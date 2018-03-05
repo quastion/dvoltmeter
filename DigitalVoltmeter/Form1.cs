@@ -21,9 +21,8 @@ namespace DigitalVoltmeter
             long[] e = processor.GetElementsFromSingleCodes(singleCodes);
             long[] b = processor.GetAllBFromE(e);
             long[] a = processor.GetA(b);
-            string[] formules = processor.Formules(b);
-            for (int i = 0; i < formules.Length; i++)
-                textBox1.Text += formules[i] + Environment.NewLine;
+            for (int i = 0; i < a.Length; i++)
+                textBox1.Text += Convert.ToString(a[i], 2) + Environment.NewLine;
         }
     }
 }
