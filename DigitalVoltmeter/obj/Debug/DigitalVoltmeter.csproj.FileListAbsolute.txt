@@ -8,3 +8,6 @@ C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalV
 C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
 C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
+C:\Users\Ivan\Documents\GitHub\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe.config
+C:\Users\Ivan\Documents\GitHub\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
+C:\Users\Ivan\Documents\GitHub\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
