@@ -9,6 +9,7 @@ C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalV
 C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 C:\Users\chekh\source\repos\DigitalVoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
 <<<<<<< HEAD
+<<<<<<< HEAD
 C:\Users\Ivan\Documents\GitHub\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe.config
 C:\Users\Ivan\Documents\GitHub\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 C:\Users\Ivan\Documents\GitHub\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
@@ -17,3 +18,5 @@ C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\bin\Debug\DigitalVoltmeter
 C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
 >>>>>>> e2149ed13a8811df9b300ac7535d9710c812a0bd
+=======
+>>>>>>> parent of 6c0d2a8... Тест
