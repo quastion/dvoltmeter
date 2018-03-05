@@ -89,6 +89,11 @@ namespace DigitalVoltmeter
             return b;
         }
 
+        /// <summary>
+        /// Вычисление ДК
+        /// </summary>
+        /// <param name="b">Массив состовляющих ЕПК</param>
+        /// <returns>ДК</returns>
         public long[] GetA(long[] b)
         {
             int n = GetN(b.Length + 1);
@@ -109,6 +114,49 @@ namespace DigitalVoltmeter
                 a[i] = ~a[i];
             }
             return a;
+        }
+
+        /// <summary>
+        /// Вывод формулы
+        /// </summary>
+        /// <param name="b">Массив состовляющих ЕПК</param>
+        /// <returns>ДК</returns>
+        public string[] Formules(long[] b)
+        {
+            int n = GetN(b.Length + 1);
+            long[] a = new long[n];
+
+            string[] formules = new string[n];
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                a[i] = ~a[i];
+                string withoutDigit = string.Empty;
+                string withDigit = string.Empty;
+                int kmax = (int)Math.Pow(2, n - 1 - i) - 1;
+                for (int k = 0; k <= kmax; k++)
+                {
+                    int tmin = (int)Math.Pow(2, i) * (2 * k + 1);
+                    int tmax = (int)Math.Pow(2, i + 1) * (k + 1) - 1;
+                    for (int t = tmin; t <= tmax; t++)
+                    {
+                        withoutDigit += "¬b" + t;
+                        withDigit += "¬" + Convert.ToString(b[t - 1], 2);
+
+                        a[i] &= ~b[t - 1];
+
+                        if (k != kmax || t != tmax)
+                        {
+                            withoutDigit += "⋀";
+                            withDigit += "⋀";
+                        }
+
+                    }
+                }
+                a[i] = ~a[i];
+                formules[i] = "¬(" + withoutDigit + ")=" + "¬(" + withDigit + ")=" + Convert.ToString(a[i], 2);
+            }
+            return formules;
         }
     }
 }
