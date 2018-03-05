@@ -141,7 +141,7 @@ namespace DigitalVoltmeter
                     for (int t = tmin; t <= tmax; t++)
                     {
                         withoutDigit += "¬b" + t;
-                        withDigit += "¬" + Convert.ToString(b[t - 1], 2);
+                        withDigit += "¬" + PrettyPrintBits(b[t - 1], b.Length + 1);
 
                         a[i] &= ~b[t - 1];
 
@@ -154,9 +154,23 @@ namespace DigitalVoltmeter
                     }
                 }
                 a[i] = ~a[i];
-                formules[i] = "¬(" + withoutDigit + ")=" + "¬(" + withDigit + ")=" + Convert.ToString(a[i], 2);
+                formules[i] = "¬(" + withoutDigit + ")=" + "¬(" + withDigit + ")=" + PrettyPrintBits(a[i], b.Length + 1);
             }
             return formules;
+        }
+
+        /// <summary>
+        /// Красивый вывод бит
+        /// </summary>
+        /// <param name="bits">Биты</param>
+        /// <param name="count">Количество</param>
+        /// <returns>Строковое представление</returns>
+        public string PrettyPrintBits(long bits, int count)
+        {
+            string stringBits = Convert.ToString(bits, 2);
+            while (stringBits.Length != count)
+                stringBits = "0" + stringBits;
+            return stringBits;
         }
     }
 }
