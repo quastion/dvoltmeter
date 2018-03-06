@@ -147,8 +147,8 @@ namespace DigitalVoltmeter
 
                         if (k != kmax || t != tmax)
                         {
-                            withoutDigit += "⋀";
-                            withDigit += "⋀";
+                            withoutDigit += "ʌ";
+                            withDigit += "ʌ";
                         }
 
                     }

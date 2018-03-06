@@ -18,3 +18,13 @@ C:\Users\Vladislav\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVol
 C:\Users\Vladislav\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
 C:\Users\Vladislav\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 C:\Users\Vladislav\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe.config
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.pdb
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csprojResolveAssemblyReference.cache
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Form1.resources
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Properties.Resources.resources
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource.Cache
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb

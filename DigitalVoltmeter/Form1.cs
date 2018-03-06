@@ -17,7 +17,7 @@ namespace DigitalVoltmeter
         private MathProcessor processor;
         private long[] singleCodes;
         private long[] b;
-        private int bitsCount = 32;
+        private int bitsCount = 8;
 
         public Form1()
         {
@@ -29,7 +29,7 @@ namespace DigitalVoltmeter
             long[] a = processor.GetA(b);
             string[] formules = processor.Formules(b);
             for (int i = 0; i < formules.Length; i++)
-                textBox1.Text += formules[i] + Environment.NewLine;
+                textBox1.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
         }
 
         private void button1_Click(object sender, EventArgs e)
