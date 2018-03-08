@@ -39,7 +39,8 @@ namespace DigitalVoltmeter
             string[] BinaryCodes = new string[bitsCount];
             for(int i =0; i < BinaryCodes.Length; i++)
                 BinaryCodes[i] = processor.PrettyPrintBits(i, (int)Math.Ceiling(Math.Log(bitsCount, 2)));
-            ExcelTools.GenerateExcel(singleCodesString, bString, BinaryCodes);
+            var exel = new ExcelTools();
+            exel.GenerateExcel(singleCodesString, bString, BinaryCodes);
         }
     }
 }
