@@ -22,14 +22,20 @@ namespace DigitalVoltmeter
             application.Visible = true;
             try
             {
-               document = application.Documents.Add();
-               document.SaveAs2("C:\\Users\\Михаил\\Desktop‪\\test.docx");
+                document = application.Documents.Add();
+                object start = 0;
+                object end = 0;
+                Word.Range _currentRange = document.Range(ref start, ref end);
+                _currentRange.Text = "a = (b)/(c)";
+                document.OMaths.Add(_currentRange).OMaths.BuildUp();
+                document.SaveAs2("D:\\test.docx");
 
             }
             finally
             {
-                document.Close();
-                application.Quit();
+                //Закрывание ворда
+                //document.Close();
+                //application.Quit();
             }
         }
     }
