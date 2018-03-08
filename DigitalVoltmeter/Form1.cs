@@ -32,6 +32,8 @@ namespace DigitalVoltmeter
                 textBox1.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
         }
 
+        //TEST
+
         private void button1_Click(object sender, EventArgs e)
         {
             string[] singleCodesString = singleCodes.Select(a =>  processor.PrettyPrintBits(a, bitsCount)).ToArray();
