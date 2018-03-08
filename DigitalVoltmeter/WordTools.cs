@@ -20,7 +20,17 @@ namespace DigitalVoltmeter
         {
             application = new Word.Application();
             application.Visible = true;
-            application.Documents.Add();
+            try
+            {
+               document = application.Documents.Add();
+               document.SaveAs2("C:\\Users\\Михаил\\Desktop‪\\test.docx");
+
+            }
+            finally
+            {
+                document.Close();
+                application.Quit();
+            }
         }
     }
 }
