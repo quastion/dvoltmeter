@@ -17,19 +17,12 @@ namespace DigitalVoltmeter
         private MathProcessor processor;
         private long[] singleCodes;
         private long[] b;
-        private int bitsCount = 8;
+        private int bitsCount;
 
         public Form1()
         {
             InitializeComponent();
-            processor = new MathProcessor();
-            singleCodes = processor.SingleCodes(bitsCount);
-            long[] e = processor.GetElementsFromSingleCodes(singleCodes);
-            b = processor.GetAllBFromE(e);
-            long[] a = processor.GetA(b);
-            string[] formules = processor.Formules(b);
-            for (int i = 0; i < formules.Length; i++)
-                textBox1.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
+            ExcelTools.SetProgressBar(this.progressBar1);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -42,5 +35,20 @@ namespace DigitalVoltmeter
             ExcelTools.GenerateExcel(singleCodesString, bString, BinaryCodes);
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            bitsCount = int.Parse(this.textBox2.Text);
+            this.textBox1.Text = "";
+            processor = new MathProcessor();
+            singleCodes = processor.SingleCodes(bitsCount);
+            long[] ec = processor.GetElementsFromSingleCodes(singleCodes);
+            b = processor.GetAllBFromE(ec);
+            long[] a = processor.GetA(b);
+            string[] formules = processor.Formules(b);
+            for (int i = 0; i < formules.Length; i++)
+                textBox1.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
+            progressBar1.Value = 0;
+        }
+        
     }
 }

@@ -7,11 +7,11 @@ namespace DigitalVoltmeter
 {
     class ExcelTools
     {
-        private Excel.Application excelApp;
-        private Workbook workBook;
+        private static Excel.Application excelApp;
+        private static Workbook workBook;
 
-        private ProgressBar bar = null;
-        DelegatePerformStep performStep = null;
+        private static ProgressBar progressBar = null;
+        private static DelegatePerformStep  performStep = null;
 
         private delegate void DelegatePerformStep();
         private delegate void SetMaxValue(int value);
@@ -22,31 +22,31 @@ namespace DigitalVoltmeter
             SetProgressBar(bar);
         }
 
-        public void SetProgressBar(ProgressBar bar)
+        public static void SetProgressBar(ProgressBar bar)
         {
-            this.bar = bar;
-            if (bar != null)
+            progressBar = bar;
+            if (progressBar != null)
                 performStep = new DelegatePerformStep(bar.PerformStep);
         }
 
-        private void SetMaxValueBar(int maxValue)
+        private static void SetMaxValueBar(int maxValue)
         {
-            if (bar == null)
+            if (progressBar == null)
                 return;
-            ChangeValue changeValue = new ChangeValue(value => bar.Value = value);
-            SetMaxValue setMaxValue = new SetMaxValue(value => bar.Maximum = value);
-            bar.Invoke(changeValue, bar.Minimum);
-            bar.Invoke(setMaxValue, maxValue);
+            ChangeValue changeValue = new ChangeValue(value => progressBar.Value = value);
+            SetMaxValue setMaxValue = new SetMaxValue(value => progressBar.Maximum = value);
+            progressBar.Invoke(changeValue, progressBar.Minimum);
+            progressBar.Invoke(setMaxValue, maxValue);
         }
 
-        private void PerformStepBar()
+        private static void PerformStepBar()
         {
-            if (bar == null)
+            if (progressBar == null)
                 return;
-            bar.Invoke(performStep);
+            progressBar.Invoke(performStep);
         }
 
-        public void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
+        public static void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
         {
             excelApp = new Excel.Application();
             workBook = excelApp.Workbooks.Add();
@@ -146,7 +146,7 @@ namespace DigitalVoltmeter
         /// <param name="workSheet">Страница excel</param>
         /// <param name="literal">Буква индекса для заголовка</param>
         /// <param name="startingIndex">Индекс массива, с которого следует начать заполнение ячеек</param>
-        private void printTable(string[] values, int row, int column, Worksheet workSheet, string literal, int startingIndex)
+        private static void printTable(string[] values, int row, int column, Worksheet workSheet, string literal, int startingIndex)
         {
             if (startingIndex >= values.Length)
                 throw new Exception("Индекс первого выводимого элемента не может быть больше размера массива");
