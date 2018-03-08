@@ -30,6 +30,8 @@ namespace DigitalVoltmeter
             string[] formules = processor.Formules(b);
             for (int i = 0; i < formules.Length; i++)
                 textBox1.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
+            //WordTools wt = new WordTools();
+            //wt.someMethod();
         }
 
         //TEST
