@@ -7,8 +7,12 @@ namespace DigitalVoltmeter
 {
     class ExcelTools
     {
+        private Excel.Application excelApp;
+        private Workbook workBook;
+
         private ProgressBar bar = null;
         DelegatePerformStep performStep = null;
+
         private delegate void DelegatePerformStep();
         private delegate void SetMaxValue(int value);
         private delegate void ChangeValue(int value);
@@ -44,8 +48,8 @@ namespace DigitalVoltmeter
 
         public void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
         {
-            Excel.Application excelApp = new Excel.Application();
-            Workbook workBook = excelApp.Workbooks.Add();
+            excelApp = new Excel.Application();
+            workBook = excelApp.Workbooks.Add();
             Worksheet workSheet = workBook.Worksheets.get_Item(1);
 
             SetMaxValueBar(singleCodes.Length + b.Length + binaryCodes.Length);
@@ -62,7 +66,7 @@ namespace DigitalVoltmeter
             workSheet.get_Range("A1", "A2").Cells.Merge(Type.Missing);
             string startingLiteral = "B1";
             string endLiteral = (singleCodes.Length - 1 > 26 ? ((char)('A' + (singleCodes.Length - 1) / 26 - 1)).ToString() : "") +
-                (char)('A' + (singleCodes.Length - 1) % 26)
+                 (char)('A' + (singleCodes.Length - 1) % 26)
                 + "1";
             workSheet.get_Range(startingLiteral, endLiteral).Cells.Merge(Type.Missing);
             workSheet.Cells[rowStartingNum, 1] = "N10";
@@ -162,6 +166,12 @@ namespace DigitalVoltmeter
                 }
                 PerformStepBar();
             }
+        }
+
+        public void Dispose()
+        {
+            if (excelApp != null)
+                excelApp.Quit();
         }
     }
 }
