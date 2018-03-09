@@ -7,17 +7,12 @@ namespace DigitalVoltmeter
 {
     class ExcelTools
     {
-<<<<<<< HEAD
-        private ProgressBar bar = null;
-        DelegatePerformStep performStep = null;
-=======
         private Excel.Application excelApp;
         private Workbook workBook;
 
-        private ProgressBar bar = null;
-        DelegatePerformStep performStep = null;
+        private ProgressBar progressBar = null;
+        private DelegatePerformStep performStep = null;
 
->>>>>>> parent of 6284e44... user interface from one window for Excel
         private delegate void DelegatePerformStep();
         private delegate void SetMaxValue(int value);
         private delegate void ChangeValue(int value);
@@ -29,32 +24,32 @@ namespace DigitalVoltmeter
 
         public void SetProgressBar(ProgressBar bar)
         {
-            this.bar = bar;
-            if (bar != null)
+            progressBar = bar;
+            if (progressBar != null)
                 performStep = new DelegatePerformStep(bar.PerformStep);
         }
 
         private void SetMaxValueBar(int maxValue)
         {
-            if (bar == null)
+            if (progressBar == null)
                 return;
-            ChangeValue changeValue = new ChangeValue(value => bar.Value = value);
-            SetMaxValue setMaxValue = new SetMaxValue(value => bar.Maximum = value);
-            bar.Invoke(changeValue, bar.Minimum);
-            bar.Invoke(setMaxValue, maxValue);
+            ChangeValue changeValue = new ChangeValue(value => progressBar.Value = value);
+            SetMaxValue setMaxValue = new SetMaxValue(value => progressBar.Maximum = value);
+            progressBar.Invoke(changeValue, progressBar.Minimum);
+            progressBar.Invoke(setMaxValue, maxValue);
         }
 
         private void PerformStepBar()
         {
-            if (bar == null)
+            if (progressBar == null)
                 return;
-            bar.Invoke(performStep);
+            progressBar.Invoke(performStep);
         }
 
         public void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
         {
-            Excel.Application excelApp = new Excel.Application();
-            Workbook workBook = excelApp.Workbooks.Add();
+            excelApp = new Excel.Application();
+            workBook = excelApp.Workbooks.Add();
             Worksheet workSheet = workBook.Worksheets.get_Item(1);
 
             SetMaxValueBar(singleCodes.Length + b.Length + binaryCodes.Length);
@@ -71,7 +66,7 @@ namespace DigitalVoltmeter
             workSheet.get_Range("A1", "A2").Cells.Merge(Type.Missing);
             string startingLiteral = "B1";
             string endLiteral = (singleCodes.Length - 1 > 26 ? ((char)('A' + (singleCodes.Length - 1) / 26 - 1)).ToString() : "") +
-                (char)('A' + (singleCodes.Length - 1) % 26)
+                 (char)('A' + (singleCodes.Length - 1) % 26)
                 + "1";
             workSheet.get_Range(startingLiteral, endLiteral).Cells.Merge(Type.Missing);
             workSheet.Cells[rowStartingNum, 1] = "N10";
@@ -171,6 +166,12 @@ namespace DigitalVoltmeter
                 }
                 PerformStepBar();
             }
+        }
+
+        public void Dispose()
+        {
+            if (excelApp != null)
+                excelApp.Quit();
         }
     }
 }
