@@ -15,6 +15,7 @@ namespace DigitalVoltmeter
         Word._Document document;
         Object missingObj = Missing.Value;
         Object trueObj = true;
+        string cherta = " ̅";
         Object falseObj = false;
         public void someMethod()
         {
@@ -26,7 +27,8 @@ namespace DigitalVoltmeter
                 object start = 0;
                 object end = 0;
                 Word.Range _currentRange = document.Range(ref start, ref end);
-                _currentRange.Text = "a = (b)/(c)";
+                _currentRange.PageSetup.Orientation = Word.WdOrientation.wdOrientLandscape;
+                _currentRange.Text = "a_1 = (b_1"+cherta+"b_2 "+"b_3"+cherta+")"+cherta;
                 document.OMaths.Add(_currentRange).OMaths.BuildUp();
                 document.SaveAs2("D:\\test.docx");
 
