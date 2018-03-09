@@ -7,8 +7,17 @@ namespace DigitalVoltmeter
 {
     class ExcelTools
     {
+<<<<<<< HEAD
         private ProgressBar bar = null;
         DelegatePerformStep performStep = null;
+=======
+        private Excel.Application excelApp;
+        private Workbook workBook;
+
+        private ProgressBar bar = null;
+        DelegatePerformStep performStep = null;
+
+>>>>>>> parent of 6284e44... user interface from one window for Excel
         private delegate void DelegatePerformStep();
         private delegate void SetMaxValue(int value);
         private delegate void ChangeValue(int value);
