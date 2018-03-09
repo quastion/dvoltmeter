@@ -22,7 +22,6 @@ C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmet
 C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe
 C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.pdb
 C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csprojResolveAssemblyReference.cache
-C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Form1.resources
 C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Properties.Resources.resources
 C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource.Cache
 C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
@@ -48,3 +47,5 @@ C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\obj\Debug\DigitalVoltmeter
 C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe.config
 C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe
 C:\Users\autor\Source\Repos\MetrRepo\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.pdb
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.ResolveComReference.cache
+C:\Users\chekh\source\repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.DigitalVoltmeterForm.resources

@@ -7,11 +7,11 @@ namespace DigitalVoltmeter
 {
     class ExcelTools
     {
-        private static Excel.Application excelApp;
-        private static Workbook workBook;
+        private Excel.Application excelApp;
+        private Workbook workBook;
 
-        private static ProgressBar progressBar = null;
-        private static DelegatePerformStep  performStep = null;
+        private ProgressBar progressBar = null;
+        private DelegatePerformStep performStep = null;
 
         private delegate void DelegatePerformStep();
         private delegate void SetMaxValue(int value);
@@ -22,14 +22,14 @@ namespace DigitalVoltmeter
             SetProgressBar(bar);
         }
 
-        public static void SetProgressBar(ProgressBar bar)
+        public void SetProgressBar(ProgressBar bar)
         {
             progressBar = bar;
             if (progressBar != null)
                 performStep = new DelegatePerformStep(bar.PerformStep);
         }
 
-        private static void SetMaxValueBar(int maxValue)
+        private void SetMaxValueBar(int maxValue)
         {
             if (progressBar == null)
                 return;
@@ -39,14 +39,14 @@ namespace DigitalVoltmeter
             progressBar.Invoke(setMaxValue, maxValue);
         }
 
-        private static void PerformStepBar()
+        private void PerformStepBar()
         {
             if (progressBar == null)
                 return;
             progressBar.Invoke(performStep);
         }
 
-        public static void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
+        public void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
         {
             excelApp = new Excel.Application();
             workBook = excelApp.Workbooks.Add();
@@ -146,7 +146,7 @@ namespace DigitalVoltmeter
         /// <param name="workSheet">Страница excel</param>
         /// <param name="literal">Буква индекса для заголовка</param>
         /// <param name="startingIndex">Индекс массива, с которого следует начать заполнение ячеек</param>
-        private static void printTable(string[] values, int row, int column, Worksheet workSheet, string literal, int startingIndex)
+        private void printTable(string[] values, int row, int column, Worksheet workSheet, string literal, int startingIndex)
         {
             if (startingIndex >= values.Length)
                 throw new Exception("Индекс первого выводимого элемента не может быть больше размера массива");
