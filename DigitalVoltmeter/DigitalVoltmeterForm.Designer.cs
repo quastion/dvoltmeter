@@ -33,7 +33,7 @@
             this.buttonGetFormules = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonSaveToExel = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox = new System.Windows.Forms.TextBox();
             this.comboBoxResistorsCount = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
@@ -92,14 +92,14 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(17, 166);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(786, 236);
-            this.textBox1.TabIndex = 7;
+            this.textBox.Location = new System.Drawing.Point(17, 166);
+            this.textBox.Multiline = true;
+            this.textBox.Name = "textBox1";
+            this.textBox.Size = new System.Drawing.Size(786, 236);
+            this.textBox.TabIndex = 7;
             // 
             // comboBoxResistorsCount
             // 
@@ -134,7 +134,7 @@
             this.Controls.Add(this.buttonGetFormules);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonSaveToExel);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DigitalVoltmeterForm";
             this.Text = "DigitalVoltmeter";
@@ -150,7 +150,7 @@
         private System.Windows.Forms.Button buttonGetFormules;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonSaveToExel;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox;
         private System.Windows.Forms.ComboBox comboBoxResistorsCount;
     }
 }
