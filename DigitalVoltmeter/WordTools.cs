@@ -49,17 +49,22 @@ namespace DigitalVoltmeter
         public static string GetRTFFromDOCXFile(string docxFile)
         {
             Word.Application app = new Word.Application();
-            object rtfFileName;
+            string rtfFileName;
             object missing = Type.Missing;
             try
             {
-                object docxFileName = docxFile;
-                app.Documents.Open(ref docxFileName, ref missing,
-                    ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing);
+                app.Documents.Open(docxFile,
+                    missing, missing, missing, missing, missing,
+                    missing, missing, missing, missing, missing,
+                    missing, missing, missing, missing, missing);
                 string temp = System.IO.Path.GetTempPath();
+
+                int safeNameStartindex = docxFile.LastIndexOf('\\') + 1;
+                rtfFileName = docxFile.Substring(safeNameStartindex, docxFile.Length - ".docx".Length - safeNameStartindex);
+                rtfFileName += ".rtf";
+                rtfFileName = temp + rtfFileName;
+
+                #region permissions
                 object lookComments = false;
                 object password = string.Empty;
                 object AddToRecentFiles = true;
@@ -68,25 +73,19 @@ namespace DigitalVoltmeter
                 object EmbedTrueTypeFonts = false;
                 object SaveFormsData = false;
                 object SaveAsAOCELetter = false;
-                int safeNameStartindex = docxFile.LastIndexOf('\\') + 1;
-                rtfFileName = docxFile.Substring(safeNameStartindex, docxFile.Length - ".docx".Length - safeNameStartindex);
-                object wdFormatRTF = Word.WdSaveFormat.wdFormatRTF;
-                rtfFileName += ".rtf";
-                rtfFileName = temp + rtfFileName;
-                app.ActiveDocument.SaveAs(ref rtfFileName,
-                    ref wdFormatRTF, ref lookComments, ref password, ref AddToRecentFiles, ref WritePassword, ref ReadOnlyRecommended,
-                    ref EmbedTrueTypeFonts, ref missing, ref SaveFormsData, ref SaveAsAOCELetter, ref missing,
-                    ref missing, ref missing, ref missing, ref missing);
-                
-                
+                #endregion
+
+                app.ActiveDocument.SaveAs(rtfFileName, Word.WdSaveFormat.wdFormatRTF, 
+                    lookComments, password, AddToRecentFiles, WritePassword, 
+                    ReadOnlyRecommended,EmbedTrueTypeFonts, missing, SaveFormsData, 
+                    SaveAsAOCELetter, missing, missing, missing, missing, missing);                             
             }
             finally
             {
-                object @false = false;
-                app.ActiveDocument.Close(ref @false, ref missing, ref missing);
-                app.Quit(ref @false, ref missing, ref missing);
+                app.ActiveDocument.Close(false, missing, missing);
+                app.Quit(false, missing, missing);
             }
-            return (string)rtfFileName;
+            return rtfFileName;
         }
     }
 }

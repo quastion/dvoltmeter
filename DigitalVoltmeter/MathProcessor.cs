@@ -78,7 +78,7 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="e">Массив состовляющих ЕК</param>
         /// <returns>Массив состовляющих ЕПК</returns>
-        public LongBits[] GetAllBFromE(LongBits[] e)
+        public LongBits[] GetAllEPKFromEK(LongBits[] e)
         {
             LongBits[] b = new LongBits[e.Length];
             for (int i = 0; i < b.Length; i++)
@@ -91,7 +91,7 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="b">Массив состовляющих ЕПК</param>
         /// <returns>ДК</returns>
-        public LongBits[] GetA(LongBits[] b)
+        public LongBits[] GetDK(LongBits[] b)
         {
             int n = GetN(b.Length + 1);
             LongBits[] a = new LongBits[n];
@@ -112,20 +112,6 @@ namespace DigitalVoltmeter
                 a[i] = ~a[i];
             }
             return a;
-        }
-
-        public LongBits[] GetBinaryCodesFromElements(LongBits[] a)
-        {
-            LongBits[] binaryCodes = new LongBits[a[0].Length];
-            for (int i = 0; i < binaryCodes.Length; i++)
-            {
-                binaryCodes[i] = new LongBits(a.Length);
-                for (int j = 0; j < a.Length; j++)
-                {
-                    binaryCodes[i][j] = a[j][i];
-                }
-            }
-            return binaryCodes;
         }
 
         /// <summary>
@@ -164,13 +150,26 @@ namespace DigitalVoltmeter
                             withoutDigit += "ʌ";
                             withDigit += "ʌ";
                         }
-
                     }
                 }
                 a[i] = ~a[i];
                 formules[i] = "¬(" + withoutDigit + ")=" + "¬(" + withDigit + ")=" + a[i];
             }
             return formules;
+        }
+
+        public LongBits[] GetBinaryCodesFromElements(LongBits[] a)
+        {
+            LongBits[] binaryCodes = new LongBits[a[0].Length];
+            for (int i = 0; i < binaryCodes.Length; i++)
+            {
+                binaryCodes[i] = new LongBits(a.Length);
+                for (int j = 0; j < a.Length; j++)
+                {
+                    binaryCodes[i][j] = a[j][i];
+                }
+            }
+            return binaryCodes;
         }
     }
 }

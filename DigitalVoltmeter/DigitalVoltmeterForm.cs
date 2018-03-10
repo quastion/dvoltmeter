@@ -22,7 +22,7 @@ namespace DigitalVoltmeter
         public DigitalVoltmeterForm()
         {
             InitializeComponent();
-            excel = new ExcelTools(this.progressBar);
+            excel = new ExcelTools(progressBar);
             processor = new MathProcessor();
         }
 
@@ -43,15 +43,16 @@ namespace DigitalVoltmeter
 
             singleCodes = processor.SingleCodes(bitsCount);
             LongBits[] ec = processor.GetElementsFromSingleCodes(singleCodes);
-            b = processor.GetAllBFromE(ec);
+            b = processor.GetAllEPKFromEK(ec);
             string[] formules = processor.Formules(b, out a);
+
             for (int i = 0; i < formules.Length; i++)
                 richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
 
-            //fillRichTextBoxFromWord();
+            //FillRichTextBoxFromWord();
         }
 
-        private void fillRichTextBoxFromWord()
+        private void FillRichTextBoxFromWord()
         {
             richTextBox.Text = string.Empty;
             string rtfPath = string.Empty;
