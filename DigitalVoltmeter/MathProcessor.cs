@@ -132,11 +132,12 @@ namespace DigitalVoltmeter
         /// Вывод формулы
         /// </summary>
         /// <param name="b">Массив состовляющих ЕПК</param>
-        /// <returns>ДК</returns>
-        public string[] Formules(LongBits[] b)
+        /// <param name="a">ДК</param>
+        /// <returns>Формулы ДК</returns>
+        public string[] Formules(LongBits[] b, out LongBits[] a)
         {
             int n = GetN(b.Length + 1);
-            LongBits[] a = new LongBits[n];
+            a = new LongBits[n];
 
             string[] formules = new string[n];
 

@@ -38,16 +38,35 @@ namespace DigitalVoltmeter
 
         private void buttonGetFormules_Click(object sender, EventArgs e)
         {
-            int bitsCount = int.Parse(this.comboBoxResistorsCount.Text);
-            this.textBox.Text = String.Empty;
+            int bitsCount = int.Parse(comboBoxResistorsCount.Text);
+            richTextBox.Text = string.Empty;
 
             singleCodes = processor.SingleCodes(bitsCount);
             LongBits[] ec = processor.GetElementsFromSingleCodes(singleCodes);
             b = processor.GetAllBFromE(ec);
-            a = processor.GetA(b);
-            string[] formules = processor.Formules(b);
+            string[] formules = processor.Formules(b, out a);
             for (int i = 0; i < formules.Length; i++)
-                textBox.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
+                richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
+
+            //fillRichTextBoxFromWord();
+        }
+
+        private void fillRichTextBoxFromWord()
+        {
+            richTextBox.Text = string.Empty;
+            string rtfPath = string.Empty;
+            {//переделать под статичный путь, когда подкатит экспорт формул в Word
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "MS Word documents (*.docx)|*.docx|Rich text format (*.rtf)|*.rtf";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (openFileDialog.FilterIndex == 1)
+                        rtfPath = WordTools.GetRTFFromDOCXFile(openFileDialog.FileName);
+                    else if (openFileDialog.FilterIndex == 2)
+                        rtfPath = openFileDialog.FileName;
+                }
+            }
+            richTextBox.LoadFile(rtfPath);
         }
 
         private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)

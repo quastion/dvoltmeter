@@ -40,5 +40,53 @@ namespace DigitalVoltmeter
                 //application.Quit();
             }
         }
+
+        /// <summary>
+        /// Создает временный файл .rtf из файла .docx для импорта в richTextBox
+        /// </summary>
+        /// <param name="docxFile">Путь к файлу .docx</param>
+        /// <returns>Путь к файлу .rtf</returns>
+        public static string GetRTFFromDOCXFile(string docxFile)
+        {
+            Word.Application app = new Word.Application();
+            object rtfFileName;
+            object missing = Type.Missing;
+            try
+            {
+                object docxFileName = docxFile;
+                app.Documents.Open(ref docxFileName, ref missing,
+                    ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing, ref missing, ref missing,
+                    ref missing, ref missing);
+                string temp = System.IO.Path.GetTempPath();
+                object lookComments = false;
+                object password = string.Empty;
+                object AddToRecentFiles = true;
+                object WritePassword = string.Empty;
+                object ReadOnlyRecommended = false;
+                object EmbedTrueTypeFonts = false;
+                object SaveFormsData = false;
+                object SaveAsAOCELetter = false;
+                int safeNameStartindex = docxFile.LastIndexOf('\\') + 1;
+                rtfFileName = docxFile.Substring(safeNameStartindex, docxFile.Length - ".docx".Length - safeNameStartindex);
+                object wdFormatRTF = Word.WdSaveFormat.wdFormatRTF;
+                rtfFileName += ".rtf";
+                rtfFileName = temp + rtfFileName;
+                app.ActiveDocument.SaveAs(ref rtfFileName,
+                    ref wdFormatRTF, ref lookComments, ref password, ref AddToRecentFiles, ref WritePassword, ref ReadOnlyRecommended,
+                    ref EmbedTrueTypeFonts, ref missing, ref SaveFormsData, ref SaveAsAOCELetter, ref missing,
+                    ref missing, ref missing, ref missing, ref missing);
+                
+                
+            }
+            finally
+            {
+                object @false = false;
+                app.ActiveDocument.Close(ref @false, ref missing, ref missing);
+                app.Quit(ref @false, ref missing, ref missing);
+            }
+            return (string)rtfFileName;
+        }
     }
 }
