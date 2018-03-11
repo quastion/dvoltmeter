@@ -28,6 +28,9 @@ namespace DigitalVoltmeter
 
         private void buttonSaveToExel_Click(object sender, EventArgs e)
         {
+            if (singleCodes == null || b == null || processor == null)
+                throw new Exception("Необходимо сгенерировать уравнения!");
+
             string[] singleCodesString = singleCodes.Select(val => val.ToString()).ToArray();
             string[] bString = b.Select(val => val.ToString()).ToArray();
             string[] binaryString = processor.GetBinaryCodesFromElements(a)
@@ -73,6 +76,12 @@ namespace DigitalVoltmeter
         private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void DigitalVoltmeterForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if(excel!=null)
+                excel.Dispose();
         }
     }
 }
