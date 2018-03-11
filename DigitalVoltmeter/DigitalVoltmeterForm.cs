@@ -14,6 +14,7 @@ namespace DigitalVoltmeter
     {
         private MathProcessor processor;
         private ExcelTools excel;
+        private WordTools word;
 
         private LongBits[] singleCodes;
         private LongBits[] b;
@@ -23,6 +24,7 @@ namespace DigitalVoltmeter
         {
             InitializeComponent();
             excel = new ExcelTools(progressBar);
+            word = new WordTools(progressBar);
             processor = new MathProcessor();
         }
 
@@ -35,7 +37,7 @@ namespace DigitalVoltmeter
             string[] bString = b.Select(val => val.ToString()).ToArray();
             string[] binaryString = processor.GetBinaryCodesFromElements(a)
                                        .Select(val => val.ToString()).ToArray();
-            excel.GenerateExcel(singleCodesString, bString, binaryString);
+            excel.GenerateDocument(singleCodesString, bString, binaryString);
             progressBar.Value = 0;
         }
 
@@ -47,11 +49,13 @@ namespace DigitalVoltmeter
             singleCodes = processor.SingleCodes(bitsCount);
             LongBits[] ec = processor.GetElementsFromSingleCodes(singleCodes);
             b = processor.GetAllEPKFromEK(ec);
+
             if (checkBoxOutToWord.Checked)
             {
                 string wordFilePath = Environment.CurrentDirectory + "\\Formules[" + (b.Length + 1) + "].docx";
-                new WordTools().createDocumentWithFormules(b,out a,wordFilePath);
+                word.GenerateDocument(b, out a, wordFilePath);
                 FillRichTextBoxFromWord(wordFilePath);
+                progressBar.Value = 0;
             }
             else
             {
@@ -77,7 +81,7 @@ namespace DigitalVoltmeter
 
         private void DigitalVoltmeterForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if(excel!=null)
+            if (excel != null)
                 excel.Dispose();
         }
     }

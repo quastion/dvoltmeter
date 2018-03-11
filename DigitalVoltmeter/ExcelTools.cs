@@ -1,12 +1,13 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
+using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace DigitalVoltmeter
 {
-    class ExcelTools
+    class ExcelTools : IDocumentTools
     {
         private Excel.Application excelApp;
         private Workbook workBook;
@@ -47,9 +48,21 @@ namespace DigitalVoltmeter
             if (progressBar == null)
                 return;
             progressBar.Invoke(performStep);
+            ProgressBarText();
         }
 
-        public void GenerateExcel(string[] singleCodes, string[] b, string[] binaryCodes)
+        private void ProgressBarText()
+        {
+            string text = "Создание Exel документа";
+            using (Graphics g = progressBar.CreateGraphics())
+            {
+                g.DrawString(text, SystemFonts.DefaultFont, Brushes.Black,
+                    new PointF(progressBar.Width / 2 - (g.MeasureString(text, SystemFonts.DefaultFont).Width / 2.0F),
+                    progressBar.Height / 2 - (g.MeasureString(text, SystemFonts.DefaultFont).Height / 2.0F)));
+            }
+        }
+
+        public void GenerateDocument(string[] singleCodes, string[] b, string[] binaryCodes)
         {
             excelApp = new Excel.Application();
             workBook = excelApp.Workbooks.Add();
@@ -59,7 +72,6 @@ namespace DigitalVoltmeter
 
             int columnStartingNum = 1;
             int rowStartingNum = 1;
-
 
             //Выравнивание по центру во всех ячейках
             workSheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
@@ -204,8 +216,6 @@ namespace DigitalVoltmeter
             else
                 colorIndexGeneral = colorIndex1;
         }
-
-
 
         public void Dispose()
         {

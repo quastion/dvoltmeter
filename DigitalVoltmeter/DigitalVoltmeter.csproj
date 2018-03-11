@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentTools.cs" />
     <Compile Include="ExcelTools.cs" />
     <Compile Include="DigitalVoltmeterForm.cs">
       <SubType>Form</SubType>

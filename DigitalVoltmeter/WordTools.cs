@@ -2,44 +2,66 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using Word = Microsoft.Office.Interop.Word;
 using System.Reflection;
-
+using Microsoft.Office.Interop.Word;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace DigitalVoltmeter
 {
-    class WordTools
+    class WordTools : IDocumentTools
     {
-        Word._Application application;
-        Word._Document document;
-        Object missingObj = Missing.Value;
-        Object trueObj = true;
-        string cherta = " ̅";
-        Object falseObj = false;
-        public void someMethod()
-        {
-            application = new Word.Application();
-            application.Visible = true;
-            try
-            {
-                document = application.Documents.Add();
-                object start = 0;
-                object end = 0;
-                Word.Range _currentRange = document.Range(ref start, ref end);
-                _currentRange.PageSetup.Orientation = Word.WdOrientation.wdOrientLandscape;
-                _currentRange.Text = "a=(b+c) ̅";
-                document.OMaths.Add(_currentRange).OMaths.BuildUp();
-                //Word.Paragraphs wordparagraphs = document.Paragraphs;
-                //String Text = Convert.ToString(wordparagraphs.Count);
-                //document.SaveAs2("D:\\test.docx");
+        private Word.Application application;
+        private Document document;
+        private string notSign = " ̅";
 
-            }
-            finally
+        private ProgressBar progressBar = null;
+        private DelegatePerformStep performStep = null;
+
+        private delegate void DelegatePerformStep();
+        private delegate void SetMaxValue(int value);
+        private delegate void ChangeValue(int value);
+
+        public WordTools(ProgressBar bar = null)
+        {
+            SetProgressBar(bar);
+        }
+
+        public void SetProgressBar(ProgressBar bar)
+        {
+            progressBar = bar;
+            if (progressBar != null)
+                performStep = new DelegatePerformStep(bar.PerformStep);
+        }
+
+        private void SetMaxValueBar(int maxValue)
+        {
+            if (progressBar == null)
+                return;
+            ChangeValue changeValue = new ChangeValue(value => progressBar.Value = value);
+            SetMaxValue setMaxValue = new SetMaxValue(value => progressBar.Maximum = value);
+            progressBar.Invoke(changeValue, progressBar.Minimum);
+            progressBar.Invoke(setMaxValue, maxValue);
+        }
+
+        private void PerformStepBar()
+        {
+            if (progressBar == null)
+                return;
+            progressBar.Invoke(performStep);
+            ProgressBarText();
+        }
+
+        private void ProgressBarText()
+        {
+            string text = "Создание Word документа";
+            using (Graphics g = progressBar.CreateGraphics())
             {
-                //Закрывание ворда
-                //document.Close();
-                //application.Quit();
+                g.DrawString(text, SystemFonts.DefaultFont, Brushes.Black,
+                    new PointF(progressBar.Width / 2 - (g.MeasureString(text, SystemFonts.DefaultFont).Width / 2.0F),
+                    progressBar.Height / 2 - (g.MeasureString(text, SystemFonts.DefaultFont).Height / 2.0F)));
             }
         }
 
@@ -47,29 +69,23 @@ namespace DigitalVoltmeter
         /// Создание документа docx с формулами ai
         /// </summary>
         /// <param name="b">Массив состовляющих ЕПК</param>
-        /// <param name="n">Количество резисторов</param>
+        /// <param name="a">ДК</param>
         /// <param name="path">Путь к результирующему файлу</param>
-        /// Вызов метода
-        /// WordTools wt = new WordTools();
-        /// wt.createDocumentWithFormules(b, processor.GetN(b.Length + 1),"D:\\test.docx");
-        public void createDocumentWithFormules(LongBits[] b, out LongBits[] a, string path)
+        public void GenerateDocument(LongBits[] b, out LongBits[] a, string path)
         {
-            application = new Word.Application();
-            application.Visible = false;
+            application = new Word.Application { Visible = false };
             try
             {
                 document = application.Documents.Add();
-                object start = 0;
-                object end = 0;
-                Word.Range _currentRange = document.Range(ref start, ref end);
-                _currentRange.PageSetup.Orientation = Word.WdOrientation.wdOrientLandscape;
+                document.Range(0, 0).PageSetup.Orientation = WdOrientation.wdOrientLandscape;
 
                 int n = MathProcessor.GetN(b.Length + 1);
                 a = new LongBits[n];
+                SetMaxValueBar(n);
 
-                for (int i = a.Length-1; i >=0; i--)
+                for (int i = n - 1; i >= 0; i--)
                 {
-                    _currentRange.Text += "a_" + i + " = (";
+                    List<string> formules = new List<string>();
                     a[i] = new LongBits(b[0].Length);
                     a[i] = ~a[i];
                     int kmax = (int)Math.Pow(2, n - 1 - i) - 1;
@@ -79,17 +95,30 @@ namespace DigitalVoltmeter
                         int tmax = (int)Math.Pow(2, i + 1) * (k + 1) - 1;
                         for (int t = tmin; t <= tmax; t++)
                         {
-                            _currentRange.Text += " b_" + t + cherta + " ";
+                            if (formules.Count == 0 || formules[formules.Count - 1].Length > 250)
+                                formules.Add(string.Empty);
+                            formules[formules.Count - 1] += " b_" + t + notSign + " ";
                             a[i] &= ~b[t - 1];
                         }
                     }
                     a[i] = ~a[i];
-                    _currentRange.Text += ")" + cherta + "\n";
-                    document.OMaths.Add(_currentRange).OMaths.BuildUp();
-                    _currentRange = document.Range(0,0);
 
+                    document.Range(0, 0).Text += "\n ";
+                    for (int index = formules.Count - 1; index >= 0; index--)
+                    {
+                        document.Range(0, 0).Text += "\n ";
+                        BuildFormula(notSign);
+                        BuildFormula(")", WdColor.wdColorWhite);
+                        BuildFormula(formules[index]);
+                        BuildFormula("(", WdColor.wdColorWhite);
+                        if (index == 0)
+                            BuildFormula("a_" + i + "=");
+                        else BuildFormula("          ");
+                        document.OMaths.BuildUp();
+                    }
+                    PerformStepBar();
                 }
-                document.SaveAs2(path);
+                document.SaveAs(path);
             }
             finally
             {
@@ -136,8 +165,6 @@ namespace DigitalVoltmeter
                     lookComments, password, AddToRecentFiles, WritePassword,
                     ReadOnlyRecommended, EmbedTrueTypeFonts, missing, SaveFormsData,
                     SaveAsAOCELetter, missing, missing, missing, missing, missing);
-
-
             }
             finally
             {
@@ -145,6 +172,14 @@ namespace DigitalVoltmeter
                 app.Quit(false, missing, missing);
             }
             return rtfFileName;
+        }
+
+        private void BuildFormula(string text, WdColor color = WdColor.wdColorBlack)
+        {
+            Range range = document.Paragraphs[1].Range;
+            range.Text += text;
+            range.Font.Color = color;
+            document.OMaths.Add(range);
         }
     }
 }
