@@ -15,44 +15,73 @@ namespace DigitalVoltmeter
         private MathProcessor processor;
         private ExcelTools excel;
 
-        private long[] singleCodes;
-        private long[] b;
-        private int bitsCount;
+        private LongBits[] singleCodes;
+        private LongBits[] b;
+        private LongBits[] a;
 
         public DigitalVoltmeterForm()
         {
             InitializeComponent();
-            excel = new ExcelTools(this.progressBar);
+            excel = new ExcelTools(progressBar);
+            processor = new MathProcessor();
         }
 
         private void buttonSaveToExel_Click(object sender, EventArgs e)
         {
-            string[] singleCodesString = singleCodes.Select(a => processor.PrettyPrintBits(a, bitsCount)).ToArray();
-            string[] bString = b.Select(a => processor.PrettyPrintBits(a, bitsCount)).ToArray();
-            string[] BinaryCodes = new string[bitsCount];
-            for (int i = 0; i < BinaryCodes.Length; i++)
-                BinaryCodes[i] = processor.PrettyPrintBits(i, processor.GetN(bitsCount));
-            excel.GenerateExcel(singleCodesString, bString, BinaryCodes);
+            if (singleCodes == null || b == null || processor == null)
+                throw new Exception("Необходимо сгенерировать уравнения!");
+
+            string[] singleCodesString = singleCodes.Select(val => val.ToString()).ToArray();
+            string[] bString = b.Select(val => val.ToString()).ToArray();
+            string[] binaryString = processor.GetBinaryCodesFromElements(a)
+                                       .Select(val => val.ToString()).ToArray();
+            excel.GenerateExcel(singleCodesString, bString, binaryString);
             progressBar.Value = 0;
         }
 
         private void buttonGetFormules_Click(object sender, EventArgs e)
         {
-            bitsCount = int.Parse(this.comboBoxResistorsCount.Text);
-            this.textBox1.Text = String.Empty;
-            processor = new MathProcessor();
+            int bitsCount = int.Parse(comboBoxResistorsCount.Text);
+            richTextBox.Text = string.Empty;
+
             singleCodes = processor.SingleCodes(bitsCount);
-            long[] ec = processor.GetElementsFromSingleCodes(singleCodes);
-            b = processor.GetAllBFromE(ec);
-            long[] a = processor.GetA(b);
-            string[] formules = processor.Formules(b);
+            LongBits[] ec = processor.GetElementsFromSingleCodes(singleCodes);
+            b = processor.GetAllEPKFromEK(ec);
+            string[] formules = processor.Formules(b, out a);
+
             for (int i = 0; i < formules.Length; i++)
-                textBox1.Text += "a" + i + "=" + formules[i] + Environment.NewLine;
+                richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
+
+            //FillRichTextBoxFromWord();
+        }
+
+        private void FillRichTextBoxFromWord()
+        {
+            richTextBox.Text = string.Empty;
+            string rtfPath = string.Empty;
+            {//переделать под статичный путь, когда подкатит экспорт формул в Word
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "MS Word documents (*.docx)|*.docx|Rich text format (*.rtf)|*.rtf";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (openFileDialog.FilterIndex == 1)
+                        rtfPath = WordTools.GetRTFFromDOCXFile(openFileDialog.FileName);
+                    else if (openFileDialog.FilterIndex == 2)
+                        rtfPath = openFileDialog.FileName;
+                }
+            }
+            richTextBox.LoadFile(rtfPath);
         }
 
         private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void DigitalVoltmeterForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if(excel!=null)
+                excel.Dispose();
         }
     }
 }

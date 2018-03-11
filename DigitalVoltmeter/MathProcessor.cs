@@ -23,11 +23,11 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="value">Десятичное число</param>
         /// <returns>ЕК</returns>
-        public long SingleCode(int value)
+        public LongBits SingleCode(int value, int count)
         {
-            long singleCode = 0;
+            LongBits singleCode = new LongBits(count);
             for (int i = 0; i < value; i++)
-                singleCode += 1 << i;
+                singleCode[i] = 1;
             return singleCode;
         }
 
@@ -36,11 +36,11 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="value">Верхняя граница</param>
         /// <returns>Массив ЕК</returns>
-        public long[] SingleCodes(int value)
+        public LongBits[] SingleCodes(int value)
         {
-            long[] singleCodes = new long[value];
+            LongBits[] singleCodes = new LongBits[value];
             for (int i = 0; i < value; i++)
-                singleCodes[i] = SingleCode(i);
+                singleCodes[i] = SingleCode(i, value);
             return singleCodes;
         }
 
@@ -50,13 +50,11 @@ namespace DigitalVoltmeter
         /// <param name="singleCodes">Массив ЕК</param>
         /// <param name="numBit">Номер состовляющей</param>
         /// <returns>i-я состовляющая</returns>
-        public long GetElementFromSingleCode(long[] singleCodes, int numBit)
+        public LongBits GetElementFromSingleCode(LongBits[] singleCodes, int numBit)
         {
-            long e = 0;
+            LongBits e = new LongBits(singleCodes.Length);
             for (int i = 0; i < singleCodes.Length; i++)
-            {
-                e += ((singleCodes[i] & (1 << numBit)) >> numBit) << i;
-            }
+                e[i] = singleCodes[i][numBit];
             return e;
         }
 
@@ -65,10 +63,9 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="singleCodes">Массив ЕК</param>
         /// <returns>Массив состовляющих</returns>
-        public long[] GetElementsFromSingleCodes(long[] singleCodes)
+        public LongBits[] GetElementsFromSingleCodes(LongBits[] singleCodes)
         {
-            Array.Sort(singleCodes);
-            long[] e = new long[singleCodes.Length - 1];
+            LongBits[] e = new LongBits[singleCodes.Length - 1];
             for (int i = 0; i < e.Length; i++)
             {
                 e[i] = GetElementFromSingleCode(singleCodes, i);
@@ -81,11 +78,11 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="e">Массив состовляющих ЕК</param>
         /// <returns>Массив состовляющих ЕПК</returns>
-        public long[] GetAllBFromE(long[] e)
+        public LongBits[] GetAllEPKFromEK(LongBits[] e)
         {
-            long[] b = new long[e.Length];
+            LongBits[] b = new LongBits[e.Length];
             for (int i = 0; i < b.Length; i++)
-                b[i] = e[i] & ~(i == b.Length - 1 ? 0 : e[i + 1]);
+                b[i] = e[i] & ~(i == b.Length - 1 ? new LongBits(e[0].Length) : e[i + 1]);
             return b;
         }
 
@@ -94,12 +91,13 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="b">Массив состовляющих ЕПК</param>
         /// <returns>ДК</returns>
-        public long[] GetA(long[] b)
+        public LongBits[] GetDK(LongBits[] b)
         {
             int n = GetN(b.Length + 1);
-            long[] a = new long[n];
+            LongBits[] a = new LongBits[n];
             for (int i = 0; i < a.Length; i++)
             {
+                a[i] = new LongBits(b[0].Length);
                 a[i] = ~a[i];
                 int kmax = (int)Math.Pow(2, n - 1 - i) - 1;
                 for (int k = 0; k <= kmax; k++)
@@ -120,16 +118,18 @@ namespace DigitalVoltmeter
         /// Вывод формулы
         /// </summary>
         /// <param name="b">Массив состовляющих ЕПК</param>
-        /// <returns>ДК</returns>
-        public string[] Formules(long[] b)
+        /// <param name="a">ДК</param>
+        /// <returns>Формулы ДК</returns>
+        public string[] Formules(LongBits[] b, out LongBits[] a)
         {
             int n = GetN(b.Length + 1);
-            long[] a = new long[n];
+            a = new LongBits[n];
 
             string[] formules = new string[n];
 
             for (int i = 0; i < a.Length; i++)
             {
+                a[i] = new LongBits(b[0].Length);
                 a[i] = ~a[i];
                 string withoutDigit = string.Empty;
                 string withDigit = string.Empty;
@@ -141,7 +141,7 @@ namespace DigitalVoltmeter
                     for (int t = tmin; t <= tmax; t++)
                     {
                         withoutDigit += "¬b" + t;
-                        withDigit += "¬" + PrettyPrintBits(b[t - 1], b.Length + 1);
+                        withDigit += "¬" + b[t - 1];
 
                         a[i] &= ~b[t - 1];
 
@@ -150,27 +150,26 @@ namespace DigitalVoltmeter
                             withoutDigit += "ʌ";
                             withDigit += "ʌ";
                         }
-
                     }
                 }
                 a[i] = ~a[i];
-                formules[i] = "¬(" + withoutDigit + ")=" + "¬(" + withDigit + ")=" + PrettyPrintBits(a[i], b.Length + 1);
+                formules[i] = "¬(" + withoutDigit + ")=" + "¬(" + withDigit + ")=" + a[i];
             }
             return formules;
         }
 
-        /// <summary>
-        /// Красивый вывод бит
-        /// </summary>
-        /// <param name="bits">Биты</param>
-        /// <param name="count">Количество</param>
-        /// <returns>Строковое представление</returns>
-        public string PrettyPrintBits(long bits, int count)
+        public LongBits[] GetBinaryCodesFromElements(LongBits[] a)
         {
-            string stringBits = Convert.ToString(bits, 2);
-            while (stringBits.Length != count)
-                stringBits = "0" + stringBits;
-            return stringBits;
+            LongBits[] binaryCodes = new LongBits[a[0].Length];
+            for (int i = 0; i < binaryCodes.Length; i++)
+            {
+                binaryCodes[i] = new LongBits(a.Length);
+                for (int j = 0; j < a.Length; j++)
+                {
+                    binaryCodes[i][j] = a[j][i];
+                }
+            }
+            return binaryCodes;
         }
     }
 }
