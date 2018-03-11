@@ -52,10 +52,10 @@ namespace DigitalVoltmeter
         /// Вызов метода
         /// WordTools wt = new WordTools();
         /// wt.createDocumentWithFormules(b, processor.GetN(b.Length + 1),"D:\\test.docx");
-        public void createDocumentWithFormules(long[] b, int n, string path)
+        public void createDocumentWithFormules(LongBits[] b, out LongBits[] a, string path)
         {
             application = new Word.Application();
-            application.Visible = true;
+            application.Visible = false;
             try
             {
                 document = application.Documents.Add();
@@ -64,11 +64,13 @@ namespace DigitalVoltmeter
                 Word.Range _currentRange = document.Range(ref start, ref end);
                 _currentRange.PageSetup.Orientation = Word.WdOrientation.wdOrientLandscape;
 
-                long[] a = new long[n];
+                int n = MathProcessor.GetN(b.Length + 1);
+                a = new LongBits[n];
 
                 for (int i = a.Length-1; i >=0; i--)
                 {
                     _currentRange.Text += "a_" + i + " = (";
+                    a[i] = new LongBits(b[0].Length);
                     a[i] = ~a[i];
                     int kmax = (int)Math.Pow(2, n - 1 - i) - 1;
                     for (int k = 0; k <= kmax; k++)
@@ -95,6 +97,54 @@ namespace DigitalVoltmeter
                 document.Close();
                 application.Quit();
             }
+        }
+
+        /// <summary>
+        /// Создает временный файл .rtf из файла .docx для импорта в richTextBox
+        /// </summary>
+        /// <param name="docxFile">Путь к файлу .docx</param>
+        /// <returns>Путь к файлу .rtf</returns>
+        public static string GetRTFFromDOCXFile(string docxFile)
+        {
+            Word.Application app = new Word.Application();
+            string rtfFileName;
+            object missing = Type.Missing;
+            try
+            {
+                app.Documents.Open(docxFile,
+                    missing, missing, missing, missing, missing,
+                    missing, missing, missing, missing, missing,
+                    missing, missing, missing, missing, missing);
+                string temp = System.IO.Path.GetTempPath();
+                int safeNameStartindex = docxFile.LastIndexOf('\\') + 1;
+                rtfFileName = docxFile.Substring(safeNameStartindex, docxFile.Length - ".docx".Length - safeNameStartindex);
+                rtfFileName += ".rtf";
+                rtfFileName = temp + rtfFileName;
+
+                #region permissions
+                object lookComments = false;
+                object password = string.Empty;
+                object AddToRecentFiles = true;
+                object WritePassword = string.Empty;
+                object ReadOnlyRecommended = false;
+                object EmbedTrueTypeFonts = false;
+                object SaveFormsData = false;
+                object SaveAsAOCELetter = false;
+                #endregion
+
+                app.ActiveDocument.SaveAs(rtfFileName, Word.WdSaveFormat.wdFormatRTF,
+                    lookComments, password, AddToRecentFiles, WritePassword,
+                    ReadOnlyRecommended, EmbedTrueTypeFonts, missing, SaveFormsData,
+                    SaveAsAOCELetter, missing, missing, missing, missing, missing);
+
+
+            }
+            finally
+            {
+                app.ActiveDocument.Close(false, missing, missing);
+                app.Quit(false, missing, missing);
+            }
+            return rtfFileName;
         }
     }
 }

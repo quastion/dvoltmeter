@@ -13,7 +13,7 @@ namespace DigitalVoltmeter
         /// </summary>
         /// <param name="value">Количество резисторов</param>
         /// <returns>Количество разрядов</returns>
-        public int GetN(int value)
+        public static int GetN(int value)
         {
             return (int)Math.Ceiling(Math.Log(value, 2));
         }

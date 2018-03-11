@@ -47,29 +47,26 @@ namespace DigitalVoltmeter
             singleCodes = processor.SingleCodes(bitsCount);
             LongBits[] ec = processor.GetElementsFromSingleCodes(singleCodes);
             b = processor.GetAllEPKFromEK(ec);
-            string[] formules = processor.Formules(b, out a);
+            if (checkBoxOutToWord.Checked)
+            {
+                string wordFilePath = Environment.CurrentDirectory + "\\Formules[" + (b.Length + 1) + "].docx";
+                new WordTools().createDocumentWithFormules(b,out a,wordFilePath);
+                FillRichTextBoxFromWord(wordFilePath);
+            }
+            else
+            {
+                string[] formules = processor.Formules(b, out a);
 
-            for (int i = 0; i < formules.Length; i++)
-                richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
-
-            //FillRichTextBoxFromWord();
+                for (int i = 0; i < formules.Length; i++)
+                    richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
+            }
         }
 
-        private void FillRichTextBoxFromWord()
+        private void FillRichTextBoxFromWord(string docxFile)
         {
             richTextBox.Text = string.Empty;
             string rtfPath = string.Empty;
-            {//переделать под статичный путь, когда подкатит экспорт формул в Word
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "MS Word documents (*.docx)|*.docx|Rich text format (*.rtf)|*.rtf";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    if (openFileDialog.FilterIndex == 1)
-                        rtfPath = WordTools.GetRTFFromDOCXFile(openFileDialog.FileName);
-                    else if (openFileDialog.FilterIndex == 2)
-                        rtfPath = openFileDialog.FileName;
-                }
-            }
+            rtfPath = WordTools.GetRTFFromDOCXFile(docxFile);
             richTextBox.LoadFile(rtfPath);
         }
 
