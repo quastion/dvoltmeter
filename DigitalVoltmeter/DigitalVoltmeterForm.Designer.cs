@@ -80,7 +80,7 @@
             // 
             this.buttonSaveToExel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSaveToExel.Location = new System.Drawing.Point(11, 312);
-            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonSaveToExel.Name = "buttonSaveToExel";
             this.buttonSaveToExel.Size = new System.Drawing.Size(110, 38);
             this.buttonSaveToExel.TabIndex = 8;
@@ -104,7 +104,7 @@
             "512",
             "1024"});
             this.comboBoxResistorsCount.Location = new System.Drawing.Point(207, 53);
-            this.comboBoxResistorsCount.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBoxResistorsCount.Margin = new System.Windows.Forms.Padding(2);
             this.comboBoxResistorsCount.Name = "comboBoxResistorsCount";
             this.comboBoxResistorsCount.Size = new System.Drawing.Size(82, 21);
             this.comboBoxResistorsCount.TabIndex = 14;
@@ -123,6 +123,7 @@
             this.richTextBox.Size = new System.Drawing.Size(520, 197);
             this.richTextBox.TabIndex = 7;
             this.richTextBox.Text = "";
+            this.richTextBox.WordWrap = false;
             // 
             // checkBoxOutToWord
             // 
