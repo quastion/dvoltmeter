@@ -12,11 +12,10 @@ namespace DigitalVoltmeter
 {
     public partial class DigitalVoltmeterForm : Form
     {
-        private MathProcessor processor;
         private ExcelTools excel;
         private WordTools word;
 
-        private LongBits[] singleCodes;
+        private LongBits[] e;
         private LongBits[] b;
         private LongBits[] a;
 
@@ -25,17 +24,16 @@ namespace DigitalVoltmeter
             InitializeComponent();
             excel = new ExcelTools(progressBar);
             word = new WordTools(progressBar);
-            processor = new MathProcessor();
         }
 
         private void buttonSaveToExel_Click(object sender, EventArgs e)
         {
-            if (singleCodes == null || b == null || processor == null)
+            if (this.e == null || b == null)
                 throw new Exception("Необходимо сгенерировать уравнения!");
 
-            string[] singleCodesString = singleCodes.Select(val => val.ToString()).ToArray();
+            string[] singleCodesString = this.e.Select(val => val.ToString()).ToArray();
             string[] bString = b.Select(val => val.ToString()).ToArray();
-            string[] binaryString = processor.GetBinaryCodesFromElements(a)
+            string[] binaryString = MathProcessor.TransposeBitMatrix(a)
                                        .Select(val => val.ToString()).ToArray();
             excel.GenerateDocument(singleCodesString, bString, binaryString);
             progressBar.Value = 0;
@@ -46,9 +44,8 @@ namespace DigitalVoltmeter
             int bitsCount = int.Parse(comboBoxResistorsCount.Text);
             richTextBox.Text = string.Empty;
 
-            singleCodes = processor.SingleCodes(bitsCount);
-            LongBits[] ec = processor.GetElementsFromSingleCodes(singleCodes);
-            b = processor.GetAllEPKFromEK(ec);
+            this.e = MathProcessor.GetAllEK(bitsCount);
+            b = MathProcessor.GetAllEPKFromEK(this.e);
 
             if (checkBoxOutToWord.Checked)
             {
@@ -59,7 +56,17 @@ namespace DigitalVoltmeter
             }
             else
             {
-                string[] formules = processor.Formules(b, out a);
+                //string[] formules = MathProcessor.Formules(b, out a);
+
+                //for (int i = 0; i < formules.Length; i++)
+                //    richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
+
+                //---> здесь были тесты нового функционала (ДА - ОНО РАБОТАЕТ)
+                DACEmulator dac = new DACEmulator(8, 1000, 0, 0, 0);
+                LongBits eeeboy = dac.GetEKFromComparators(254);
+                LongBits bbbboy = MathProcessor.GetEPKFromEK(eeeboy);
+                LongBits aaaboy;
+                string[] formules = MathProcessor.Formules(bbbboy, out aaaboy);
 
                 for (int i = 0; i < formules.Length; i++)
                     richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;

@@ -68,7 +68,7 @@ namespace DigitalVoltmeter
         /// <summary>
         /// Создание документа docx с формулами ai
         /// </summary>
-        /// <param name="b">Массив состовляющих ЕПК</param>
+        /// <param name="transpB">Массив состовляющих ЕПК</param>
         /// <param name="a">ДК</param>
         /// <param name="path">Путь к результирующему файлу</param>
         public void GenerateDocument(LongBits[] b, out LongBits[] a, string path)
@@ -79,14 +79,15 @@ namespace DigitalVoltmeter
                 document = application.Documents.Add();
                 document.Range(0, 0).PageSetup.Orientation = WdOrientation.wdOrientLandscape;
 
-                int n = MathProcessor.GetN(b.Length + 1);
+                LongBits[] transpB = MathProcessor.TransposeBitMatrix(b);
+                int n = MathProcessor.GetN(transpB.Length + 1);
                 a = new LongBits[n];
                 SetMaxValueBar(n);
 
                 for (int i = n - 1; i >= 0; i--)
                 {
                     List<string> formules = new List<string>();
-                    a[i] = new LongBits(b[0].Length);
+                    a[i] = new LongBits(transpB[0].Length);
                     a[i] = ~a[i];
                     int kmax = (int)Math.Pow(2, n - 1 - i) - 1;
                     for (int k = 0; k <= kmax; k++)
@@ -98,7 +99,7 @@ namespace DigitalVoltmeter
                             if (formules.Count == 0 || formules[formules.Count - 1].Length > 250)
                                 formules.Add(string.Empty);
                             formules[formules.Count - 1] += " b_" + t + notSign + " ";
-                            a[i] &= ~b[t - 1];
+                            a[i] &= ~transpB[t - 1];
                         }
                     }
                     a[i] = ~a[i];

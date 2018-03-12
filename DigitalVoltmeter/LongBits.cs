@@ -26,6 +26,21 @@ namespace DigitalVoltmeter
                 bitsString.Append("0");
         }
 
+        public LongBits(int number, int countBits)
+        {
+            if (countBits < 1)
+                throw new ArgumentException();
+
+            bitsString = new StringBuilder();
+            bitsString.Append(Convert.ToString(number, 2));
+
+            if (bitsString.Length > countBits)
+                bitsString.Remove(0, bitsString.Length - countBits);
+
+            while (bitsString.Length < countBits)
+                bitsString.Insert(0, "0");
+        }
+
         public int this[int index]
         {
             get
@@ -42,6 +57,14 @@ namespace DigitalVoltmeter
                     throw new ArgumentException();
                 bitsString[bitsString.Length - 1 - index] = (value == 0) ? '0' : '1';
             }
+        }
+
+        public int Negative(int index)
+        {
+            if (index < 0 || index >= bitsString.Length)
+                throw new IndexOutOfRangeException();
+            int value = (int)Char.GetNumericValue(bitsString[bitsString.Length - 1 - index]);
+            return value == 1 ? 0 : 1;
         }
 
         public int Length
