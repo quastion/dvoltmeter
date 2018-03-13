@@ -87,7 +87,7 @@ namespace DigitalVoltmeter
             workSheet.Cells[rowStartingNum, 2] = "Единичный код";
             rowStartingNum++;
             //Вывод значений единичных кодов
-            printTable(singleCodes, rowStartingNum, columnStartingNum, workSheet, "e", 1);
+            printTable(singleCodes, rowStartingNum, columnStartingNum, workSheet, "e", 0);
 
             //Таблица с единичным позиционным кодом
             columnStartingNum += singleCodes.Length - 1;
@@ -108,12 +108,12 @@ namespace DigitalVoltmeter
             {
                 for (int j = 0; j < b[i].Length; j++)
                 {
-                    workSheet.Cells[rowStartingNum + j, columnStartingNum + i + 1] =
+                    workSheet.Cells[rowStartingNum + i, columnStartingNum + j + 1] =
                         b[i][b[i].Length - 1 - j].ToString();
-                    workSheet.get_Range(GetCellName(columnStartingNum + i, rowStartingNum + j),
+                    workSheet.get_Range(GetCellName(columnStartingNum + j, rowStartingNum + i ),
                         Missing.Value).Interior.ColorIndex = colorIndexGeneral1;
-                    ChangeCellFillingColor(ref colorIndexGeneral1, 2, 15);
                 }
+                    ChangeCellFillingColor(ref colorIndexGeneral1, 2, 15);
                 PerformStepBar();
 
             }
