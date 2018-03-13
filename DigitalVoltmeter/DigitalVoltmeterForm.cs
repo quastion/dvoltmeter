@@ -41,10 +41,10 @@ namespace DigitalVoltmeter
 
         private void buttonGetFormules_Click(object sender, EventArgs e)
         {
-            int bitsCount = int.Parse(comboBoxResistorsCount.Text);
+            int bitsCount = int.Parse(textBoxN.Text);
             richTextBox.Text = string.Empty;
 
-            this.e = MathProcessor.GetAllEK(bitsCount);
+            this.e = MathProcessor.GetAllEK((int)Math.Pow(2, bitsCount));
             b = MathProcessor.GetAllEPKFromEK(this.e);
 
             if (checkBoxOutToWord.Checked)
@@ -91,5 +91,7 @@ namespace DigitalVoltmeter
             if (excel != null)
                 excel.Dispose();
         }
+
+        
     }
 }
