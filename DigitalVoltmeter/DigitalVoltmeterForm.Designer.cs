@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
@@ -38,7 +38,6 @@
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.checkBoxOutToWord = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.textBoxN = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxK = new System.Windows.Forms.TextBox();
@@ -54,8 +53,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.listBoxOutputA = new System.Windows.Forms.ListBox();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.mainChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainChart)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar
@@ -142,22 +142,6 @@
             this.label3.Size = new System.Drawing.Size(308, 13);
             this.label3.TabIndex = 16;
             this.label3.Text = "Формулы связи между ЕПК и выходным двоичным кодом.\r\n";
-            // 
-            // chart1
-            // 
-            this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.chart1.Location = new System.Drawing.Point(107, 40);
-            this.chart1.Name = "chart1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(528, 299);
-            this.chart1.TabIndex = 17;
-            this.chart1.Text = "chart1";
-            title2.Name = "Title1";
-            title2.Text = "Выходное напряжение";
-            this.chart1.Titles.Add(title2);
             // 
             // textBoxN
             // 
@@ -259,11 +243,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxInputX.FormattingEnabled = true;
-            this.listBoxInputX.Items.AddRange(new object[] {
-            "00000000",
-            "00000001",
-            "00000010",
-            "00000011"});
             this.listBoxInputX.Location = new System.Drawing.Point(3, 17);
             this.listBoxInputX.Name = "listBoxInputX";
             this.listBoxInputX.Size = new System.Drawing.Size(165, 108);
@@ -305,21 +284,33 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxOutputA.FormattingEnabled = true;
-            this.listBoxOutputA.Items.AddRange(new object[] {
-            "00000000",
-            "00000001",
-            "00000010",
-            "00000011"});
             this.listBoxOutputA.Location = new System.Drawing.Point(3, 152);
             this.listBoxOutputA.Name = "listBoxOutputA";
             this.listBoxOutputA.Size = new System.Drawing.Size(165, 134);
             this.listBoxOutputA.TabIndex = 33;
+            // 
+            // mainChart
+            // 
+            this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea2.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea2);
+            this.mainChart.Location = new System.Drawing.Point(107, 50);
+            this.mainChart.Name = "mainChart";
+            this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.mainChart.Size = new System.Drawing.Size(539, 276);
+            this.mainChart.TabIndex = 33;
+            title2.Name = "Title1";
+            title2.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title2);
             // 
             // DigitalVoltmeterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(849, 561);
+            this.Controls.Add(this.mainChart);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxDUsm);
@@ -331,7 +322,6 @@
             this.Controls.Add(this.textBoxK);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxN);
-            this.Controls.Add(this.chart1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBoxOutToWord);
             this.Controls.Add(this.richTextBox);
@@ -344,9 +334,9 @@
             this.Name = "DigitalVoltmeterForm";
             this.Text = "DigitalVoltmeter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DigitalVoltmeterForm_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainChart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -362,7 +352,6 @@
         private System.Windows.Forms.RichTextBox richTextBox;
         private System.Windows.Forms.CheckBox checkBoxOutToWord;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.TextBox textBoxN;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxK;
@@ -378,6 +367,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ListBox listBoxOutputA;
+        private System.Windows.Forms.DataVisualization.Charting.Chart mainChart;
     }
 }
 
