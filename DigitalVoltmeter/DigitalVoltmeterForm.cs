@@ -28,8 +28,8 @@ namespace DigitalVoltmeter
 
         private void buttonSaveToExel_Click(object sender, EventArgs e)
         {
-            if (this.e == null || b == null)
-                throw new Exception("Необходимо сгенерировать уравнения!");
+            if (this.e == null || b == null || a == null)
+                throw new Exception("Should be generate the equations!");
 
             string[] singleCodesString = this.e.Select(val => val.ToString()).ToArray();
             string[] bString = b.Select(val => val.ToString()).ToArray();
