@@ -21,6 +21,10 @@ namespace DigitalVoltmeter
         private LongBits[] b;
         private LongBits[] a;
 
+        private double[] voltages;
+
+        private GraphExpandingForm expandingForm = new GraphExpandingForm();
+
         public DigitalVoltmeterForm()
         {
             InitializeComponent();
@@ -94,6 +98,61 @@ namespace DigitalVoltmeter
                 excel.Dispose();
         }
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int N = 0, K = 0, DK = 0, Di = 0;
+            double DUsm = 0;
+            try
+            {
+                N = int.Parse(textBoxN.Text);
+                K = int.Parse(textBoxK.Text);
+                DK = int.Parse(textBoxDK.Text);
+                Di = int.Parse(textBoxDi.Text);
+                DUsm = double.Parse(textBoxDUsm.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Input parameters have wrong values!");
+                return;
+            }
+
+            DACEmulator emulator = new DACEmulator(N, K, DK, Di, DUsm);
+            double quantStep = emulator.QuantStep;
+            double deltaUsm = 0;
+            voltages = new double[(int)Math.Pow(2, N) - 1];
+            for (int i = 0; i < voltages.Length; i++)
+                voltages[i] = quantStep * (i + 1) + deltaUsm;
+            ChartService chartService = new ChartService(mainChart);
+            chartService.drawInputVoltageList(voltages, Color.Red, 1);
+
+            listBoxInputX.Items.Clear();
+            listBoxOutputA.Items.Clear();
+            for (int i = 1; i < (int)Math.Pow(2, N); i++)
+            {
+                LongBits ee = emulator.GetEKFromComparators(i);
+                LongBits bb = MathProcessor.GetEPKFromEK(ee);
+                LongBits aa;
+                string[] formules = MathProcessor.Formules(bb, out aa);
+                listBoxInputX.Items.Add(new LongBits(i, N).ToString());
+                listBoxOutputA.Items.Add(aa.ToString());
+            }
+        }
+
+        private void buttonExpand_Click(object sender, EventArgs e)
+        {
+            if (voltages == null)
+            {
+                MessageBox.Show("First generate the data!");
+                return;
+            }
+
+            if (!expandingForm.Visible)
+            {
+                expandingForm = new GraphExpandingForm();
+                ChartService chartService = new ChartService(expandingForm.Chart);
+                chartService.drawInputVoltageList(voltages, Color.Red, 1);
+                expandingForm.Show();
+            }
+        }
     }
 }

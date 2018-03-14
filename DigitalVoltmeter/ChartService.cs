@@ -37,6 +37,9 @@ namespace DigitalVoltmeter
             this.chart.ChartAreas[0].AxisX.Title = "N";
             this.chart.ChartAreas[0].AxisY.Title = "Uвх";
             this.chart.ChartAreas[0].AxisY.TextOrientation = TextOrientation.Horizontal;
+            Series series = chart.Series.FindByName("valtages");
+            if (series != null)
+                chart.Series.Remove(series);
             chart.Series.Add(valtageSeries);
         }
     }
