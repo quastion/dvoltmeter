@@ -45,21 +45,24 @@
             legend1.Name = "Legend1";
             this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(0, 0);
+            this.chart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.chart.Name = "chart";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart.Series.Add(series1);
-            this.chart.Size = new System.Drawing.Size(1179, 648);
+            this.chart.Size = new System.Drawing.Size(786, 421);
             this.chart.TabIndex = 0;
             this.chart.Text = "chart1";
             // 
             // GraphExpandingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1180, 648);
+            this.ClientSize = new System.Drawing.Size(787, 421);
             this.Controls.Add(this.chart);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(350, 200);
             this.Name = "GraphExpandingForm";
             this.Text = "График";
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -102,7 +102,7 @@
             // 
             this.buttonSaveToExel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSaveToExel.Location = new System.Drawing.Point(11, 527);
-            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonSaveToExel.Name = "buttonSaveToExel";
             this.buttonSaveToExel.Size = new System.Drawing.Size(110, 23);
             this.buttonSaveToExel.TabIndex = 8;
@@ -296,20 +296,20 @@
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea2);
             this.mainChart.Location = new System.Drawing.Point(107, 50);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.mainChart.Size = new System.Drawing.Size(539, 276);
             this.mainChart.TabIndex = 33;
-            title1.Name = "Title1";
-            title1.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title1);
+            title2.Name = "Title1";
+            title2.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title2);
             // 
             // buttonExpand
             // 
-            this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExpand.Location = new System.Drawing.Point(512, 332);
             this.buttonExpand.Name = "buttonExpand";
             this.buttonExpand.Size = new System.Drawing.Size(133, 23);
@@ -345,6 +345,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonSaveToExel);
             this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.MinimumSize = new System.Drawing.Size(666, 580);
             this.Name = "DigitalVoltmeterForm";
             this.Text = "DigitalVoltmeter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DigitalVoltmeterForm_FormClosed);
