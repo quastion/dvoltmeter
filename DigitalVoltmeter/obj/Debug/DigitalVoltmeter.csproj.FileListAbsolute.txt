@@ -57,3 +57,14 @@ C:\Users\autor\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmet
 C:\Users\autor\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.DigitalVoltmeterForm.resources
 C:\Users\autor\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Properties.Resources.resources
 C:\Users\autor\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource.Cache
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe.config
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.pdb
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csprojResolveAssemblyReference.cache
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.DigitalVoltmeterForm.resources
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.GraphExpandingForm.resources
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Properties.Resources.resources
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource.Cache
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
+C:\Users\chekh\Education\4 Курс\2 Семестр\Метрология\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb

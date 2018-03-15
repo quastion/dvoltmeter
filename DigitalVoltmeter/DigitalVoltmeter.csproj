@@ -71,7 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChartService.cs" />
+    <Compile Include="VoltageChartService.cs" />
     <Compile Include="DACEmulator.cs" />
     <Compile Include="DocumentTools.cs" />
     <Compile Include="ExcelTools.cs" />

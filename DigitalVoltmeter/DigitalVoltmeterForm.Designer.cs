@@ -47,7 +47,7 @@
             this.textBoxDi = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxDUsm = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonGetModel = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.listBoxInputX = new System.Windows.Forms.ListBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -98,9 +98,9 @@
             this.label1.Location = new System.Drawing.Point(9, 82);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 20);
+            this.label1.Size = new System.Drawing.Size(22, 20);
             this.label1.TabIndex = 9;
-            this.label1.Text = "N:";
+            this.label1.Text = "n:";
             // 
             // buttonSaveToExel
             // 
@@ -235,16 +235,16 @@
             this.textBoxDUsm.TabIndex = 26;
             this.textBoxDUsm.Text = "0";
             // 
-            // button1
+            // buttonGetModel
             // 
-            this.button1.Location = new System.Drawing.Point(14, 295);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(120, 75);
-            this.button1.TabIndex = 27;
-            this.button1.Text = "Получить модель";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonGetModel.Location = new System.Drawing.Point(14, 295);
+            this.buttonGetModel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonGetModel.Name = "buttonGetModel";
+            this.buttonGetModel.Size = new System.Drawing.Size(120, 55);
+            this.buttonGetModel.TabIndex = 27;
+            this.buttonGetModel.Text = "Получить модель";
+            this.buttonGetModel.UseVisualStyleBackColor = true;
+            this.buttonGetModel.Click += new System.EventHandler(this.buttonGetModel_Click);
             // 
             // label8
             // 
@@ -351,7 +351,7 @@
             this.Controls.Add(this.buttonExpand);
             this.Controls.Add(this.mainChart);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonGetModel);
             this.Controls.Add(this.textBoxDUsm);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxDi);
@@ -400,7 +400,7 @@
         private System.Windows.Forms.TextBox textBoxDi;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxDUsm;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonGetModel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ListBox listBoxInputX;
         private System.Windows.Forms.Label label9;

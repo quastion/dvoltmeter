@@ -5,10 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
-using System.Drawing;
 
 namespace DigitalVoltmeter
 {
@@ -62,17 +59,7 @@ namespace DigitalVoltmeter
             }
             else
             {
-                //string[] formules = MathProcessor.Formules(b, out a);
-
-                //for (int i = 0; i < formules.Length; i++)
-                //    richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
-
-                //---> здесь были тесты нового функционала (ДА - ОНО РАБОТАЕТ)
-                DACEmulator dac = new DACEmulator(8, 1000, 0, 0, 0);
-                LongBits eeeboy = dac.GetEKFromComparators(254);
-                LongBits bbbboy = MathProcessor.GetEPKFromEK(eeeboy);
-                LongBits aaaboy;
-                string[] formules = MathProcessor.Formules(bbbboy, out aaaboy);
+                string[] formules = MathProcessor.Formules(b, out a);
 
                 for (int i = 0; i < formules.Length; i++)
                     richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
@@ -87,28 +74,17 @@ namespace DigitalVoltmeter
             richTextBox.LoadFile(rtfPath);
         }
 
-        private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)
+        private void buttonGetModel_Click(object sender, EventArgs e)
         {
-            e.Handled = true;
-        }
-
-        private void DigitalVoltmeterForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (excel != null)
-                excel.Dispose();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            int N = 0, K = 0, DK = 0, Di = 0;
-            double DUsm = 0;
+            int n = 0, coeff = 0, deltaCoeff = 0, deltaIndex = 0;
+            double deltaSM = 0;
             try
             {
-                N = int.Parse(textBoxN.Text);
-                K = int.Parse(textBoxK.Text);
-                DK = int.Parse(textBoxDK.Text);
-                Di = int.Parse(textBoxDi.Text);
-                DUsm = double.Parse(textBoxDUsm.Text);
+                n = int.Parse(textBoxN.Text);
+                coeff = int.Parse(textBoxK.Text);
+                deltaCoeff = int.Parse(textBoxDK.Text);
+                deltaIndex = int.Parse(textBoxDi.Text);
+                deltaSM = double.Parse(textBoxDUsm.Text);
             }
             catch
             {
@@ -116,26 +92,23 @@ namespace DigitalVoltmeter
                 return;
             }
 
-            DACEmulator emulator = new DACEmulator(N, K, DK, Di, DUsm);
-            double quantStep = emulator.QuantStep;
-            double deltaUsm = 0;
-            voltages = new double[(int)Math.Pow(2, N) - 1];
-            for (int i = 0; i < voltages.Length; i++)
-                voltages[i] = quantStep * (i + 1) + deltaUsm;
-            ChartService chartService = new ChartService(mainChart);
-            chartService.drawInputVoltageList(voltages, Color.Red, 1);
+            DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            int countNumbers = (int)Math.Pow(2, n);
+            voltages = new double[countNumbers];
+            LongBits simpleCode, simplePositionCode, binaryCode;
 
             listBoxInputX.Items.Clear();
             listBoxOutputA.Items.Clear();
-            for (int i = 1; i < (int)Math.Pow(2, N); i++)
+            for (int x = 0; x < countNumbers; x++)
             {
-                LongBits ee = emulator.GetEKFromComparators(i);
-                LongBits bb = MathProcessor.GetEPKFromEK(ee);
-                LongBits aa;
-                string[] formules = MathProcessor.Formules(bb, out aa);
-                listBoxInputX.Items.Add(new LongBits(i, N).ToString());
-                listBoxOutputA.Items.Add(aa.ToString());
+                voltages[x] = emulator.Uin(x);
+                simpleCode = emulator.GetEKFromComparators(x);
+                simplePositionCode = MathProcessor.GetEPKFromEK(simpleCode);
+                binaryCode = MathProcessor.GetDK(simplePositionCode);
+                listBoxInputX.Items.Add(new LongBits(x, n));
+                listBoxOutputA.Items.Add(binaryCode);
             }
+            VoltageChartService.DrawInputVoltageList(mainChart, voltages, Color.Red, 2);
         }
 
         private void buttonExpand_Click(object sender, EventArgs e)
@@ -149,10 +122,21 @@ namespace DigitalVoltmeter
             if (!expandingForm.Visible)
             {
                 expandingForm = new GraphExpandingForm();
-                ChartService chartService = new ChartService(expandingForm.Chart);
-                chartService.drawInputVoltageList(voltages, Color.Red, 1);
+                expandingForm.Chart.Series.Clear();
+                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, voltages, Color.Red, 2);
                 expandingForm.Show();
             }
+        }
+
+        private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void DigitalVoltmeterForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (excel != null)
+                excel.Dispose();
         }
     }
 }
