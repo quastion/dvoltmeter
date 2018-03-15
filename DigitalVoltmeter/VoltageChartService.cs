@@ -19,7 +19,7 @@ namespace DigitalVoltmeter
         /// <param name="width">ширина линии</param>
         public static void DrawInputVoltageList(Chart chart, double[] valtages, Color color, int width)
         {
-            Series valtageSeries = new Series("valtages");
+            Series valtageSeries = new Series("voltages");
             valtageSeries.ChartType = SeriesChartType.StepLine;
             valtageSeries.Color = color;
             valtageSeries.BorderWidth = width;
@@ -31,7 +31,7 @@ namespace DigitalVoltmeter
             chart.ChartAreas[0].AxisX.Title = "X";
             chart.ChartAreas[0].AxisY.Title = "Uвх";
             chart.ChartAreas[0].AxisY.TextOrientation = TextOrientation.Horizontal;
-            Series series = chart.Series.FindByName("valtages");
+            Series series = chart.Series.FindByName("voltages");
             if (series != null)
                 chart.Series.Remove(series);
             chart.Series.Add(valtageSeries);
