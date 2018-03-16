@@ -34,16 +34,19 @@ namespace DigitalVoltmeter
         {
             dataGridViewVect.Columns.Clear();
 
+            DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn
+            {
+                Name = "Вход",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
 
-            DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn();
-            _in.Name = "Вход";
-            _in.SortMode = DataGridViewColumnSortMode.NotSortable;
-            _in.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-            DataGridViewTextBoxColumn _out = new DataGridViewTextBoxColumn();
-            _out.Name = "Выход";
-            _out.SortMode = DataGridViewColumnSortMode.NotSortable;
-            _out.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            DataGridViewTextBoxColumn _out = new DataGridViewTextBoxColumn
+            {
+                Name = "Выход",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
 
             dataGridViewVect.Columns.Add(_in);
             dataGridViewVect.Columns.Add(_out);
@@ -82,7 +85,6 @@ namespace DigitalVoltmeter
             else
             {
                 string[] formules = MathProcessor.Formules(b, out a);
-
                 for (int i = 0; i < formules.Length; i++)
                     richTextBox.Text += "a" + i + " =" + formules[i] + Environment.NewLine;
             }
@@ -117,22 +119,18 @@ namespace DigitalVoltmeter
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
             int countNumbers = (int)Math.Pow(2, n);
             voltages = new double[countNumbers];
-            LongBits simpleCode, simplePositionCode, binaryCode;
-
             dataGridViewVect.Rows.Clear();
             for (int x = 0; x < countNumbers; x++)
             {
                 voltages[x] = emulator.Uin(x);
-                simpleCode = emulator.GetEKFromComparators(x);
-                simplePositionCode = MathProcessor.GetEPKFromEK(simpleCode);
-                binaryCode = MathProcessor.GetDK(simplePositionCode);
+                LongBits binaryCode = emulator.GetDKFromComparators(x);
                 LongBits inCode = new LongBits(x, n);
                 dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode });
                 if (inCode != binaryCode)
                     foreach (DataGridViewCell cell in dataGridViewVect.Rows[x].Cells)
                         cell.Style.BackColor = Color.Tomato;
             }
-            VoltageChartService.DrawInputVoltageList(mainChart, voltages, Color.Red, 2);
+            VoltageChartService.DrawInputVoltageList(mainChart, "voltages", voltages, Color.Red, 2);
         }
 
         private void buttonExpand_Click(object sender, EventArgs e)
@@ -147,7 +145,7 @@ namespace DigitalVoltmeter
             {
                 expandingForm = new GraphExpandingForm();
                 expandingForm.Chart.Series.Clear();
-                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, voltages, Color.Red, 2);
+                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, "voltages", voltages, Color.Red, 2);
                 expandingForm.Show();
             }
         }
