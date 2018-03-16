@@ -12,7 +12,7 @@ namespace DigitalVoltmeter
     public partial class DigitalVoltmeterForm : Form
     {
         Color errorCellBackColor = Color.Pink;
-        Color errorCellTextColor = Color.Firebrick;
+        Color errorCellTextColor = Color.OrangeRed;
 
         /// <summary>
         /// Отсортированные списки индексов ошибочных бит ячеек Выхода
@@ -42,36 +42,41 @@ namespace DigitalVoltmeter
         {
             dataGridViewVect.Columns.Clear();
 
-<<<<<<< HEAD
-            DataGridViewTextBoxColumn _num = new DataGridViewTextBoxColumn();
-            _num.Name = "№";
-            _num.SortMode = DataGridViewColumnSortMode.NotSortable;
-            _num.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-=======
+            DataGridViewTextBoxColumn _num = new DataGridViewTextBoxColumn
+            {
+                Name = "№",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+
             DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn
             {
                 Name = "Вход",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
->>>>>>> 80c1c35660355b40fc8af46632a746554f09dde2
 
             DataGridViewTextBoxColumn _out = new DataGridViewTextBoxColumn
             {
                 Name = "Выход",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                Width = 0
+            };
+
+            DataGridViewTextBoxColumn _inDes = new DataGridViewTextBoxColumn
+            {
+                Name = "Вход 10",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
 
-            DataGridViewTextBoxColumn _inDes = new DataGridViewTextBoxColumn();
-            _inDes.Name = "Вход 10";
-            _inDes.SortMode = DataGridViewColumnSortMode.NotSortable;
-            _inDes.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-            DataGridViewTextBoxColumn _outDes = new DataGridViewTextBoxColumn();
-            _outDes.Name = "Выход 10";
-            _outDes.SortMode = DataGridViewColumnSortMode.NotSortable;
-            _outDes.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            DataGridViewTextBoxColumn _outDes = new DataGridViewTextBoxColumn
+            {
+                Name = "Выход 10",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
 
             dataGridViewVect.Columns.Add(_num);
             dataGridViewVect.Columns.Add(_in);
@@ -147,25 +152,35 @@ namespace DigitalVoltmeter
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
             int countNumbers = (int)Math.Pow(2, n);
             voltages = new double[countNumbers];
+
             dataGridViewVect.Rows.Clear();
+            errorBitIndexes = new List<List<int>>() { };
             for (int x = 0; x < countNumbers; x++)
             {
                 voltages[x] = emulator.Uin(x);
                 LongBits binaryCode = emulator.GetDKFromComparators(x);
                 LongBits inCode = new LongBits(x, n);
 
+                List<int> diffs;
+                bool error = !GetIndexesOfDiffs(inCode, binaryCode, out diffs);
+                errorBitIndexes.Add(diffs);
                 dataGridViewVect.Rows.Add(new object[] { x, inCode, binaryCode });
-                if (inCode != binaryCode)
-<<<<<<< HEAD
+                if (error)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
-=======
-                {
-                    foreach (DataGridViewCell cell in dataGridViewVect.Rows[x].Cells)
-                        cell.Style.BackColor = Color.Tomato;
-                }
->>>>>>> 80c1c35660355b40fc8af46632a746554f09dde2
             }
             VoltageChartService.DrawInputVoltageList(mainChart, "Voltages", voltages, Color.Red, 2);
+        }
+
+        bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
+        {//Все таки пришлось циклом сравнить. Ваня, не бей(
+            diffs = null;
+            if (first.Length != second.Length) return first == second;
+            diffs = new List<int>() { };
+            string sf = first.ToString();
+            string ss = second.ToString();
+            for (int i = 0; i < sf.Length; i++)
+                if (sf[i] != ss[i]) diffs.Add(i);
+            return diffs.Count == 0;
         }
 
         private void buttonExpand_Click(object sender, EventArgs e)
@@ -241,7 +256,8 @@ namespace DigitalVoltmeter
 
                     errorState = !errorState;
                 }
-
+                int cellWidth = curBox.Location.X - e.CellBounds.Location.X + curBox.Width + 5;
+                dataGridViewVect.Columns[2].Width = Math.Max(dataGridViewVect.Columns[2].Width, cellWidth);
                 e.Handled = true;
             }
         }
