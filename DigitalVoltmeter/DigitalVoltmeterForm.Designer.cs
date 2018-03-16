@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title7 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -231,23 +231,23 @@
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea1);
+            chartArea7.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea7);
             this.mainChart.Location = new System.Drawing.Point(107, 50);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.mainChart.Size = new System.Drawing.Size(539, 276);
+            this.mainChart.Size = new System.Drawing.Size(462, 276);
             this.mainChart.TabIndex = 33;
-            title1.Name = "Title1";
-            title1.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title1);
+            title7.Name = "Title1";
+            title7.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title7);
             // 
             // buttonExpand
             // 
             this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExpand.Location = new System.Drawing.Point(512, 332);
+            this.buttonExpand.Location = new System.Drawing.Point(473, 332);
             this.buttonExpand.Name = "buttonExpand";
-            this.buttonExpand.Size = new System.Drawing.Size(133, 23);
+            this.buttonExpand.Size = new System.Drawing.Size(96, 23);
             this.buttonExpand.TabIndex = 34;
             this.buttonExpand.Text = "Раскрыть график";
             this.buttonExpand.UseVisualStyleBackColor = true;
@@ -263,14 +263,17 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewVect.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dataGridViewVect.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVect.Location = new System.Drawing.Point(652, 12);
+            this.dataGridViewVect.Location = new System.Drawing.Point(575, 12);
+            this.dataGridViewVect.MultiSelect = false;
             this.dataGridViewVect.Name = "dataGridViewVect";
             this.dataGridViewVect.ReadOnly = true;
             this.dataGridViewVect.RowHeadersVisible = false;
-            this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridViewVect.ShowCellToolTips = false;
-            this.dataGridViewVect.Size = new System.Drawing.Size(185, 367);
+            this.dataGridViewVect.Size = new System.Drawing.Size(262, 367);
             this.dataGridViewVect.TabIndex = 35;
+            this.dataGridViewVect.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewVect_CellPainting);
+            this.dataGridViewVect.SelectionChanged += new System.EventHandler(this.dataGridViewVect_SelectionChanged);
             // 
             // DigitalVoltmeterForm
             // 

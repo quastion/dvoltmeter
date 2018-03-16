@@ -11,6 +11,14 @@ namespace DigitalVoltmeter
 {
     public partial class DigitalVoltmeterForm : Form
     {
+        Color errorCellBackColor = Color.Pink;
+        Color errorCellTextColor = Color.Firebrick;
+
+        /// <summary>
+        /// Отсортированные списки индексов ошибочных бит ячеек Выхода
+        /// </summary>
+        List<List<int>> errorBitIndexes = new List<List<int>>() { };
+
         private ExcelTools excel;
         private WordTools word;
 
@@ -34,6 +42,10 @@ namespace DigitalVoltmeter
         {
             dataGridViewVect.Columns.Clear();
 
+            DataGridViewTextBoxColumn _num = new DataGridViewTextBoxColumn();
+            _num.Name = "№";
+            _num.SortMode = DataGridViewColumnSortMode.NotSortable;
+            _num.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
             DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn();
             _in.Name = "Вход";
@@ -45,8 +57,21 @@ namespace DigitalVoltmeter
             _out.SortMode = DataGridViewColumnSortMode.NotSortable;
             _out.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
+            DataGridViewTextBoxColumn _inDes = new DataGridViewTextBoxColumn();
+            _inDes.Name = "Вход 10";
+            _inDes.SortMode = DataGridViewColumnSortMode.NotSortable;
+            _inDes.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            DataGridViewTextBoxColumn _outDes = new DataGridViewTextBoxColumn();
+            _outDes.Name = "Выход 10";
+            _outDes.SortMode = DataGridViewColumnSortMode.NotSortable;
+            _outDes.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            dataGridViewVect.Columns.Add(_num);
             dataGridViewVect.Columns.Add(_in);
             dataGridViewVect.Columns.Add(_out);
+            dataGridViewVect.Columns.Add(_inDes);
+            dataGridViewVect.Columns.Add(_outDes);
 
             dataGridViewVect.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
         }
@@ -127,10 +152,10 @@ namespace DigitalVoltmeter
                 simplePositionCode = MathProcessor.GetEPKFromEK(simpleCode);
                 binaryCode = MathProcessor.GetDK(simplePositionCode);
                 LongBits inCode = new LongBits(x, n);
-                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode });
+
+                dataGridViewVect.Rows.Add(new object[] { x, inCode, binaryCode });
                 if (inCode != binaryCode)
-                    foreach (DataGridViewCell cell in dataGridViewVect.Rows[x].Cells)
-                        cell.Style.BackColor = Color.Tomato;
+                    dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
             VoltageChartService.DrawInputVoltageList(mainChart, voltages, Color.Red, 2);
         }
@@ -161,6 +186,56 @@ namespace DigitalVoltmeter
         {
             if (excel != null)
                 excel.Dispose();
+        }
+
+        private void dataGridViewVect_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridViewVect.ClearSelection();//всем привет, я костыль
+        }
+
+        void MarkCellErrors()
+        {
+        }
+
+        private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == 2 && e.RowIndex >= 0 && errorBitIndexes.ElementAtOrDefault(e.RowIndex) != null)
+            {//кастомная отрисовка ячеек Выхода
+                e.PaintBackground(e.ClipBounds, true);
+
+                Font font = e.CellStyle.Font;
+                Font errorFont = new Font(font, FontStyle.Bold);
+                TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+
+                string text = (string)e.FormattedValue;
+
+                List<string> subStrings = new List<string>() { };
+                int curInd = 0;
+                foreach (int ind in errorBitIndexes[e.RowIndex])
+                {
+                    subStrings.Add(text.Substring(curInd, ind - curInd));
+                    subStrings.Add(text.Substring(ind, 1));
+                    curInd = ind + 1;
+                }
+                subStrings.Add(text.Substring(curInd, text.Length - curInd));
+
+                bool errorState = false;
+                Size size;
+                Rectangle curBox = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, 0, e.CellBounds.Height);
+                for (int i = 0; i < subStrings.Count; i++)
+                {
+                    Font curFont = errorState ? errorFont : font;
+                    Color curColor = errorState ? errorCellTextColor : e.CellStyle.ForeColor;
+
+                    size = TextRenderer.MeasureText(e.Graphics, subStrings[i], curFont, e.CellBounds.Size, flags);
+                    curBox = new Rectangle(curBox.X + curBox.Width, curBox.Y, size.Width, curBox.Height);
+                    TextRenderer.DrawText(e.Graphics, subStrings[i], curFont, curBox, curColor, flags);
+
+                    errorState = !errorState;
+                }
+
+                e.Handled = true;
+            }
         }
     }
 }
