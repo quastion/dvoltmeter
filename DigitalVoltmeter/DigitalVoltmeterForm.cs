@@ -25,8 +25,30 @@ namespace DigitalVoltmeter
         public DigitalVoltmeterForm()
         {
             InitializeComponent();
+            initializeDataGrid();
             excel = new ExcelTools(progressBar);
             word = new WordTools(progressBar);
+        }
+
+        void initializeDataGrid()
+        {
+            dataGridViewVect.Columns.Clear();
+
+
+            DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn();
+            _in.Name = "Вход";
+            _in.SortMode = DataGridViewColumnSortMode.NotSortable;
+            _in.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            DataGridViewTextBoxColumn _out = new DataGridViewTextBoxColumn();
+            _out.Name = "Выход";
+            _out.SortMode = DataGridViewColumnSortMode.NotSortable;
+            _out.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            dataGridViewVect.Columns.Add(_in);
+            dataGridViewVect.Columns.Add(_out);
+
+            dataGridViewVect.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
         }
 
         private void buttonSaveToExel_Click(object sender, EventArgs e)
@@ -97,16 +119,18 @@ namespace DigitalVoltmeter
             voltages = new double[countNumbers];
             LongBits simpleCode, simplePositionCode, binaryCode;
 
-            listBoxInputX.Items.Clear();
-            listBoxOutputA.Items.Clear();
+            dataGridViewVect.Rows.Clear();
             for (int x = 0; x < countNumbers; x++)
             {
                 voltages[x] = emulator.Uin(x);
                 simpleCode = emulator.GetEKFromComparators(x);
                 simplePositionCode = MathProcessor.GetEPKFromEK(simpleCode);
                 binaryCode = MathProcessor.GetDK(simplePositionCode);
-                listBoxInputX.Items.Add(new LongBits(x, n));
-                listBoxOutputA.Items.Add(binaryCode);
+                LongBits inCode = new LongBits(x, n);
+                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode });
+                if (inCode != binaryCode)
+                    foreach (DataGridViewCell cell in dataGridViewVect.Rows[x].Cells)
+                        cell.Style.BackColor = Color.Tomato;
             }
             VoltageChartService.DrawInputVoltageList(mainChart, voltages, Color.Red, 2);
         }

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -48,15 +48,11 @@
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxDUsm = new System.Windows.Forms.TextBox();
             this.buttonGetModel = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.listBoxInputX = new System.Windows.Forms.ListBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.listBoxOutputA = new System.Windows.Forms.ListBox();
             this.mainChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonExpand = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.dataGridViewVect = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.mainChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVect)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar
@@ -230,82 +226,21 @@
             this.buttonGetModel.UseVisualStyleBackColor = true;
             this.buttonGetModel.Click += new System.EventHandler(this.buttonGetModel_Click);
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(100, 13);
-            this.label8.TabIndex = 28;
-            this.label8.Text = "Входные векторы:";
-            // 
-            // listBoxInputX
-            // 
-            this.listBoxInputX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxInputX.FormattingEnabled = true;
-            this.listBoxInputX.Location = new System.Drawing.Point(3, 17);
-            this.listBoxInputX.Name = "listBoxInputX";
-            this.listBoxInputX.Size = new System.Drawing.Size(165, 108);
-            this.listBoxInputX.TabIndex = 30;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 133);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(108, 13);
-            this.label9.TabIndex = 31;
-            this.label9.Text = "Выходные векторы:";
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.11236F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 89.88764F));
-            this.tableLayoutPanel1.Controls.Add(this.listBoxOutputA, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.listBoxInputX, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label9, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label8, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(666, 40);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.59603F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.40398F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 149F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(171, 299);
-            this.tableLayoutPanel1.TabIndex = 32;
-            // 
-            // listBoxOutputA
-            // 
-            this.listBoxOutputA.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxOutputA.FormattingEnabled = true;
-            this.listBoxOutputA.Location = new System.Drawing.Point(3, 152);
-            this.listBoxOutputA.Name = "listBoxOutputA";
-            this.listBoxOutputA.Size = new System.Drawing.Size(165, 134);
-            this.listBoxOutputA.TabIndex = 33;
-            // 
             // mainChart
             // 
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea1);
             this.mainChart.Location = new System.Drawing.Point(107, 50);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.mainChart.Size = new System.Drawing.Size(539, 276);
             this.mainChart.TabIndex = 33;
-            title2.Name = "Title1";
-            title2.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title2);
+            title1.Name = "Title1";
+            title1.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title1);
             // 
             // buttonExpand
             // 
@@ -318,14 +253,33 @@
             this.buttonExpand.UseVisualStyleBackColor = true;
             this.buttonExpand.Click += new System.EventHandler(this.buttonExpand_Click);
             // 
+            // dataGridViewVect
+            // 
+            this.dataGridViewVect.AllowUserToAddRows = false;
+            this.dataGridViewVect.AllowUserToDeleteRows = false;
+            this.dataGridViewVect.AllowUserToResizeColumns = false;
+            this.dataGridViewVect.AllowUserToResizeRows = false;
+            this.dataGridViewVect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewVect.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            this.dataGridViewVect.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewVect.Location = new System.Drawing.Point(652, 12);
+            this.dataGridViewVect.Name = "dataGridViewVect";
+            this.dataGridViewVect.ReadOnly = true;
+            this.dataGridViewVect.RowHeadersVisible = false;
+            this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewVect.ShowCellToolTips = false;
+            this.dataGridViewVect.Size = new System.Drawing.Size(185, 367);
+            this.dataGridViewVect.TabIndex = 35;
+            // 
             // DigitalVoltmeterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(849, 561);
+            this.Controls.Add(this.dataGridViewVect);
             this.Controls.Add(this.buttonExpand);
             this.Controls.Add(this.mainChart);
-            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.buttonGetModel);
             this.Controls.Add(this.textBoxDUsm);
             this.Controls.Add(this.label7);
@@ -349,9 +303,8 @@
             this.Name = "DigitalVoltmeterForm";
             this.Text = "DigitalVoltmeter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DigitalVoltmeterForm_FormClosed);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVect)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,13 +330,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxDUsm;
         private System.Windows.Forms.Button buttonGetModel;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ListBox listBoxInputX;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.ListBox listBoxOutputA;
         private System.Windows.Forms.DataVisualization.Charting.Chart mainChart;
         private System.Windows.Forms.Button buttonExpand;
+        private System.Windows.Forms.DataGridView dataGridViewVect;
     }
 }
 

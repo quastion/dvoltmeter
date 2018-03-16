@@ -112,6 +112,23 @@ namespace DigitalVoltmeter
             return newbits;
         }
 
+        public static bool operator ==(LongBits first, LongBits second)
+        {
+            bool ans = true;
+            int i = 0;
+            while (ans && i < first.Length)
+            {
+                ans = first[i] == second[i];
+                i++;
+            }
+            return ans;
+        }
+
+        public static bool operator !=(LongBits first, LongBits second)
+        {
+            return !(first == second);
+        }
+
         public override string ToString()
         {
             return bitsString.ToString();
