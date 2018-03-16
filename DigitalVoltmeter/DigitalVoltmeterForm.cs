@@ -127,10 +127,12 @@ namespace DigitalVoltmeter
                 LongBits inCode = new LongBits(x, n);
                 dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode });
                 if (inCode != binaryCode)
+                {
                     foreach (DataGridViewCell cell in dataGridViewVect.Rows[x].Cells)
                         cell.Style.BackColor = Color.Tomato;
+                }
             }
-            VoltageChartService.DrawInputVoltageList(mainChart, "voltages", voltages, Color.Red, 2);
+            VoltageChartService.DrawInputVoltageList(mainChart, "Voltages", voltages, Color.Red, 2);
         }
 
         private void buttonExpand_Click(object sender, EventArgs e)
@@ -145,7 +147,7 @@ namespace DigitalVoltmeter
             {
                 expandingForm = new GraphExpandingForm();
                 expandingForm.Chart.Series.Clear();
-                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, "voltages", voltages, Color.Red, 2);
+                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, "Voltages", voltages, Color.Red, 2);
                 expandingForm.Show();
             }
         }

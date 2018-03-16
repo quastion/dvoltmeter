@@ -114,8 +114,11 @@ namespace DigitalVoltmeter
 
         public static bool operator ==(LongBits first, LongBits second)
         {
-            return first.Length == second.Length ? 
-                first.bitsString.Equals(second.bitsString) : first.ToLong().Equals(second.ToLong());
+            if (first.Length == second.Length)
+                return first.bitsString.Equals(second.bitsString);
+            string firstEqualsPart = string.Concat(first.bitsString.ToString().SkipWhile(elem => elem == '0'));
+            string secondEqualsPart = string.Concat(second.bitsString.ToString().SkipWhile(elem => elem == '0'));
+            return firstEqualsPart == secondEqualsPart;
         }
 
         public static bool operator !=(LongBits first, LongBits second)
