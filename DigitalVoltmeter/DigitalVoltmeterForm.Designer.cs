@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title7 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -51,6 +51,7 @@
             this.mainChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonExpand = new System.Windows.Forms.Button();
             this.dataGridViewVect = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mainChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVect)).BeginInit();
             this.SuspendLayout();
@@ -59,17 +60,19 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(127, 528);
+            this.progressBar.Location = new System.Drawing.Point(169, 650);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(710, 21);
+            this.progressBar.Size = new System.Drawing.Size(947, 26);
             this.progressBar.TabIndex = 13;
             // 
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Location = new System.Drawing.Point(9, 13);
+            this.label2.Location = new System.Drawing.Point(12, 16);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(425, 24);
+            this.label2.Size = new System.Drawing.Size(566, 29);
             this.label2.TabIndex = 12;
             this.label2.Text = "Программа для анализа работы вольтметра параллельного преобразования.\r\n";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -77,9 +80,10 @@
             // buttonGetFormules
             // 
             this.buttonGetFormules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonGetFormules.Location = new System.Drawing.Point(10, 358);
+            this.buttonGetFormules.Location = new System.Drawing.Point(13, 441);
+            this.buttonGetFormules.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonGetFormules.Name = "buttonGetFormules";
-            this.buttonGetFormules.Size = new System.Drawing.Size(133, 23);
+            this.buttonGetFormules.Size = new System.Drawing.Size(177, 28);
             this.buttonGetFormules.TabIndex = 10;
             this.buttonGetFormules.Text = "Получить уравнения";
             this.buttonGetFormules.UseVisualStyleBackColor = true;
@@ -88,19 +92,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 53);
+            this.label1.Location = new System.Drawing.Point(8, 65);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(16, 13);
+            this.label1.Size = new System.Drawing.Size(20, 17);
             this.label1.TabIndex = 9;
             this.label1.Text = "n:";
             // 
             // buttonSaveToExel
             // 
             this.buttonSaveToExel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSaveToExel.Location = new System.Drawing.Point(11, 527);
-            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonSaveToExel.Location = new System.Drawing.Point(15, 649);
+            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonSaveToExel.Name = "buttonSaveToExel";
-            this.buttonSaveToExel.Size = new System.Drawing.Size(110, 23);
+            this.buttonSaveToExel.Size = new System.Drawing.Size(147, 28);
             this.buttonSaveToExel.TabIndex = 8;
             this.buttonSaveToExel.Text = "Экспорт в Excel";
             this.buttonSaveToExel.UseVisualStyleBackColor = true;
@@ -111,10 +116,11 @@
             this.richTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.richTextBox.Location = new System.Drawing.Point(12, 385);
+            this.richTextBox.Location = new System.Drawing.Point(16, 474);
+            this.richTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
-            this.richTextBox.Size = new System.Drawing.Size(825, 137);
+            this.richTextBox.Size = new System.Drawing.Size(1099, 168);
             this.richTextBox.TabIndex = 7;
             this.richTextBox.Text = "";
             this.richTextBox.WordWrap = false;
@@ -123,9 +129,10 @@
             // 
             this.checkBoxOutToWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxOutToWord.AutoSize = true;
-            this.checkBoxOutToWord.Location = new System.Drawing.Point(149, 362);
+            this.checkBoxOutToWord.Location = new System.Drawing.Point(199, 446);
+            this.checkBoxOutToWord.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxOutToWord.Name = "checkBoxOutToWord";
-            this.checkBoxOutToWord.Size = new System.Drawing.Size(126, 17);
+            this.checkBoxOutToWord.Size = new System.Drawing.Size(160, 21);
             this.checkBoxOutToWord.TabIndex = 15;
             this.checkBoxOutToWord.Text = "Вывод в Word файл";
             this.checkBoxOutToWord.UseVisualStyleBackColor = true;
@@ -134,93 +141,104 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 342);
+            this.label3.Location = new System.Drawing.Point(9, 421);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(308, 13);
+            this.label3.Size = new System.Drawing.Size(389, 17);
             this.label3.TabIndex = 16;
             this.label3.Text = "Формулы связи между ЕПК и выходным двоичным кодом.\r\n";
             // 
             // textBoxN
             // 
-            this.textBoxN.Location = new System.Drawing.Point(30, 50);
+            this.textBoxN.Location = new System.Drawing.Point(40, 62);
+            this.textBoxN.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxN.Name = "textBoxN";
-            this.textBoxN.Size = new System.Drawing.Size(59, 20);
+            this.textBoxN.Size = new System.Drawing.Size(77, 22);
             this.textBoxN.TabIndex = 18;
             this.textBoxN.Text = "8";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 79);
+            this.label4.Location = new System.Drawing.Point(8, 97);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(17, 13);
+            this.label4.Size = new System.Drawing.Size(21, 17);
             this.label4.TabIndex = 19;
             this.label4.Text = "K:";
             // 
             // textBoxK
             // 
-            this.textBoxK.Location = new System.Drawing.Point(30, 76);
+            this.textBoxK.Location = new System.Drawing.Point(40, 94);
+            this.textBoxK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxK.Name = "textBoxK";
-            this.textBoxK.Size = new System.Drawing.Size(59, 20);
+            this.textBoxK.Size = new System.Drawing.Size(77, 22);
             this.textBoxK.TabIndex = 20;
             this.textBoxK.Text = "1000";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 110);
+            this.label5.Location = new System.Drawing.Point(8, 135);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(24, 13);
+            this.label5.Size = new System.Drawing.Size(30, 17);
             this.label5.TabIndex = 21;
             this.label5.Text = "ΔK:";
             // 
             // textBoxDK
             // 
-            this.textBoxDK.Location = new System.Drawing.Point(30, 107);
+            this.textBoxDK.Location = new System.Drawing.Point(40, 132);
+            this.textBoxDK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxDK.Name = "textBoxDK";
-            this.textBoxDK.Size = new System.Drawing.Size(59, 20);
+            this.textBoxDK.Size = new System.Drawing.Size(77, 22);
             this.textBoxDK.TabIndex = 22;
             this.textBoxDK.Text = "0";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 139);
+            this.label6.Location = new System.Drawing.Point(8, 171);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(19, 13);
+            this.label6.Size = new System.Drawing.Size(24, 17);
             this.label6.TabIndex = 23;
             this.label6.Text = "Δi:";
             // 
             // textBoxDi
             // 
-            this.textBoxDi.Location = new System.Drawing.Point(30, 136);
+            this.textBoxDi.Location = new System.Drawing.Point(40, 167);
+            this.textBoxDi.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxDi.Name = "textBoxDi";
-            this.textBoxDi.Size = new System.Drawing.Size(59, 20);
+            this.textBoxDi.Size = new System.Drawing.Size(77, 22);
             this.textBoxDi.TabIndex = 24;
             this.textBoxDi.Text = "0";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 169);
+            this.label7.Location = new System.Drawing.Point(8, 208);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(30, 13);
+            this.label7.Size = new System.Drawing.Size(36, 17);
             this.label7.TabIndex = 25;
             this.label7.Text = "δсм:";
             // 
             // textBoxDUsm
             // 
-            this.textBoxDUsm.Location = new System.Drawing.Point(43, 166);
+            this.textBoxDUsm.Location = new System.Drawing.Point(57, 204);
+            this.textBoxDUsm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxDUsm.Name = "textBoxDUsm";
-            this.textBoxDUsm.Size = new System.Drawing.Size(46, 20);
+            this.textBoxDUsm.Size = new System.Drawing.Size(60, 22);
             this.textBoxDUsm.TabIndex = 26;
             this.textBoxDUsm.Text = "0";
             // 
             // buttonGetModel
             // 
-            this.buttonGetModel.Location = new System.Drawing.Point(9, 192);
+            this.buttonGetModel.Location = new System.Drawing.Point(12, 236);
+            this.buttonGetModel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonGetModel.Name = "buttonGetModel";
-            this.buttonGetModel.Size = new System.Drawing.Size(80, 36);
+            this.buttonGetModel.Size = new System.Drawing.Size(107, 44);
             this.buttonGetModel.TabIndex = 27;
             this.buttonGetModel.Text = "Получить модель";
             this.buttonGetModel.UseVisualStyleBackColor = true;
@@ -231,23 +249,25 @@
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea7.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea7);
-            this.mainChart.Location = new System.Drawing.Point(107, 50);
+            chartArea2.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea2);
+            this.mainChart.Location = new System.Drawing.Point(143, 62);
+            this.mainChart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.mainChart.Size = new System.Drawing.Size(462, 276);
+            this.mainChart.Size = new System.Drawing.Size(616, 340);
             this.mainChart.TabIndex = 33;
-            title7.Name = "Title1";
-            title7.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title7);
+            title2.Name = "Title1";
+            title2.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title2);
             // 
             // buttonExpand
             // 
             this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExpand.Location = new System.Drawing.Point(473, 332);
+            this.buttonExpand.Location = new System.Drawing.Point(631, 409);
+            this.buttonExpand.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonExpand.Name = "buttonExpand";
-            this.buttonExpand.Size = new System.Drawing.Size(96, 23);
+            this.buttonExpand.Size = new System.Drawing.Size(128, 28);
             this.buttonExpand.TabIndex = 34;
             this.buttonExpand.Text = "Раскрыть график";
             this.buttonExpand.UseVisualStyleBackColor = true;
@@ -263,23 +283,37 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewVect.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dataGridViewVect.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVect.Location = new System.Drawing.Point(575, 12);
+            this.dataGridViewVect.Location = new System.Drawing.Point(767, 15);
+            this.dataGridViewVect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridViewVect.MultiSelect = false;
             this.dataGridViewVect.Name = "dataGridViewVect";
             this.dataGridViewVect.ReadOnly = true;
             this.dataGridViewVect.RowHeadersVisible = false;
             this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridViewVect.ShowCellToolTips = false;
-            this.dataGridViewVect.Size = new System.Drawing.Size(262, 367);
+            this.dataGridViewVect.Size = new System.Drawing.Size(349, 452);
             this.dataGridViewVect.TabIndex = 35;
             this.dataGridViewVect.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewVect_CellPainting);
             this.dataGridViewVect.SelectionChanged += new System.EventHandler(this.dataGridViewVect_SelectionChanged);
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(11, 288);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(108, 82);
+            this.button1.TabIndex = 36;
+            this.button1.Text = "Поиск критических параметров";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // DigitalVoltmeterForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(849, 561);
+            this.ClientSize = new System.Drawing.Size(1132, 690);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridViewVect);
             this.Controls.Add(this.buttonExpand);
             this.Controls.Add(this.mainChart);
@@ -301,8 +335,8 @@
             this.Controls.Add(this.buttonGetFormules);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonSaveToExel);
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.MinimumSize = new System.Drawing.Size(666, 580);
+            this.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.MinimumSize = new System.Drawing.Size(882, 703);
             this.Name = "DigitalVoltmeterForm";
             this.Text = "DigitalVoltmeter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DigitalVoltmeterForm_FormClosed);
@@ -336,6 +370,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart mainChart;
         private System.Windows.Forms.Button buttonExpand;
         private System.Windows.Forms.DataGridView dataGridViewVect;
+        private System.Windows.Forms.Button button1;
     }
 }
 

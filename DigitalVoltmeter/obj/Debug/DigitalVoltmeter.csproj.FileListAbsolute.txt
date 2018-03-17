@@ -79,3 +79,14 @@ D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource
 D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
 D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe.config
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.exe
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\bin\Debug\DigitalVoltmeter.pdb
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.DigitalVoltmeterForm.resources
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.GraphExpandingForm.resources
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.Properties.Resources.resources
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource.Cache
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
+C:\Users\Vladislav\Source\Repos\dvoltmeter7\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
