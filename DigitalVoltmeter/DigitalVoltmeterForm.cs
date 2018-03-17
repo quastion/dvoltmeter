@@ -183,17 +183,18 @@ namespace DigitalVoltmeter
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
         }
 
-        ParamsContainer TestingModel(int n, double coeff)
+        List<ParamsContainer> TestingModel(int n, double coeff)
         {
+            List<ParamsContainer> l = new List<ParamsContainer> { };
             DACEmulator emulator;
-            double deltaCoeff=0;
-            int deltaIndex=0;
-            double deltaSM=0;
+            double deltaCoeff = 0;
+            int deltaIndex = 0;
+            double deltaSM = 0;
             List<int> indexes = new List<int> { };
-            while (indexes.Count==0)
+            while (indexes.Count == 0)
             {
                 emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-                
+
                 int countNumbers = (int)Math.Pow(2, n);
                 int x;
                 for (x = 0; x < countNumbers; x++)
@@ -203,6 +204,9 @@ namespace DigitalVoltmeter
                 deltaCoeff += 0.0001;
             }
             double deltaCoeffCrit = deltaCoeff;
+            ParamsContainer p = new ParamsContainer(n, coeff, deltaCoeffCrit, 0, 0);
+            p.comparatorsErrorIndexes = indexes.ToArray();
+            l.Add(p);
             deltaCoeff = 0;
             indexes = new List<int> { };
             while (indexes.Count == 0)
@@ -217,7 +221,10 @@ namespace DigitalVoltmeter
                 }
                 deltaIndex++;
             }
-            int deltaIndexCrit= deltaIndex;
+            int deltaIndexCrit = deltaIndex;
+            p = new ParamsContainer(n, coeff, 0, deltaIndexCrit, 0);
+            p.comparatorsErrorIndexes = indexes.ToArray();
+            l.Add(p);
             indexes = new List<int> { };
             deltaIndex = 0;
             while (indexes.Count == 0)
@@ -233,7 +240,10 @@ namespace DigitalVoltmeter
                 deltaSM += 0.0001;
             }
             double deltaSMCrit = deltaSM;
-            return new ParamsContainer(n, coeff, deltaCoeffCrit, deltaIndexCrit, deltaSMCrit);
+            p = new ParamsContainer(n, coeff, 0, 0, deltaSMCrit);
+            p.comparatorsErrorIndexes = indexes.ToArray();
+            l.Add(p);
+            return l;
         }
 
         bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
@@ -348,11 +358,11 @@ namespace DigitalVoltmeter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ParamsContainer p = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
-            MessageBox.Show("Для n=" + p.N + ";K="+p.Coeff+"\n" +
-                "ΔK критическое значение: " + p.DeltaCoeff+"\n" +
-                "Δi критическое значение: " + p.DeltaIndex+"\n"+
-                "δсм критическое значение: "+ p.DeltaSM);
+            List<ParamsContainer> p = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
+            MessageBox.Show("Для n=" + p[0].N + ";K="+p[0].Coeff+"\n" +
+            "ΔK критическое значение: " + p[0].DeltaCoeff + "\n" +
+            "Δi критическое значение: " + p[1].DeltaIndex + "\n" +
+            "δсм критическое значение: " + p[2].DeltaSM);
         }
     }
 }
