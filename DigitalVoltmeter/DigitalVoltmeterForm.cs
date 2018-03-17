@@ -27,7 +27,9 @@ namespace DigitalVoltmeter
         private LongBits[] b;
         private LongBits[] a;
 
-        private double[] voltages;
+        private double[] modelVoltages;
+        private double[] idealVoltages;
+        private double voltagesQuantumStep;
 
         private GraphExpandingForm expandingForm = new GraphExpandingForm();
 
@@ -74,10 +76,18 @@ namespace DigitalVoltmeter
                 Width = TextRenderer.MeasureText("Выход 10", dataGridViewVect.Font).Width + 6
             };
 
+            DataGridViewTextBoxColumn _errInds = new DataGridViewTextBoxColumn
+            {
+                Name = "Ошиб. b",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+
             dataGridViewVect.Columns.Add(_in);
             dataGridViewVect.Columns.Add(_out);
             dataGridViewVect.Columns.Add(_inDes);
             dataGridViewVect.Columns.Add(_outDes);
+            dataGridViewVect.Columns.Add(_errInds);
 
             dataGridViewVect.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
         }
@@ -146,24 +156,31 @@ namespace DigitalVoltmeter
 
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
             int countNumbers = (int)Math.Pow(2, n);
-            voltages = new double[countNumbers];
+            modelVoltages = new double[countNumbers];
+            idealVoltages = new double[countNumbers];
 
             initializeDataGrid();
             errorBitIndexes = new List<List<int>>() { };
             for (int x = 0; x < countNumbers; x++)
             {
-                voltages[x] = emulator.Uin(x);
+                modelVoltages[x] = emulator.Uin(x);
+                idealVoltages[x] = emulator.IdealUin(x);
                 LongBits binaryCode = emulator.GetDKFromComparators(x);
                 LongBits inCode = new LongBits(x, n);
+                int[] errorInds = emulator.GetEKPErrorFromComparators(x);
 
                 List<int> diffs;
                 bool error = !GetIndexesOfDiffs(inCode, binaryCode, out diffs);
                 errorBitIndexes.Add(diffs);
-                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong() });
+
+                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong(), string.Join(", ", errorInds) });
                 if (error)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
-            VoltageChartService.DrawInputVoltageList(mainChart, "Voltages", voltages, Color.Red, 2);
+            voltagesQuantumStep = emulator.IdealUin(1);
+            VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение", voltagesQuantumStep);
+            chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
+            chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
         }
 
         void TestingModel(int n, double coeff)
@@ -204,7 +221,7 @@ namespace DigitalVoltmeter
 
         private void buttonExpand_Click(object sender, EventArgs e)
         {
-            if (voltages == null)
+            if (modelVoltages == null)
             {
                 MessageBox.Show("First generate the data!");
                 return;
@@ -214,7 +231,9 @@ namespace DigitalVoltmeter
             {
                 expandingForm = new GraphExpandingForm();
                 expandingForm.Chart.Series.Clear();
-                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, "Voltages", voltages, Color.Red, 2);
+                VoltageChartService chartService = new VoltageChartService(expandingForm.Chart, "Входное напряжение", voltagesQuantumStep);
+                chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Yellow, 2);
+                chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
                 expandingForm.Show();
             }
         }

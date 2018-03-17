@@ -79,3 +79,4 @@ D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.GenerateResource
 D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.csproj.CoreCompileInputs.cache
 D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.exe
 D:\Labs\Volt\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.pdb
+C:\Users\autor\Source\Repos\dvoltmeter\DigitalVoltmeter\obj\Debug\DigitalVoltmeter.GraphExpandingForm.resources
