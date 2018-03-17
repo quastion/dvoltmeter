@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,7 +16,7 @@ namespace DigitalVoltmeter
         Font errorFont;
 
         /// <summary>
-        /// Отсортированные списки индексов ошибочных бит ячеек Выхода
+        /// РћС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ СЃРїРёСЃРєРё РёРЅРґРµРєСЃРѕРІ РѕС€РёР±РѕС‡РЅС‹С… Р±РёС‚ СЏС‡РµРµРє Р’С‹С…РѕРґР°
         /// </summary>
         List<List<int>> errorBitIndexes = new List<List<int>>() { };
 
@@ -48,37 +48,37 @@ namespace DigitalVoltmeter
 
             DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn
             {
-                Name = "Вход",
+                Name = "Р’С…РѕРґ",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
 
             DataGridViewTextBoxColumn _out = new DataGridViewTextBoxColumn
             {
-                Name = "Выход",
+                Name = "Р’С‹С…РѕРґ",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                Width = TextRenderer.MeasureText("Выход", dataGridViewVect.Font).Width + 5
+                Width = TextRenderer.MeasureText("Р’С‹С…РѕРґ", dataGridViewVect.Font).Width + 5
             };
 
             DataGridViewTextBoxColumn _inDes = new DataGridViewTextBoxColumn
             {
-                Name = "Вход 10",
+                Name = "Р’С…РѕРґ 10",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
 
             DataGridViewTextBoxColumn _outDes = new DataGridViewTextBoxColumn
             {
-                Name = "Выход 10",
+                Name = "Р’С‹С…РѕРґ 10",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                Width = TextRenderer.MeasureText("Выход 10", dataGridViewVect.Font).Width + 6
+                Width = TextRenderer.MeasureText("Р’С‹С…РѕРґ 10", dataGridViewVect.Font).Width + 6
             };
 
             DataGridViewTextBoxColumn _errInds = new DataGridViewTextBoxColumn
             {
-                Name = "Ошиб. b",
+                Name = "РћС€РёР±. b",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
@@ -178,37 +178,66 @@ namespace DigitalVoltmeter
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
             voltagesQuantumStep = emulator.IdealUin(1);
-            VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение", voltagesQuantumStep);
+            VoltageChartService chartService = new VoltageChartService(this.mainChart, "Р’С…РѕРґРЅРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ", voltagesQuantumStep);
             chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
         }
 
-        void TestingModel(int n, double coeff)
+        ParamsContainer TestingModel(int n, double coeff)
         {
             DACEmulator emulator;
-            double deltaCoeff=coeff/1000;
+            double deltaCoeff=0;
             int deltaIndex=0;
             double deltaSM=0;
-            while (deltaCoeff > 0.001)
+            List<int> indexes = new List<int> { };
+            while (indexes.Count==0)
             {
                 emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+                
                 int countNumbers = (int)Math.Pow(2, n);
-                for (int x = 0; x < countNumbers; x++)
+                int x;
+                for (x = 0; x < countNumbers; x++)
                 {
-                    int[] mas = emulator.GetEKPErrorFromComparators(x);
-                    
-                    if (mas.Length > 0)
-                    {
-                        Console.WriteLine(deltaCoeff+" errors exist "+ mas.Length);
-                        deltaCoeff /= 2;
-                        break;
-                    }
+                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
                 }
+                deltaCoeff += 0.0001;
             }
+            double deltaCoeffCrit = deltaCoeff;
+            deltaCoeff = 0;
+            indexes = new List<int> { };
+            while (indexes.Count == 0)
+            {
+                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+
+                int countNumbers = (int)Math.Pow(2, n);
+                int x;
+                for (x = 0; x < countNumbers; x++)
+                {
+                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
+                }
+                deltaIndex++;
+            }
+            int deltaIndexCrit= deltaIndex;
+            indexes = new List<int> { };
+            deltaIndex = 0;
+            while (indexes.Count == 0)
+            {
+                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+
+                int countNumbers = (int)Math.Pow(2, n);
+                int x;
+                for (x = 0; x < countNumbers; x++)
+                {
+                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
+                }
+                deltaSM += 0.0001;
+            }
+            double deltaSMCrit = deltaSM;
+            return new ParamsContainer(n, coeff, deltaCoeffCrit, deltaIndexCrit, deltaSMCrit);
         }
 
         bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
-        {//Все таки пришлось циклом сравнить. Ваня, не бей(
+        {//Р’СЃРµ С‚Р°РєРё РїСЂРёС€Р»РѕСЃСЊ С†РёРєР»РѕРј СЃСЂР°РІРЅРёС‚СЊ. Р’Р°РЅСЏ, РЅРµ Р±РµР№(
             diffs = null;
             if (first.Length != second.Length) return first == second;
             diffs = new List<int>() { };
@@ -231,7 +260,7 @@ namespace DigitalVoltmeter
             {
                 expandingForm = new GraphExpandingForm();
                 expandingForm.Chart.Series.Clear();
-                VoltageChartService chartService = new VoltageChartService(expandingForm.Chart, "Входное напряжение", voltagesQuantumStep);
+                VoltageChartService chartService = new VoltageChartService(expandingForm.Chart, "Р’С…РѕРґРЅРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ", voltagesQuantumStep);
                 chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Yellow, 2);
                 chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
                 expandingForm.Show();
@@ -251,7 +280,7 @@ namespace DigitalVoltmeter
 
         private void dataGridViewVect_SelectionChanged(object sender, EventArgs e)
         {
-            dataGridViewVect.ClearSelection();//всем привет, я костыль
+            dataGridViewVect.ClearSelection();//РІСЃРµРј РїСЂРёРІРµС‚, СЏ РєРѕСЃС‚С‹Р»СЊ
         }
 
         void MarkCellErrors()
@@ -261,7 +290,7 @@ namespace DigitalVoltmeter
         private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex >= 0 && errorBitIndexes.ElementAtOrDefault(e.RowIndex) != null)
-            {//кастомная отрисовка ячеек Выхода
+            {//РєР°СЃС‚РѕРјРЅР°СЏ РѕС‚СЂРёСЃРѕРІРєР° СЏС‡РµРµРє Р’С‹С…РѕРґР°
                 if (e.ColumnIndex == 1)
                 {
                     e.PaintBackground(e.ClipBounds, true);
@@ -318,6 +347,15 @@ namespace DigitalVoltmeter
                     e.Handled = true;
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ParamsContainer p = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
+            MessageBox.Show("Р”Р»СЏ n=" + p.N + ";K="+p.Coeff+"\n" +
+                "О”K РєСЂРёС‚РёС‡РµСЃРєРѕРµ Р·РЅР°С‡РµРЅРёРµ: " + p.DeltaCoeff+"\n" +
+                "О”i РєСЂРёС‚РёС‡РµСЃРєРѕРµ Р·РЅР°С‡РµРЅРёРµ: " + p.DeltaIndex+"\n"+
+                "ОґСЃРј РєСЂРёС‚РёС‡РµСЃРєРѕРµ Р·РЅР°С‡РµРЅРёРµ: "+ p.DeltaSM);
         }
     }
 }
