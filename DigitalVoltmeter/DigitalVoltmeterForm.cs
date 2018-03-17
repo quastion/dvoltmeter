@@ -183,6 +183,30 @@ namespace DigitalVoltmeter
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
         }
 
+        void TestingModel(int n, double coeff)
+        {
+            DACEmulator emulator;
+            double deltaCoeff=coeff/1000;
+            int deltaIndex=0;
+            double deltaSM=0;
+            while (deltaCoeff > 0.001)
+            {
+                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+                int countNumbers = (int)Math.Pow(2, n);
+                for (int x = 0; x < countNumbers; x++)
+                {
+                    int[] mas = emulator.GetEKPErrorFromComparators(x);
+                    
+                    if (mas.Length > 0)
+                    {
+                        Console.WriteLine(deltaCoeff+" errors exist "+ mas.Length);
+                        deltaCoeff /= 2;
+                        break;
+                    }
+                }
+            }
+        }
+
         bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
         {//Все таки пришлось циклом сравнить. Ваня, не бей(
             diffs = null;
