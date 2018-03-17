@@ -13,6 +13,7 @@ namespace DigitalVoltmeter
     {
         Color errorCellBackColor = Color.Pink;
         Color errorCellTextColor = Color.OrangeRed;
+        Font errorFont;
 
         /// <summary>
         /// Отсортированные списки индексов ошибочных бит ячеек Выхода
@@ -34,6 +35,7 @@ namespace DigitalVoltmeter
         {
             InitializeComponent();
             initializeDataGrid();
+            errorFont = new Font(dataGridViewVect.Font, FontStyle.Bold);
             excel = new ExcelTools(progressBar);
             word = new WordTools(progressBar);
         }
@@ -41,13 +43,6 @@ namespace DigitalVoltmeter
         void initializeDataGrid()
         {
             dataGridViewVect.Columns.Clear();
-
-            DataGridViewTextBoxColumn _num = new DataGridViewTextBoxColumn
-            {
-                Name = "№",
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            };
 
             DataGridViewTextBoxColumn _in = new DataGridViewTextBoxColumn
             {
@@ -61,7 +56,7 @@ namespace DigitalVoltmeter
                 Name = "Выход",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                Width = 0
+                Width = TextRenderer.MeasureText("Выход", dataGridViewVect.Font).Width + 5
             };
 
             DataGridViewTextBoxColumn _inDes = new DataGridViewTextBoxColumn
@@ -75,10 +70,10 @@ namespace DigitalVoltmeter
             {
                 Name = "Выход 10",
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                Width = TextRenderer.MeasureText("Выход 10", dataGridViewVect.Font).Width + 6
             };
 
-            dataGridViewVect.Columns.Add(_num);
             dataGridViewVect.Columns.Add(_in);
             dataGridViewVect.Columns.Add(_out);
             dataGridViewVect.Columns.Add(_inDes);
@@ -153,7 +148,7 @@ namespace DigitalVoltmeter
             int countNumbers = (int)Math.Pow(2, n);
             voltages = new double[countNumbers];
 
-            dataGridViewVect.Rows.Clear();
+            initializeDataGrid();
             errorBitIndexes = new List<List<int>>() { };
             for (int x = 0; x < countNumbers; x++)
             {
@@ -164,7 +159,7 @@ namespace DigitalVoltmeter
                 List<int> diffs;
                 bool error = !GetIndexesOfDiffs(inCode, binaryCode, out diffs);
                 errorBitIndexes.Add(diffs);
-                dataGridViewVect.Rows.Add(new object[] { x, inCode, binaryCode });
+                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong() });
                 if (error)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
@@ -222,43 +217,63 @@ namespace DigitalVoltmeter
 
         private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex == 2 && e.RowIndex >= 0 && errorBitIndexes.ElementAtOrDefault(e.RowIndex) != null)
+            if (e.RowIndex >= 0 && errorBitIndexes.ElementAtOrDefault(e.RowIndex) != null)
             {//кастомная отрисовка ячеек Выхода
-                e.PaintBackground(e.ClipBounds, true);
-
-                Font font = e.CellStyle.Font;
-                Font errorFont = new Font(font, FontStyle.Bold);
-                TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
-
-                string text = (string)e.FormattedValue;
-
-                List<string> subStrings = new List<string>() { };
-                int curInd = 0;
-                foreach (int ind in errorBitIndexes[e.RowIndex])
+                if (e.ColumnIndex == 1)
                 {
-                    subStrings.Add(text.Substring(curInd, ind - curInd));
-                    subStrings.Add(text.Substring(ind, 1));
-                    curInd = ind + 1;
-                }
-                subStrings.Add(text.Substring(curInd, text.Length - curInd));
+                    e.PaintBackground(e.ClipBounds, true);
 
-                bool errorState = false;
-                Size size;
-                Rectangle curBox = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, 0, e.CellBounds.Height);
-                for (int i = 0; i < subStrings.Count; i++)
+                    Font font = e.CellStyle.Font;
+                    TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+
+                    string text = (string)e.FormattedValue;
+
+                    List<string> subStrings = new List<string>() { };
+                    int curInd = 0;
+                    foreach (int ind in errorBitIndexes[e.RowIndex])
+                    {
+                        subStrings.Add(text.Substring(curInd, ind - curInd));
+                        subStrings.Add(text.Substring(ind, 1));
+                        curInd = ind + 1;
+                    }
+                    subStrings.Add(text.Substring(curInd, text.Length - curInd));
+
+                    bool errorState = false;
+                    Size size;
+                    Rectangle curBox = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, 0, e.CellBounds.Height);
+                    for (int i = 0; i < subStrings.Count; i++)
+                    {
+                        Font curFont = errorState ? errorFont : font;
+                        Color curColor = errorState ? errorCellTextColor : e.CellStyle.ForeColor;
+
+                        size = TextRenderer.MeasureText(e.Graphics, subStrings[i], curFont, e.CellBounds.Size, flags);
+                        curBox = new Rectangle(curBox.X + curBox.Width, curBox.Y, size.Width, curBox.Height);
+                        TextRenderer.DrawText(e.Graphics, subStrings[i], curFont, curBox, curColor, flags);
+
+                        errorState = !errorState;
+                    }
+                    int cellWidth = curBox.Location.X - e.CellBounds.Location.X + curBox.Width + 5;
+                    dataGridViewVect.Columns[1].Width = Math.Max(dataGridViewVect.Columns[1].Width, cellWidth);
+                    e.Handled = true;
+                }
+                else if (e.ColumnIndex == 3)
                 {
-                    Font curFont = errorState ? errorFont : font;
-                    Color curColor = errorState ? errorCellTextColor : e.CellStyle.ForeColor;
+                    e.PaintBackground(e.ClipBounds, true);
+                    bool error = errorBitIndexes.ElementAtOrDefault(e.RowIndex).Count > 0;
+                    Font font = error ? errorFont : e.CellStyle.Font;
+                    Color color = error ? errorCellTextColor : e.CellStyle.ForeColor;
+                    TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
 
-                    size = TextRenderer.MeasureText(e.Graphics, subStrings[i], curFont, e.CellBounds.Size, flags);
-                    curBox = new Rectangle(curBox.X + curBox.Width, curBox.Y, size.Width, curBox.Height);
-                    TextRenderer.DrawText(e.Graphics, subStrings[i], curFont, curBox, curColor, flags);
+                    string text = (string)e.FormattedValue;
 
-                    errorState = !errorState;
+                    Size size = TextRenderer.MeasureText(e.Graphics, text, font, e.CellBounds.Size, flags);
+                    Rectangle Box = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, size.Width, e.CellBounds.Height);
+                    TextRenderer.DrawText(e.Graphics, text, font, Box, color, flags);
+
+                    int cellWidth = e.CellBounds.Location.X - e.CellBounds.Location.X + Box.Width + 8;
+                    dataGridViewVect.Columns[3].Width = Math.Max(dataGridViewVect.Columns[3].Width, cellWidth);
+                    e.Handled = true;
                 }
-                int cellWidth = curBox.Location.X - e.CellBounds.Location.X + curBox.Width + 5;
-                dataGridViewVect.Columns[2].Width = Math.Max(dataGridViewVect.Columns[2].Width, cellWidth);
-                e.Handled = true;
             }
         }
     }
