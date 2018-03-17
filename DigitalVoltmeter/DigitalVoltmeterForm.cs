@@ -283,9 +283,6 @@ namespace DigitalVoltmeter
             dataGridViewVect.ClearSelection();//всем привет, я костыль
         }
 
-        void MarkCellErrors()
-        {
-        }
 
         private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
