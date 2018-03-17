@@ -10,9 +10,9 @@ namespace DigitalVoltmeter
     {
         public int N { get; private set; }
 
-        public int Coeff { get; set; }
+        public double Coeff { get; set; }
 
-        public int DeltaCoeff { get; set; }
+        public double DeltaCoeff { get; set; }
 
         public int DeltaIndex { get; set; }
 
@@ -26,7 +26,7 @@ namespace DigitalVoltmeter
             QuantStep = MaxSignal() / Math.Pow(2, N);
         }
 
-        public DACEmulator(int n, int coeff, int deltaCoeff, int deltaIndex, double deltaSM)
+        public DACEmulator(int n, double coeff, double deltaCoeff, int deltaIndex, double deltaSM)
         {
             N = n;
             Coeff = coeff;
