@@ -14,27 +14,27 @@ namespace DigitalVoltmeter
         /// Строит ступенчатый график последовательных значений напряжений
         /// </summary>
         /// <param name="chart">график для рисования</param>
-        /// <param name="valtages">массив напряжений</param>
+        /// <param name="voltages">массив напряжений</param>
         /// <param name="color">цвет графика</param>
         /// <param name="width">ширина линии</param>
-        public static void DrawInputVoltageList(Chart chart, double[] valtages, Color color, int width)
+        public static void DrawInputVoltageList(Chart chart, string seriesName, double[] voltages, Color color, int width)
         {
-            Series valtageSeries = new Series("voltages");
-            valtageSeries.ChartType = SeriesChartType.StepLine;
-            valtageSeries.Color = color;
-            valtageSeries.BorderWidth = width;
-            valtageSeries.Points.AddXY(0, 0);
-            for (int x = 0; x < valtages.Length; x++)
-                valtageSeries.Points.AddXY(x, valtages[x]);
+            Series voltageSeries = new Series(seriesName);
+            voltageSeries.ChartType = SeriesChartType.StepLine;
+            voltageSeries.Color = color;
+            voltageSeries.BorderWidth = width;
+            voltageSeries.Points.AddXY(0, 0);
+            for (int x = 0; x < voltages.Length; x++)
+                voltageSeries.Points.AddXY(x, voltages[x]);
 
             chart.ChartAreas[0].AxisX.Minimum = 0;
             chart.ChartAreas[0].AxisX.Title = "X";
             chart.ChartAreas[0].AxisY.Title = "Uвх";
             chart.ChartAreas[0].AxisY.TextOrientation = TextOrientation.Horizontal;
-            Series series = chart.Series.FindByName("voltages");
+            Series series = chart.Series.FindByName(seriesName);
             if (series != null)
                 chart.Series.Remove(series);
-            chart.Series.Add(valtageSeries);
+            chart.Series.Add(voltageSeries);
         }
     }
 }

@@ -36,16 +36,46 @@ namespace DigitalVoltmeter
             QuantStep = MaxSignal() / Math.Pow(2, N);
         }
 
+        /// <summary>
+        /// Получить  максимальный сигнал
+        /// </summary>
+        /// <returns>Максимальный сигнал</returns>
         public double MaxSignal()
         {
             return Coeff * (Math.Pow(2, N) - 1) / Math.Pow(2, N - 1);
         }
 
+        /// <summary>
+        /// Получить смещение
+        /// </summary>
+        /// <returns>Смещение</returns>
         public double DeltaUsm()
         {
             return QuantStep / 2;
         }
 
+        /// <summary>
+        /// Получить идеальный сигнал
+        /// </summary>
+        /// <param name="data">Входное число</param>
+        /// <returns>Идеальный сигнал</returns>
+        public double IdealUin(int data)
+        {
+            LongBits x = new LongBits(data, N);
+            double sum = 0;
+            for (int i = 1; i <= N; i++)
+            {
+                sum += x[i - 1] * Math.Pow(2, -(N - i));
+            }
+            return Coeff * sum;
+        }
+
+        /// <summary>
+        /// Получить сигнал учитывая отклонения
+        /// </summary>
+        /// <param name="data">Входное число</param>
+        /// <param name="deltaIsUp">Задания знака для delta</param>
+        /// <returns>Сигнал учитывая отклонения</returns>
         public double Uin(int data, bool deltaIsUp = true)
         {
             LongBits x = new LongBits(data, N);
@@ -58,6 +88,11 @@ namespace DigitalVoltmeter
             return (Coeff + DeltaCoeff) * sum + (DeltaUsm() + delta);
         }
 
+        /// <summary>
+        /// Получить позиционный код
+        /// </summary>
+        /// <param name="data">Входное число</param>
+        /// <returns>Позиционный код</returns>
         public LongBits GetEKFromComparators(int data)
         {
             int m = (int)Math.Pow(2, N) - 1;
@@ -71,6 +106,41 @@ namespace DigitalVoltmeter
                 e[t - 1] = (uin + deltaUsm >= ((double)t / m) * uop) ? 1 : 0;
             }
             return e;
+        }
+
+        /// <summary>
+        /// Получить бинарный код
+        /// </summary>
+        /// <param name="data">Входное число</param>
+        /// <returns>Бинарный код</returns>
+        public LongBits GetDKFromComparators(int data)
+        {
+            LongBits simpleCode = GetEKFromComparators(data);
+            LongBits simplePositionCode = MathProcessor.GetEPKFromEK(simpleCode);
+            return MathProcessor.GetDK(simplePositionCode);
+        }
+
+        /// <summary>
+        /// Получить индексы битов с ошибками в последовательном позиционном коде
+        /// </summary>
+        /// <param name="data">Входное число</param>
+        /// <returns>Индексы битов с ошибками в последовательном позиционном коде</returns>
+        public int[] GetEKPErrorFromComparators(int data)
+        {
+            int m = (int)Math.Pow(2, N) - 1;
+            LongBits idealSimpleCode = MathProcessor.GetEK(data, m);
+            LongBits idealSimplePositionCode = MathProcessor.GetEPKFromEK(idealSimpleCode);
+
+            LongBits realSimpleCode = GetEKFromComparators(data);
+            LongBits realSimplePositionCode = MathProcessor.GetEPKFromEK(realSimpleCode);
+
+            List<int> errors = new List<int>();
+            for (int i = 0; i < realSimpleCode.Length; i++)
+            {
+                if (idealSimplePositionCode[i] != realSimplePositionCode[i])
+                    errors.Add(i + 1);
+            }
+            return errors.ToArray();
         }
     }
 }
