@@ -264,6 +264,7 @@
             // 
             this.dataGridViewVect.AllowUserToAddRows = false;
             this.dataGridViewVect.AllowUserToDeleteRows = false;
+            this.dataGridViewVect.AllowUserToOrderColumns = true;
             this.dataGridViewVect.AllowUserToResizeColumns = false;
             this.dataGridViewVect.AllowUserToResizeRows = false;
             this.dataGridViewVect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -275,7 +276,7 @@
             this.dataGridViewVect.Name = "dataGridViewVect";
             this.dataGridViewVect.ReadOnly = true;
             this.dataGridViewVect.RowHeadersVisible = false;
-            this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewVect.ShowCellToolTips = false;
             this.dataGridViewVect.Size = new System.Drawing.Size(240, 367);
             this.dataGridViewVect.TabIndex = 35;
