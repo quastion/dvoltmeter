@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title7 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -51,6 +51,13 @@
             this.mainChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonExpand = new System.Windows.Forms.Button();
             this.dataGridViewVect = new System.Windows.Forms.DataGridView();
+            this.labelCriticalDK = new System.Windows.Forms.Label();
+            this.labelCriticalDi = new System.Windows.Forms.Label();
+            this.labelCriticalDsm = new System.Windows.Forms.Label();
+            this.buttonCriticalDK = new System.Windows.Forms.Button();
+            this.buttonCriticalDi = new System.Windows.Forms.Button();
+            this.buttonCritical = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mainChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVect)).BeginInit();
             this.SuspendLayout();
@@ -144,7 +151,7 @@
             // 
             this.textBoxN.Location = new System.Drawing.Point(30, 50);
             this.textBoxN.Name = "textBoxN";
-            this.textBoxN.Size = new System.Drawing.Size(59, 20);
+            this.textBoxN.Size = new System.Drawing.Size(44, 20);
             this.textBoxN.TabIndex = 18;
             this.textBoxN.Text = "8";
             // 
@@ -161,7 +168,7 @@
             // 
             this.textBoxK.Location = new System.Drawing.Point(30, 76);
             this.textBoxK.Name = "textBoxK";
-            this.textBoxK.Size = new System.Drawing.Size(59, 20);
+            this.textBoxK.Size = new System.Drawing.Size(44, 20);
             this.textBoxK.TabIndex = 20;
             this.textBoxK.Text = "1000";
             // 
@@ -178,7 +185,7 @@
             // 
             this.textBoxDK.Location = new System.Drawing.Point(30, 107);
             this.textBoxDK.Name = "textBoxDK";
-            this.textBoxDK.Size = new System.Drawing.Size(59, 20);
+            this.textBoxDK.Size = new System.Drawing.Size(44, 20);
             this.textBoxDK.TabIndex = 22;
             this.textBoxDK.Text = "0";
             // 
@@ -195,7 +202,7 @@
             // 
             this.textBoxDi.Location = new System.Drawing.Point(30, 136);
             this.textBoxDi.Name = "textBoxDi";
-            this.textBoxDi.Size = new System.Drawing.Size(59, 20);
+            this.textBoxDi.Size = new System.Drawing.Size(44, 20);
             this.textBoxDi.TabIndex = 24;
             this.textBoxDi.Text = "0";
             // 
@@ -212,7 +219,7 @@
             // 
             this.textBoxDUsm.Location = new System.Drawing.Point(43, 166);
             this.textBoxDUsm.Name = "textBoxDUsm";
-            this.textBoxDUsm.Size = new System.Drawing.Size(46, 20);
+            this.textBoxDUsm.Size = new System.Drawing.Size(31, 20);
             this.textBoxDUsm.TabIndex = 26;
             this.textBoxDUsm.Text = "0";
             // 
@@ -220,7 +227,7 @@
             // 
             this.buttonGetModel.Location = new System.Drawing.Point(9, 192);
             this.buttonGetModel.Name = "buttonGetModel";
-            this.buttonGetModel.Size = new System.Drawing.Size(80, 36);
+            this.buttonGetModel.Size = new System.Drawing.Size(134, 24);
             this.buttonGetModel.TabIndex = 27;
             this.buttonGetModel.Text = "Получить модель";
             this.buttonGetModel.UseVisualStyleBackColor = true;
@@ -231,23 +238,23 @@
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea7.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea7);
-            this.mainChart.Location = new System.Drawing.Point(107, 50);
+            chartArea2.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea2);
+            this.mainChart.Location = new System.Drawing.Point(149, 50);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.mainChart.Size = new System.Drawing.Size(462, 276);
+            this.mainChart.Size = new System.Drawing.Size(442, 276);
             this.mainChart.TabIndex = 33;
-            title7.Name = "Title1";
-            title7.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title7);
+            title2.Name = "Title1";
+            title2.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title2);
             // 
             // buttonExpand
             // 
             this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExpand.Location = new System.Drawing.Point(473, 332);
+            this.buttonExpand.Location = new System.Drawing.Point(523, 332);
             this.buttonExpand.Name = "buttonExpand";
-            this.buttonExpand.Size = new System.Drawing.Size(96, 23);
+            this.buttonExpand.Size = new System.Drawing.Size(68, 23);
             this.buttonExpand.TabIndex = 34;
             this.buttonExpand.Text = "Раскрыть график";
             this.buttonExpand.UseVisualStyleBackColor = true;
@@ -263,23 +270,90 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewVect.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dataGridViewVect.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVect.Location = new System.Drawing.Point(575, 12);
+            this.dataGridViewVect.Location = new System.Drawing.Point(597, 12);
             this.dataGridViewVect.MultiSelect = false;
             this.dataGridViewVect.Name = "dataGridViewVect";
             this.dataGridViewVect.ReadOnly = true;
             this.dataGridViewVect.RowHeadersVisible = false;
             this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridViewVect.ShowCellToolTips = false;
-            this.dataGridViewVect.Size = new System.Drawing.Size(262, 367);
+            this.dataGridViewVect.Size = new System.Drawing.Size(240, 367);
             this.dataGridViewVect.TabIndex = 35;
             this.dataGridViewVect.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewVect_CellPainting);
             this.dataGridViewVect.SelectionChanged += new System.EventHandler(this.dataGridViewVect_SelectionChanged);
+            // 
+            // labelCriticalDK
+            // 
+            this.labelCriticalDK.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.labelCriticalDK.Location = new System.Drawing.Point(80, 110);
+            this.labelCriticalDK.Name = "labelCriticalDK";
+            this.labelCriticalDK.Size = new System.Drawing.Size(41, 13);
+            this.labelCriticalDK.TabIndex = 36;
+            // 
+            // labelCriticalDi
+            // 
+            this.labelCriticalDi.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.labelCriticalDi.Location = new System.Drawing.Point(80, 139);
+            this.labelCriticalDi.Name = "labelCriticalDi";
+            this.labelCriticalDi.Size = new System.Drawing.Size(41, 13);
+            this.labelCriticalDi.TabIndex = 37;
+            // 
+            // labelCriticalDsm
+            // 
+            this.labelCriticalDsm.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.labelCriticalDsm.Location = new System.Drawing.Point(80, 169);
+            this.labelCriticalDsm.Name = "labelCriticalDsm";
+            this.labelCriticalDsm.Size = new System.Drawing.Size(41, 13);
+            this.labelCriticalDsm.TabIndex = 38;
+            // 
+            // buttonCriticalDK
+            // 
+            this.buttonCriticalDK.BackColor = System.Drawing.Color.Red;
+            this.buttonCriticalDK.Location = new System.Drawing.Point(127, 107);
+            this.buttonCriticalDK.Name = "buttonCriticalDK";
+            this.buttonCriticalDK.Size = new System.Drawing.Size(16, 20);
+            this.buttonCriticalDK.TabIndex = 39;
+            this.buttonCriticalDK.UseVisualStyleBackColor = false;
+            // 
+            // buttonCriticalDi
+            // 
+            this.buttonCriticalDi.BackColor = System.Drawing.Color.Green;
+            this.buttonCriticalDi.Location = new System.Drawing.Point(127, 136);
+            this.buttonCriticalDi.Name = "buttonCriticalDi";
+            this.buttonCriticalDi.Size = new System.Drawing.Size(16, 20);
+            this.buttonCriticalDi.TabIndex = 40;
+            this.buttonCriticalDi.UseVisualStyleBackColor = false;
+            // 
+            // buttonCritical
+            // 
+            this.buttonCritical.BackColor = System.Drawing.SystemColors.Highlight;
+            this.buttonCritical.Location = new System.Drawing.Point(127, 166);
+            this.buttonCritical.Name = "buttonCritical";
+            this.buttonCritical.Size = new System.Drawing.Size(16, 20);
+            this.buttonCritical.TabIndex = 41;
+            this.buttonCritical.UseVisualStyleBackColor = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(9, 222);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(134, 37);
+            this.button1.TabIndex = 42;
+            this.button1.Text = "Получить критические значения параметров";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // DigitalVoltmeterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(849, 561);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonCritical);
+            this.Controls.Add(this.buttonCriticalDi);
+            this.Controls.Add(this.buttonCriticalDK);
+            this.Controls.Add(this.labelCriticalDsm);
+            this.Controls.Add(this.labelCriticalDi);
+            this.Controls.Add(this.labelCriticalDK);
             this.Controls.Add(this.dataGridViewVect);
             this.Controls.Add(this.buttonExpand);
             this.Controls.Add(this.mainChart);
@@ -336,6 +410,13 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart mainChart;
         private System.Windows.Forms.Button buttonExpand;
         private System.Windows.Forms.DataGridView dataGridViewVect;
+        private System.Windows.Forms.Label labelCriticalDK;
+        private System.Windows.Forms.Label labelCriticalDi;
+        private System.Windows.Forms.Label labelCriticalDsm;
+        private System.Windows.Forms.Button buttonCriticalDK;
+        private System.Windows.Forms.Button buttonCriticalDi;
+        private System.Windows.Forms.Button buttonCritical;
+        private System.Windows.Forms.Button button1;
     }
 }
 

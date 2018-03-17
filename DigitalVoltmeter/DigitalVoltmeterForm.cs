@@ -27,7 +27,9 @@ namespace DigitalVoltmeter
         private LongBits[] b;
         private LongBits[] a;
 
-        private double[] voltages;
+        private double[] modelVoltages;
+        private double[] idealVoltages;
+        private double voltagesQuantumStep;
 
         private GraphExpandingForm expandingForm = new GraphExpandingForm();
 
@@ -146,13 +148,15 @@ namespace DigitalVoltmeter
 
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
             int countNumbers = (int)Math.Pow(2, n);
-            voltages = new double[countNumbers];
+            modelVoltages = new double[countNumbers];
+            idealVoltages = new double[countNumbers];
 
             initializeDataGrid();
             errorBitIndexes = new List<List<int>>() { };
             for (int x = 0; x < countNumbers; x++)
             {
-                voltages[x] = emulator.Uin(x);
+                modelVoltages[x] = emulator.Uin(x);
+                idealVoltages[x] = emulator.IdealUin(x);
                 LongBits binaryCode = emulator.GetDKFromComparators(x);
                 LongBits inCode = new LongBits(x, n);
 
@@ -163,7 +167,10 @@ namespace DigitalVoltmeter
                 if (error)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
-            VoltageChartService.DrawInputVoltageList(mainChart, "Voltages", voltages, Color.Red, 2);
+            voltagesQuantumStep = emulator.IdealUin(1);
+            VoltageChartService chartService = new VoltageChartService(this.mainChart, "¬ходное напр€жение", voltagesQuantumStep);
+            chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
+            chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
         }
 
         bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
@@ -180,7 +187,7 @@ namespace DigitalVoltmeter
 
         private void buttonExpand_Click(object sender, EventArgs e)
         {
-            if (voltages == null)
+            if (modelVoltages == null)
             {
                 MessageBox.Show("First generate the data!");
                 return;
@@ -190,7 +197,9 @@ namespace DigitalVoltmeter
             {
                 expandingForm = new GraphExpandingForm();
                 expandingForm.Chart.Series.Clear();
-                VoltageChartService.DrawInputVoltageList(expandingForm.Chart, "Voltages", voltages, Color.Red, 2);
+                VoltageChartService chartService = new VoltageChartService(expandingForm.Chart, "¬ходное напр€жение", voltagesQuantumStep);
+                chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Yellow, 2);
+                chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
                 expandingForm.Show();
             }
         }
