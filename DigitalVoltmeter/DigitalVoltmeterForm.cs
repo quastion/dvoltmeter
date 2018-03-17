@@ -74,10 +74,18 @@ namespace DigitalVoltmeter
                 Width = TextRenderer.MeasureText("Выход 10", dataGridViewVect.Font).Width + 6
             };
 
+            DataGridViewTextBoxColumn _errInds = new DataGridViewTextBoxColumn
+            {
+                Name = "Ошиб. b",
+                SortMode = DataGridViewColumnSortMode.NotSortable,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+
             dataGridViewVect.Columns.Add(_in);
             dataGridViewVect.Columns.Add(_out);
             dataGridViewVect.Columns.Add(_inDes);
             dataGridViewVect.Columns.Add(_outDes);
+            dataGridViewVect.Columns.Add(_errInds);
 
             dataGridViewVect.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
         }
@@ -155,11 +163,13 @@ namespace DigitalVoltmeter
                 voltages[x] = emulator.Uin(x);
                 LongBits binaryCode = emulator.GetDKFromComparators(x);
                 LongBits inCode = new LongBits(x, n);
+                int[] errorInds = emulator.GetEKPErrorFromComparators(x);
 
                 List<int> diffs;
                 bool error = !GetIndexesOfDiffs(inCode, binaryCode, out diffs);
                 errorBitIndexes.Add(diffs);
-                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong() });
+
+                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong(), string.Join(", ", errorInds) });
                 if (error)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
