@@ -105,7 +105,7 @@
             // 
             this.buttonSaveToExel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSaveToExel.Location = new System.Drawing.Point(11, 527);
-            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonSaveToExel.Name = "buttonSaveToExel";
             this.buttonSaveToExel.Size = new System.Drawing.Size(110, 23);
             this.buttonSaveToExel.TabIndex = 8;
@@ -154,6 +154,7 @@
             this.textBoxN.Size = new System.Drawing.Size(44, 20);
             this.textBoxN.TabIndex = 18;
             this.textBoxN.Text = "8";
+            this.textBoxN.TextChanged += new System.EventHandler(this.textBoxN_TextChanged);
             // 
             // label4
             // 
@@ -315,6 +316,7 @@
             this.buttonCriticalDK.Size = new System.Drawing.Size(16, 20);
             this.buttonCriticalDK.TabIndex = 39;
             this.buttonCriticalDK.UseVisualStyleBackColor = false;
+            this.buttonCriticalDK.Click += new System.EventHandler(this.buttonCriticalDK_Click);
             // 
             // buttonCriticalDi
             // 

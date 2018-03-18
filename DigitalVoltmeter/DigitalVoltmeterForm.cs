@@ -568,5 +568,57 @@ namespace DigitalVoltmeter
         {
             dataGridViewVect.ClearSelection();
         }
+
+
+
+        private void buttonCriticalDK_Click(object sender, EventArgs e)
+        {
+            int n = 0, deltaIndex = 0;
+            double coeff = 0, deltaCoeff = 0, deltaSM = 0;
+
+            n = int.Parse(textBoxN.Text);
+            coeff = double.Parse(textBoxK.Text);
+            try
+            {
+                deltaCoeff = double.Parse(labelCriticalDK.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Absent critical parameters!");
+                return;
+            }
+            
+
+            DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            voltagesQuantumStep = emulator.RealStep;
+            int countNumbers = (int)Math.Pow(2, n);
+            modelVoltages = new double[countNumbers];
+            idealVoltages = new double[countNumbers];
+
+            dataGridViewVect.Rows.Clear();
+            for (int x = 0; x < countNumbers; x++)
+            {
+                modelVoltages[x] = emulator.Uin(x);
+                idealVoltages[x] = emulator.IdealUin(x);
+                LongBits binaryCode = emulator.GetDKFromComparators(x);
+                LongBits inCode = new LongBits(x, n);
+                int[] errorInds = emulator.GetEKPErrorFromComparators(x);
+
+                dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong(), string.Join(", ", errorInds) });
+                if (inCode != binaryCode)
+                    dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
+            }
+            modelVoltageColor = Color.Red;
+            VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение при критическом ΔK", voltagesQuantumStep);
+            chartService.AddInputVoltageList("Voltages", modelVoltages, modelVoltageColor, 2);
+            chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
+        }
+
+        private void textBoxN_TextChanged(object sender, EventArgs e)
+        {
+            labelCriticalDK.Text = "";
+            labelCriticalDi.Text = "";
+            labelCriticalDsm.Text = "";
+        }
     }
 }
