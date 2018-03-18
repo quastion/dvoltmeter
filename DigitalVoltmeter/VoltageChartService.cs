@@ -29,7 +29,7 @@ namespace DigitalVoltmeter
             this.title = title;
             this.quantStep = quantStep;
             this.chart.ChartAreas[0].AxisY.Interval = quantStep;
-            //this.chart.Titles[0] = new Title(title);
+            this.chart.Titles[0] = new Title(title);
         }
 
         /// <summary>

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -239,16 +239,16 @@
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea3);
             this.mainChart.Location = new System.Drawing.Point(149, 50);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.mainChart.Size = new System.Drawing.Size(442, 276);
             this.mainChart.TabIndex = 33;
-            title1.Name = "Title1";
-            title1.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title1);
+            title3.Name = "Title1";
+            title3.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title3);
             // 
             // buttonExpand
             // 
@@ -326,6 +326,7 @@
             this.buttonCriticalDi.Size = new System.Drawing.Size(16, 20);
             this.buttonCriticalDi.TabIndex = 40;
             this.buttonCriticalDi.UseVisualStyleBackColor = false;
+            this.buttonCriticalDi.Click += new System.EventHandler(this.buttonCriticalDi_Click);
             // 
             // buttonCritical
             // 
@@ -335,6 +336,7 @@
             this.buttonCritical.Size = new System.Drawing.Size(16, 20);
             this.buttonCritical.TabIndex = 41;
             this.buttonCritical.UseVisualStyleBackColor = false;
+            this.buttonCritical.Click += new System.EventHandler(this.buttonCritical_Click);
             // 
             // button1
             // 
