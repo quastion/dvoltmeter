@@ -204,16 +204,13 @@ namespace DigitalVoltmeter
 
         private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.RowIndex < 0)
+            if (e.RowIndex < 0 || (e.ColumnIndex != 1 && e.ColumnIndex != 3))
                 return;
 
             DataGridView dataGridView = sender as DataGridView;
             LongBits inCode = dataGridView.Rows[e.RowIndex].Cells[0].Value as LongBits;
             LongBits binaryCode = dataGridView.Rows[e.RowIndex].Cells[1].Value as LongBits;
             int[] difference = LongBits.GetStringIndexesOfDifferenceBits(inCode, binaryCode);
-            
-            if (difference.Length == 0)
-                return;
 
             //кастомная отрисовка ячеек Выхода
             if (e.ColumnIndex == 1)
