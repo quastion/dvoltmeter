@@ -22,7 +22,7 @@ namespace DigitalVoltmeter
 
         public double QuantStep { get; private set; }
 
-        public double RealStep { get { return Uin(1); } }
+        public double RealStep { get { return IdealUin(1); } }
 
         public DACEmulator(int n = 8)
         {

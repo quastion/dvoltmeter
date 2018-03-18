@@ -31,6 +31,8 @@ namespace DigitalVoltmeter
         private double[] idealVoltages;
         private double voltagesQuantumStep;
 
+        private Color idealVoltageColor = Color.Green;
+
         private GraphExpandingForm expandingForm;
 
         public DigitalVoltmeterForm()
@@ -176,7 +178,7 @@ namespace DigitalVoltmeter
             }
             VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение", voltagesQuantumStep);
             chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
-            chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
+            chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
         }
 
         private List<ParamsContainer> TestingModel(int n, double coeff)
