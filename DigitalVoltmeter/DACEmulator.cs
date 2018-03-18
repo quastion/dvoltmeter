@@ -154,29 +154,35 @@ namespace DigitalVoltmeter
             double deltaSM = 0;
             int countNumbers = (int)Math.Pow(2, n);
             List<int> indexes = new List<int>();
+            ParamsContainer container = new ParamsContainer(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            LongBits inputBinaryCode = null, outputBinaryCode = null;
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
             while (indexes.Count == 0)
             {
                 emulator.DeltaCoeff = deltaCoeff;
                 emulator.DeltaIndex = deltaIndex;
                 emulator.DeltaSM = deltaSM;
+                container.ErrorIndexesFromInputAndOutputCodes.Clear();
                 for (int x = 0; x < countNumbers; x++)
                 {
                     indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
+                    inputBinaryCode = new LongBits(x, n);
+                    outputBinaryCode = emulator.GetDKFromComparators(x);
+                    if (inputBinaryCode != outputBinaryCode)
+                    {
+                        container.ErrorIndexesFromInputAndOutputCodes.Add(x);
+                    }
                 }
                 if (delta == Delta.Coeff) deltaCoeff += 0.0001;
                 else if (delta == Delta.Index) deltaIndex++;
                 else if (delta == Delta.SM) deltaSM += 0.0001;
             }
-            ParamsContainer container = new ParamsContainer
-            {
-                N = emulator.N,
-                Coeff = emulator.Coeff,
-                DeltaCoeff = emulator.DeltaCoeff,
-                DeltaIndex = emulator.DeltaIndex,
-                DeltaSM = emulator.DeltaSM
-            };
-            container.ComparatorsErrorIndexes = indexes.ToArray();
+            container.DeltaCoeff = emulator.DeltaCoeff;
+            container.DeltaIndex = emulator.DeltaIndex;
+            container.DeltaSM = emulator.DeltaSM;
+            container.ComparatorsErrorIndexes = indexes.Distinct().ToArray();
+            container.InputBinaryCodes.Add(inputBinaryCode);
+            container.OutputBinaryCodes.Add(outputBinaryCode);
             return container;
         }
     }
