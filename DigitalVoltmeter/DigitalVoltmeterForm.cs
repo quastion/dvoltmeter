@@ -183,18 +183,6 @@ namespace DigitalVoltmeter
             return list;
         }
 
-        bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
-        {//Все таки пришлось циклом сравнить. Ваня, не бей(
-            diffs = null;
-            if (first.Length != second.Length) return first == second;
-            diffs = new List<int>() { };
-            string sf = first.ToString();
-            string ss = second.ToString();
-            for (int i = 0; i < sf.Length; i++)
-                if (sf[i] != ss[i]) diffs.Add(i);
-            return diffs.Count == 0;
-        }
-
         private void buttonExpand_Click(object sender, EventArgs e)
         {
             if (modelVoltages == null)
