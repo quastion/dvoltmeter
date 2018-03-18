@@ -28,7 +28,7 @@ namespace DigitalVoltmeter
             this.chart.ChartAreas[0].AxisY.TextOrientation = TextOrientation.Horizontal;
             this.title = title;
             this.quantStep = quantStep;
-            this.chart.ChartAreas[0].AxisY.Interval = quantStep;
+            this.chart.ChartAreas[0].AxisY.Interval = this.quantStep;
             this.chart.Titles[0] = new Title(title);
         }
 
@@ -40,6 +40,9 @@ namespace DigitalVoltmeter
         /// <param name="width">ширина линии</param>
         public void AddInputVoltageList(string seriesName, double[] voltages, Color color, int width)
         {
+            double n = Math.Log(voltages.Length, 2);
+            double readQuantStep = (n > 5) ? (quantStep * (n - 4)) : quantStep;
+            this.chart.ChartAreas[0].AxisY.Interval = readQuantStep;
             Series voltageSeries = new Series(seriesName);
             voltageSeries.ChartType = SeriesChartType.StepLine;
             voltageSeries.Color = color;
