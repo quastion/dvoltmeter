@@ -176,7 +176,7 @@ namespace DigitalVoltmeter
                 DeltaIndex = emulator.DeltaIndex,
                 DeltaSM = emulator.DeltaSM
             };
-            container.comparatorsErrorIndexes = indexes.ToArray();
+            container.ComparatorsErrorIndexes = indexes.ToArray();
             return container;
         }
     }

@@ -11,6 +11,7 @@ namespace DigitalVoltmeter
     {
         private Excel.Application excelApp;
         private Workbook workBook;
+        private Worksheet workSheet;
 
         private ProgressBar progressBar = null;
         private DelegatePerformStep performStep = null;
@@ -24,6 +25,20 @@ namespace DigitalVoltmeter
         public ExcelTools(ProgressBar bar = null)
         {
             SetProgressBar(bar);
+            excelApp = new Excel.Application();
+            workBook = excelApp.Workbooks.Add();
+            workSheet = workBook.Worksheets.get_Item(1);
+            workSheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            workSheet.Cells.VerticalAlignment = XlHAlign.xlHAlignCenter;
+        }
+
+        public ExcelTools()
+        {
+            excelApp = new Excel.Application();
+            workBook = excelApp.Workbooks.Add();
+            workSheet = workBook.Worksheets.get_Item(1);
+            workSheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            workSheet.Cells.VerticalAlignment = XlHAlign.xlHAlignCenter;
         }
 
         public void SetProgressBar(ProgressBar bar)
@@ -64,23 +79,15 @@ namespace DigitalVoltmeter
 
         public void GenerateDocument(string[] singleCodes, string[] b, string[] binaryCodes)
         {
-            excelApp = new Excel.Application();
-            workBook = excelApp.Workbooks.Add();
-            Worksheet workSheet = workBook.Worksheets.get_Item(1);
-
             SetMaxValueBar(singleCodes.Length + b.Length + binaryCodes.Length);
 
             int columnStartingNum = 1;
             int rowStartingNum = 1;
 
-            //Выравнивание по центру во всех ячейках
-            workSheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            workSheet.Cells.VerticalAlignment = XlHAlign.xlHAlignCenter;
-
             //Таблица с единичным кодом
             //Заголовки
             workSheet.get_Range("A1", "A2").Cells.Merge(Type.Missing);
-            MergeCells(1, singleCodes.Length - 1, workSheet);
+            MergeCells(1, singleCodes.Length - 1);
             workSheet.Cells[rowStartingNum, 1] = "N10";
             workSheet.get_Range(GetCellName(0, 1),
                         Missing.Value).Interior.ColorIndex = 15;
@@ -93,14 +100,14 @@ namespace DigitalVoltmeter
             columnStartingNum += singleCodes.Length - 1;
             rowStartingNum = 1;
             //Заголовки
-            MergeCells(columnStartingNum, columnStartingNum + singleCodes.Length - 2, workSheet);
+            MergeCells(columnStartingNum, columnStartingNum + singleCodes.Length - 2);
             workSheet.Cells[rowStartingNum, columnStartingNum + 1] = "Единичный позиционный код";
             rowStartingNum++;
             //Вывод индексов единичных позиционных кодов
             for (int i = b.Length; i > 0; i--)
             {
                 workSheet.Cells[rowStartingNum, columnStartingNum + i] = "b" + (i);
-                workSheet.get_Range(GetCellName(columnStartingNum + i-1, rowStartingNum), Missing.Value).Interior.ColorIndex = 43;
+                workSheet.get_Range(GetCellName(columnStartingNum + i - 1, rowStartingNum), Missing.Value).Interior.ColorIndex = 43;
             }
             rowStartingNum++;
             //Вывод значений с единичными позиционными кодами
@@ -110,10 +117,10 @@ namespace DigitalVoltmeter
                 {
                     workSheet.Cells[rowStartingNum + i, columnStartingNum + j + 1] =
                         b[i][b[i].Length - 1 - j].ToString();
-                    workSheet.get_Range(GetCellName(columnStartingNum + j, rowStartingNum + i ),
+                    workSheet.get_Range(GetCellName(columnStartingNum + j, rowStartingNum + i),
                         Missing.Value).Interior.ColorIndex = colorIndexGeneral1;
                 }
-                    ChangeCellFillingColor(ref colorIndexGeneral1, 2, 15);
+                ChangeCellFillingColor(ref colorIndexGeneral1, 2, 15);
                 PerformStepBar();
 
             }
@@ -122,7 +129,7 @@ namespace DigitalVoltmeter
             columnStartingNum += singleCodes.Length - 1;
             rowStartingNum = 1;
             //Заголовки
-            MergeCells(columnStartingNum, columnStartingNum + (int)Math.Ceiling(Math.Log(binaryCodes.Length, 2)) - 1, workSheet);
+            MergeCells(columnStartingNum, columnStartingNum + (int)Math.Ceiling(Math.Log(binaryCodes.Length, 2)) - 1);
             workSheet.Cells[rowStartingNum, columnStartingNum + 1] = "Двоичный код";
             rowStartingNum++;
             //Вывод заголовков с индексами двоичных кодов
@@ -147,6 +154,11 @@ namespace DigitalVoltmeter
                 PerformStepBar();
             }
 
+            Show();
+        }
+
+        public void Show()
+        {
             excelApp.Visible = true;
             excelApp.UserControl = true;
         }
@@ -168,7 +180,7 @@ namespace DigitalVoltmeter
             for (int i = values.Length - startingIndex; i > 0; i--)
             {
                 workSheet.Cells[row, column + i] = literal + (i);
-                workSheet.get_Range(GetCellName(column + i-1, row), Missing.Value).Interior.ColorIndex = 10;
+                workSheet.get_Range(GetCellName(column + i - 1, row), Missing.Value).Interior.ColorIndex = 10;
             }
             row++;
             for (int i = 0; i < values.Length; i++)
@@ -195,18 +207,49 @@ namespace DigitalVoltmeter
         /// <param name="columnStartingIndex"></param>
         /// <param name="columnEndingIndex"></param>
         /// <param name="workSheet"></param>
-        private void MergeCells(int columnStartingIndex, int columnEndingIndex, Worksheet workSheet)
+        public void MergeCells(int columnStartingIndex, int columnEndingIndex, int rowStartingIndex = 0, int rowEndingIndex = 0)
         {
-            string startingLiteral = GetCellName(columnStartingIndex, 1);
-            string endLiteral = GetCellName(columnEndingIndex, 1); ;
+            string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex+1);
+            string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex+1);
             workSheet.get_Range(startingLiteral, endLiteral).Cells.Merge(Type.Missing);
+        }
+
+        public void Borders(int columnStartingIndex, int columnEndingIndex, int rowStartingIndex, int rowEndingIndex,
+            XlLineStyle lineStyle, double weight)
+        {
+            string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex + 1);
+            string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex + 1);
+            for(int i =7; i < 11; i++)
+            {
+                workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].LineStyle = lineStyle;
+                workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].Weight = weight;
+            }
+        }
+
+        public void FillColor(int row, int column, int color = 46)
+        {
+            if (row < 0 || column < 0)
+                throw new Exception("Выход индексов за границы таблицы!");
+            workSheet.get_Range(GetCellName(column, row+1), Missing.Value).Interior.ColorIndex = color;
         }
 
         private string GetCellName(int columnIndex, int rowIndex)
         {
             return (columnIndex > 676 ? ((char)('A' + columnIndex / 676 - 1)).ToString() : "") +
-                ((columnIndex % 676) > 26 ? ((char)('A' + (columnIndex % 676) / 26 - 1)).ToString() : "")
+                ((columnIndex % 676) >= 26 ? ((char)('A' + (columnIndex % 676) / 26 - 1)).ToString() : "")
                 + (char)('A' + (columnIndex % 26)) + rowIndex.ToString();
+        }
+
+        public void Write(int row, int column, string text)
+        {
+            if (row < 0 || column < 0)
+                throw new Exception("Выход индексов за границы таблицы!");
+            workSheet.Cells[row+1, column+1] = text;
+        }
+
+        public void SetColumnsWidth(int columnIndex1, int columnIndex2, int width)
+        {
+            workSheet.Range[GetCellName(columnIndex1, 1), GetCellName(columnIndex2, 1)].EntireColumn.ColumnWidth = width;
         }
 
         private void ChangeCellFillingColor(ref int colorIndexGeneral, int colorIndex1, int colorIndex2)

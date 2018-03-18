@@ -23,11 +23,11 @@ namespace DigitalVoltmeter
 
         public double DeltaSM { get; set; }
 
-        public List<LongBits> InputBinaryCode { get; set; }
-        public List<LongBits> OutputBinaryCode { get; set; }
+        public List<LongBits> InputBinaryCodes { get; set; }
+        public List<LongBits> OutputBinaryCodes { get; set; }
 
-        public int[] comparatorsErrorIndexes { get; set; }
-        public int[] errorIndexesFromInputAndOutputCodes { get; set; }
+        public int[] ComparatorsErrorIndexes { get; set; }
+        public List<int> ErrorIndexesFromInputAndOutputCodes { get; set; }
 
 
         public ParamsContainer(int n, double coeff, double deltaCoeff, int deltaIndex, double deltaSM)
@@ -37,10 +37,16 @@ namespace DigitalVoltmeter
             DeltaCoeff = deltaCoeff;
             DeltaIndex = deltaIndex;
             DeltaSM = deltaSM;
+            InputBinaryCodes = new List<LongBits>();
+            OutputBinaryCodes = new List<LongBits>();
+            ErrorIndexesFromInputAndOutputCodes = new List<int>();
         }
 
         public ParamsContainer()
         {
+            InputBinaryCodes = new List<LongBits>();
+            OutputBinaryCodes = new List<LongBits>();
+            ErrorIndexesFromInputAndOutputCodes = new List<int>();
         }
     }
 }
