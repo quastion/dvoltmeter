@@ -116,14 +116,34 @@ namespace DigitalVoltmeter
         {
             if (first.Length == second.Length)
                 return first.bitsString.Equals(second.bitsString);
-            string firstEqualsPart = string.Concat(first.bitsString.ToString().SkipWhile(elem => elem == '0'));
-            string secondEqualsPart = string.Concat(second.bitsString.ToString().SkipWhile(elem => elem == '0'));
+            string firstEqualsPart = string.Concat(first.ToString().TrimStart('0'));
+            string secondEqualsPart = string.Concat(second.ToString().TrimStart('0'));
             return firstEqualsPart == secondEqualsPart;
         }
 
         public static bool operator !=(LongBits first, LongBits second)
         {
             return !(first == second);
+        }
+
+        public static int[] GetStringIndexesOfDifferenceBits(LongBits first, LongBits second)
+        {
+            if (first.bitsString.Equals(second.bitsString))
+                return new int[] { };
+
+            string firstString = first.ToString();
+            string secondString = second.ToString();
+            while (firstString.Length > secondString.Length)
+                secondString = "0" + secondString;
+            while (firstString.Length < secondString.Length)
+                firstString = "0" + firstString;
+
+            List<int> indexesOfBits = new List<int>();
+            for (int i = 0; i < firstString.Length; i++)
+            {
+                if (firstString[i] != secondString[i]) indexesOfBits.Add(i);
+            }
+            return indexesOfBits.ToArray();
         }
 
         public long ToLong()

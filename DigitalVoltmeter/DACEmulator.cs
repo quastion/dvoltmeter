@@ -8,6 +8,8 @@ namespace DigitalVoltmeter
 {
     class DACEmulator
     {
+        public enum Delta { Coeff = 0, Index = 1, SM = 2 }
+
         public int N { get; private set; }
 
         public double Coeff { get; set; }
@@ -19,6 +21,8 @@ namespace DigitalVoltmeter
         public double DeltaSM { get; set; }
 
         public double QuantStep { get; private set; }
+
+        public double RealStep { get { return Uin(1); } }
 
         public DACEmulator(int n = 8)
         {
@@ -141,6 +145,39 @@ namespace DigitalVoltmeter
                     errors.Add(i + 1);
             }
             return errors.ToArray();
+        }
+
+        public static ParamsContainer TestingDelta(int n, double coeff, Delta delta)
+        {
+            double deltaCoeff = 0;
+            int deltaIndex = 0;
+            double deltaSM = 0;
+            int countNumbers = (int)Math.Pow(2, n);
+            List<int> indexes = new List<int>();
+            DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            while (indexes.Count == 0)
+            {
+                emulator.DeltaCoeff = deltaCoeff;
+                emulator.DeltaIndex = deltaIndex;
+                emulator.DeltaSM = deltaSM;
+                for (int x = 0; x < countNumbers; x++)
+                {
+                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
+                }
+                if (delta == Delta.Coeff) deltaCoeff += 0.0001;
+                else if (delta == Delta.Index) deltaIndex++;
+                else if (delta == Delta.SM) deltaSM += 0.0001;
+            }
+            ParamsContainer container = new ParamsContainer
+            {
+                N = emulator.N,
+                Coeff = emulator.Coeff,
+                DeltaCoeff = emulator.DeltaCoeff,
+                DeltaIndex = emulator.DeltaIndex,
+                DeltaSM = emulator.DeltaSM
+            };
+            container.comparatorsErrorIndexes = indexes.ToArray();
+            return container;
         }
     }
 }

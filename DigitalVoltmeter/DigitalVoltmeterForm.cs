@@ -11,14 +11,9 @@ namespace DigitalVoltmeter
 {
     public partial class DigitalVoltmeterForm : Form
     {
-        Color errorCellBackColor = Color.Pink;
-        Color errorCellTextColor = Color.OrangeRed;
-        Font errorFont;
-
-        /// <summary>
-        /// Отсортированные списки индексов ошибочных бит ячеек Выхода
-        /// </summary>
-        List<List<int>> errorBitIndexes = new List<List<int>>() { };
+        public readonly Color errorCellBackColor = Color.Pink;
+        public readonly Color errorCellTextColor = Color.OrangeRed;
+        public readonly Font errorFont;
 
         private ExcelTools excel;
         private WordTools word;
@@ -31,18 +26,19 @@ namespace DigitalVoltmeter
         private double[] idealVoltages;
         private double voltagesQuantumStep;
 
-        private GraphExpandingForm expandingForm = new GraphExpandingForm();
+        private GraphExpandingForm expandingForm;
 
         public DigitalVoltmeterForm()
         {
             InitializeComponent();
-            initializeDataGrid();
+            InitializeDataGrid();
+            expandingForm = new GraphExpandingForm();
             errorFont = new Font(dataGridViewVect.Font, FontStyle.Bold);
             excel = new ExcelTools(progressBar);
             word = new WordTools(progressBar);
         }
 
-        void initializeDataGrid()
+        private void InitializeDataGrid()
         {
             dataGridViewVect.Columns.Clear();
 
@@ -155,12 +151,12 @@ namespace DigitalVoltmeter
             }
 
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            voltagesQuantumStep = emulator.RealStep;
             int countNumbers = (int)Math.Pow(2, n);
             modelVoltages = new double[countNumbers];
             idealVoltages = new double[countNumbers];
 
-            initializeDataGrid();
-            errorBitIndexes = new List<List<int>>() { };
+            dataGridViewVect.Rows.Clear();
             for (int x = 0; x < countNumbers; x++)
             {
                 modelVoltages[x] = emulator.Uin(x);
@@ -168,82 +164,23 @@ namespace DigitalVoltmeter
                 LongBits binaryCode = emulator.GetDKFromComparators(x);
                 LongBits inCode = new LongBits(x, n);
                 int[] errorInds = emulator.GetEKPErrorFromComparators(x);
-
-                List<int> diffs;
-                bool error = !GetIndexesOfDiffs(inCode, binaryCode, out diffs);
-                errorBitIndexes.Add(diffs);
-
+                
                 dataGridViewVect.Rows.Add(new object[] { inCode, binaryCode, inCode.ToLong(), binaryCode.ToLong(), string.Join(", ", errorInds) });
-                if (error)
+                if (inCode != binaryCode)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
-            voltagesQuantumStep = emulator.IdealUin(1);
             VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение", voltagesQuantumStep);
             chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, Color.Yellow, 2);
         }
 
-        List<ParamsContainer> TestingModel(int n, double coeff)
+        private List<ParamsContainer> TestingModel(int n, double coeff)
         {
-            List<ParamsContainer> l = new List<ParamsContainer> { };
-            DACEmulator emulator;
-            double deltaCoeff = 0;
-            int deltaIndex = 0;
-            double deltaSM = 0;
-            List<int> indexes = new List<int> { };
-            while (indexes.Count == 0)
-            {
-                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-
-                int countNumbers = (int)Math.Pow(2, n);
-                int x;
-                for (x = 0; x < countNumbers; x++)
-                {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                }
-                deltaCoeff += 0.0001;
-            }
-            double deltaCoeffCrit = deltaCoeff;
-            ParamsContainer p = new ParamsContainer(n, coeff, deltaCoeffCrit, 0, 0);
-            p.comparatorsErrorIndexes = indexes.ToArray();
-            l.Add(p);
-            deltaCoeff = 0;
-            indexes = new List<int> { };
-            while (indexes.Count == 0)
-            {
-                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-
-                int countNumbers = (int)Math.Pow(2, n);
-                int x;
-                for (x = 0; x < countNumbers; x++)
-                {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                }
-                deltaIndex++;
-            }
-            int deltaIndexCrit = deltaIndex;
-            p = new ParamsContainer(n, coeff, 0, deltaIndexCrit, 0);
-            p.comparatorsErrorIndexes = indexes.ToArray();
-            l.Add(p);
-            indexes = new List<int> { };
-            deltaIndex = 0;
-            while (indexes.Count == 0)
-            {
-                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-
-                int countNumbers = (int)Math.Pow(2, n);
-                int x;
-                for (x = 0; x < countNumbers; x++)
-                {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                }
-                deltaSM += 0.0001;
-            }
-            double deltaSMCrit = deltaSM;
-            p = new ParamsContainer(n, coeff, 0, 0, deltaSMCrit);
-            p.comparatorsErrorIndexes = indexes.ToArray();
-            l.Add(p);
-            return l;
+            List<ParamsContainer> list = new List<ParamsContainer>();
+            list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Coeff));
+            list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Index));
+            list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.SM));
+            return list;
         }
 
         bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
@@ -277,6 +214,86 @@ namespace DigitalVoltmeter
             }
         }
 
+        private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            DataGridView dataGridView = sender as DataGridView;
+            LongBits inCode = dataGridView.Rows[e.RowIndex].Cells[0].Value as LongBits;
+            LongBits binaryCode = dataGridView.Rows[e.RowIndex].Cells[1].Value as LongBits;
+            int[] difference = LongBits.GetStringIndexesOfDifferenceBits(inCode, binaryCode);
+            
+            if (difference.Length == 0)
+                return;
+
+            //кастомная отрисовка ячеек Выхода
+            if (e.ColumnIndex == 1)
+            {
+                e.PaintBackground(e.ClipBounds, true);
+
+                Font font = e.CellStyle.Font;
+                TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+
+                string text = (string)e.FormattedValue;
+
+                List<string> subStrings = new List<string>();
+                int curInd = 0;
+                foreach (int ind in difference)
+                {
+                    subStrings.Add(text.Substring(curInd, ind - curInd));
+                    subStrings.Add(text.Substring(ind, 1));
+                    curInd = ind + 1;
+                }
+                subStrings.Add(text.Substring(curInd, text.Length - curInd));
+
+                bool errorState = false;
+                Size size;
+                Rectangle curBox = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, 0, e.CellBounds.Height);
+                for (int i = 0; i < subStrings.Count; i++)
+                {
+                    Font curFont = errorState ? errorFont : font;
+                    Color curColor = errorState ? errorCellTextColor : e.CellStyle.ForeColor;
+
+                    size = TextRenderer.MeasureText(e.Graphics, subStrings[i], curFont, e.CellBounds.Size, flags);
+                    curBox = new Rectangle(curBox.X + curBox.Width, curBox.Y, size.Width, curBox.Height);
+                    TextRenderer.DrawText(e.Graphics, subStrings[i], curFont, curBox, curColor, flags);
+
+                    errorState = !errorState;
+                }
+                int cellWidth = curBox.Location.X - e.CellBounds.Location.X + curBox.Width + 5;
+                dataGridViewVect.Columns[1].Width = Math.Max(dataGridViewVect.Columns[1].Width, cellWidth);
+                e.Handled = true;
+            }
+            else if (e.ColumnIndex == 3)
+            {
+                e.PaintBackground(e.ClipBounds, true);
+                bool error = difference.Length > 0;
+                Font font = error ? errorFont : e.CellStyle.Font;
+                Color color = error ? errorCellTextColor : e.CellStyle.ForeColor;
+                TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
+
+                string text = (string)e.FormattedValue;
+
+                Size size = TextRenderer.MeasureText(e.Graphics, text, font, e.CellBounds.Size, flags);
+                Rectangle Box = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, size.Width, e.CellBounds.Height);
+                TextRenderer.DrawText(e.Graphics, text, font, Box, color, flags);
+
+                int cellWidth = e.CellBounds.Location.X - e.CellBounds.Location.X + Box.Width + 8;
+                dataGridViewVect.Columns[3].Width = Math.Max(dataGridViewVect.Columns[3].Width, cellWidth);
+                e.Handled = true;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            List<ParamsContainer> list = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
+            MessageBox.Show("Для n=" + list[0].N + ";K="+list[0].Coeff+"\n" +
+            "ΔK критическое значение: " + list[0].DeltaCoeff + "\n" +
+            "Δi критическое значение: " + list[1].DeltaIndex + "\n" +
+            "δсм критическое значение: " + list[2].DeltaSM);
+        }
+
         private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
@@ -290,79 +307,7 @@ namespace DigitalVoltmeter
 
         private void dataGridViewVect_SelectionChanged(object sender, EventArgs e)
         {
-            dataGridViewVect.ClearSelection();//всем привет, я костыль
-        }
-
-
-        private void dataGridViewVect_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            if (e.RowIndex >= 0 && errorBitIndexes.ElementAtOrDefault(e.RowIndex) != null)
-            {//кастомная отрисовка ячеек Выхода
-                if (e.ColumnIndex == 1)
-                {
-                    e.PaintBackground(e.ClipBounds, true);
-
-                    Font font = e.CellStyle.Font;
-                    TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
-
-                    string text = (string)e.FormattedValue;
-
-                    List<string> subStrings = new List<string>() { };
-                    int curInd = 0;
-                    foreach (int ind in errorBitIndexes[e.RowIndex])
-                    {
-                        subStrings.Add(text.Substring(curInd, ind - curInd));
-                        subStrings.Add(text.Substring(ind, 1));
-                        curInd = ind + 1;
-                    }
-                    subStrings.Add(text.Substring(curInd, text.Length - curInd));
-
-                    bool errorState = false;
-                    Size size;
-                    Rectangle curBox = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, 0, e.CellBounds.Height);
-                    for (int i = 0; i < subStrings.Count; i++)
-                    {
-                        Font curFont = errorState ? errorFont : font;
-                        Color curColor = errorState ? errorCellTextColor : e.CellStyle.ForeColor;
-
-                        size = TextRenderer.MeasureText(e.Graphics, subStrings[i], curFont, e.CellBounds.Size, flags);
-                        curBox = new Rectangle(curBox.X + curBox.Width, curBox.Y, size.Width, curBox.Height);
-                        TextRenderer.DrawText(e.Graphics, subStrings[i], curFont, curBox, curColor, flags);
-
-                        errorState = !errorState;
-                    }
-                    int cellWidth = curBox.Location.X - e.CellBounds.Location.X + curBox.Width + 5;
-                    dataGridViewVect.Columns[1].Width = Math.Max(dataGridViewVect.Columns[1].Width, cellWidth);
-                    e.Handled = true;
-                }
-                else if (e.ColumnIndex == 3)
-                {
-                    e.PaintBackground(e.ClipBounds, true);
-                    bool error = errorBitIndexes.ElementAtOrDefault(e.RowIndex).Count > 0;
-                    Font font = error ? errorFont : e.CellStyle.Font;
-                    Color color = error ? errorCellTextColor : e.CellStyle.ForeColor;
-                    TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.VerticalCenter;
-
-                    string text = (string)e.FormattedValue;
-
-                    Size size = TextRenderer.MeasureText(e.Graphics, text, font, e.CellBounds.Size, flags);
-                    Rectangle Box = new Rectangle(e.CellBounds.X + 3, e.CellBounds.Y - 1, size.Width, e.CellBounds.Height);
-                    TextRenderer.DrawText(e.Graphics, text, font, Box, color, flags);
-
-                    int cellWidth = e.CellBounds.Location.X - e.CellBounds.Location.X + Box.Width + 8;
-                    dataGridViewVect.Columns[3].Width = Math.Max(dataGridViewVect.Columns[3].Width, cellWidth);
-                    e.Handled = true;
-                }
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            List<ParamsContainer> p = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
-            MessageBox.Show("Для n=" + p[0].N + ";K="+p[0].Coeff+"\n" +
-            "ΔK критическое значение: " + p[0].DeltaCoeff + "\n" +
-            "Δi критическое значение: " + p[1].DeltaIndex + "\n" +
-            "δсм критическое значение: " + p[2].DeltaSM);
+            dataGridViewVect.ClearSelection();
         }
     }
 }
