@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Title title6 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonGetFormules = new System.Windows.Forms.Button();
@@ -66,19 +66,17 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(190, 812);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.progressBar.Location = new System.Drawing.Point(127, 528);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(1065, 32);
+            this.progressBar.Size = new System.Drawing.Size(710, 21);
             this.progressBar.TabIndex = 13;
             // 
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Location = new System.Drawing.Point(14, 20);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(9, 13);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(636, 36);
+            this.label2.Size = new System.Drawing.Size(425, 24);
             this.label2.TabIndex = 12;
             this.label2.Text = "Программа для анализа работы вольтметра параллельного преобразования.\r\n";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -86,10 +84,9 @@
             // buttonGetFormules
             // 
             this.buttonGetFormules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonGetFormules.Location = new System.Drawing.Point(15, 551);
-            this.buttonGetFormules.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonGetFormules.Location = new System.Drawing.Point(10, 358);
             this.buttonGetFormules.Name = "buttonGetFormules";
-            this.buttonGetFormules.Size = new System.Drawing.Size(200, 35);
+            this.buttonGetFormules.Size = new System.Drawing.Size(133, 23);
             this.buttonGetFormules.TabIndex = 10;
             this.buttonGetFormules.Text = "Получить уравнения";
             this.buttonGetFormules.UseVisualStyleBackColor = true;
@@ -98,19 +95,19 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 82);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(6, 53);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(22, 20);
+            this.label1.Size = new System.Drawing.Size(16, 13);
             this.label1.TabIndex = 9;
             this.label1.Text = "n:";
             // 
             // buttonSaveToExel
             // 
             this.buttonSaveToExel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSaveToExel.Location = new System.Drawing.Point(16, 811);
+            this.buttonSaveToExel.Location = new System.Drawing.Point(11, 527);
+            this.buttonSaveToExel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonSaveToExel.Name = "buttonSaveToExel";
-            this.buttonSaveToExel.Size = new System.Drawing.Size(165, 35);
+            this.buttonSaveToExel.Size = new System.Drawing.Size(110, 23);
             this.buttonSaveToExel.TabIndex = 8;
             this.buttonSaveToExel.Text = "Экспорт в Excel";
             this.buttonSaveToExel.UseVisualStyleBackColor = true;
@@ -121,11 +118,10 @@
             this.richTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.richTextBox.Location = new System.Drawing.Point(18, 592);
-            this.richTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.richTextBox.Location = new System.Drawing.Point(12, 385);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
-            this.richTextBox.Size = new System.Drawing.Size(1236, 209);
+            this.richTextBox.Size = new System.Drawing.Size(825, 137);
             this.richTextBox.TabIndex = 7;
             this.richTextBox.Text = "";
             this.richTextBox.WordWrap = false;
@@ -134,10 +130,9 @@
             // 
             this.checkBoxOutToWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxOutToWord.AutoSize = true;
-            this.checkBoxOutToWord.Location = new System.Drawing.Point(224, 559);
-            this.checkBoxOutToWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxOutToWord.Location = new System.Drawing.Point(149, 362);
             this.checkBoxOutToWord.Name = "checkBoxOutToWord";
-            this.checkBoxOutToWord.Size = new System.Drawing.Size(188, 24);
+            this.checkBoxOutToWord.Size = new System.Drawing.Size(126, 17);
             this.checkBoxOutToWord.TabIndex = 15;
             this.checkBoxOutToWord.Text = "Вывод в Word файл";
             this.checkBoxOutToWord.UseVisualStyleBackColor = true;
@@ -146,104 +141,93 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 526);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(7, 342);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(451, 20);
+            this.label3.Size = new System.Drawing.Size(308, 13);
             this.label3.TabIndex = 16;
             this.label3.Text = "Формулы связи между ЕПК и выходным двоичным кодом.\r\n";
             // 
             // textBoxN
             // 
-            this.textBoxN.Location = new System.Drawing.Point(45, 77);
-            this.textBoxN.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxN.Location = new System.Drawing.Point(30, 50);
             this.textBoxN.Name = "textBoxN";
-            this.textBoxN.Size = new System.Drawing.Size(64, 26);
+            this.textBoxN.Size = new System.Drawing.Size(44, 20);
             this.textBoxN.TabIndex = 18;
             this.textBoxN.Text = "8";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 122);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(6, 79);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(23, 20);
+            this.label4.Size = new System.Drawing.Size(17, 13);
             this.label4.TabIndex = 19;
             this.label4.Text = "K:";
             // 
             // textBoxK
             // 
-            this.textBoxK.Location = new System.Drawing.Point(45, 117);
-            this.textBoxK.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxK.Location = new System.Drawing.Point(30, 76);
             this.textBoxK.Name = "textBoxK";
-            this.textBoxK.Size = new System.Drawing.Size(64, 26);
+            this.textBoxK.Size = new System.Drawing.Size(44, 20);
             this.textBoxK.TabIndex = 20;
             this.textBoxK.Text = "1000";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 169);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(6, 110);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 20);
+            this.label5.Size = new System.Drawing.Size(24, 13);
             this.label5.TabIndex = 21;
             this.label5.Text = "ΔK:";
             // 
             // textBoxDK
             // 
-            this.textBoxDK.Location = new System.Drawing.Point(45, 165);
-            this.textBoxDK.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxDK.Location = new System.Drawing.Point(30, 107);
             this.textBoxDK.Name = "textBoxDK";
-            this.textBoxDK.Size = new System.Drawing.Size(64, 26);
+            this.textBoxDK.Size = new System.Drawing.Size(44, 20);
             this.textBoxDK.TabIndex = 22;
             this.textBoxDK.Text = "0";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 214);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(6, 139);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(27, 20);
+            this.label6.Size = new System.Drawing.Size(19, 13);
             this.label6.TabIndex = 23;
             this.label6.Text = "Δi:";
             // 
             // textBoxDi
             // 
-            this.textBoxDi.Location = new System.Drawing.Point(45, 209);
-            this.textBoxDi.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxDi.Location = new System.Drawing.Point(30, 136);
             this.textBoxDi.Name = "textBoxDi";
-            this.textBoxDi.Size = new System.Drawing.Size(64, 26);
+            this.textBoxDi.Size = new System.Drawing.Size(44, 20);
             this.textBoxDi.TabIndex = 24;
             this.textBoxDi.Text = "0";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 260);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(6, 169);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(41, 20);
+            this.label7.Size = new System.Drawing.Size(30, 13);
             this.label7.TabIndex = 25;
             this.label7.Text = "δсм:";
             // 
             // textBoxDUsm
             // 
-            this.textBoxDUsm.Location = new System.Drawing.Point(64, 255);
-            this.textBoxDUsm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxDUsm.Location = new System.Drawing.Point(43, 166);
             this.textBoxDUsm.Name = "textBoxDUsm";
-            this.textBoxDUsm.Size = new System.Drawing.Size(44, 26);
+            this.textBoxDUsm.Size = new System.Drawing.Size(31, 20);
             this.textBoxDUsm.TabIndex = 26;
             this.textBoxDUsm.Text = "0";
             // 
             // buttonGetModel
             // 
-            this.buttonGetModel.Location = new System.Drawing.Point(14, 295);
-            this.buttonGetModel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonGetModel.Location = new System.Drawing.Point(9, 192);
             this.buttonGetModel.Name = "buttonGetModel";
-            this.buttonGetModel.Size = new System.Drawing.Size(201, 37);
+            this.buttonGetModel.Size = new System.Drawing.Size(134, 24);
             this.buttonGetModel.TabIndex = 27;
             this.buttonGetModel.Text = "Получить модель";
             this.buttonGetModel.UseVisualStyleBackColor = true;
@@ -254,25 +238,23 @@
             this.mainChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea6.Name = "ChartArea1";
-            this.mainChart.ChartAreas.Add(chartArea6);
-            this.mainChart.Location = new System.Drawing.Point(224, 77);
-            this.mainChart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chartArea1.Name = "ChartArea1";
+            this.mainChart.ChartAreas.Add(chartArea1);
+            this.mainChart.Location = new System.Drawing.Point(149, 50);
             this.mainChart.Name = "mainChart";
             this.mainChart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.mainChart.Size = new System.Drawing.Size(663, 425);
+            this.mainChart.Size = new System.Drawing.Size(442, 276);
             this.mainChart.TabIndex = 33;
-            title6.Name = "Title1";
-            title6.Text = "Входное напряжение";
-            this.mainChart.Titles.Add(title6);
+            title1.Name = "Title1";
+            title1.Text = "Входное напряжение";
+            this.mainChart.Titles.Add(title1);
             // 
             // buttonExpand
             // 
             this.buttonExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExpand.Location = new System.Drawing.Point(784, 511);
-            this.buttonExpand.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonExpand.Location = new System.Drawing.Point(523, 332);
             this.buttonExpand.Name = "buttonExpand";
-            this.buttonExpand.Size = new System.Drawing.Size(102, 35);
+            this.buttonExpand.Size = new System.Drawing.Size(68, 23);
             this.buttonExpand.TabIndex = 34;
             this.buttonExpand.Text = "Раскрыть график";
             this.buttonExpand.UseVisualStyleBackColor = true;
@@ -289,15 +271,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewVect.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dataGridViewVect.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVect.Location = new System.Drawing.Point(896, 18);
-            this.dataGridViewVect.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dataGridViewVect.Location = new System.Drawing.Point(597, 12);
             this.dataGridViewVect.MultiSelect = false;
             this.dataGridViewVect.Name = "dataGridViewVect";
             this.dataGridViewVect.ReadOnly = true;
             this.dataGridViewVect.RowHeadersVisible = false;
             this.dataGridViewVect.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewVect.ShowCellToolTips = false;
-            this.dataGridViewVect.Size = new System.Drawing.Size(360, 565);
+            this.dataGridViewVect.Size = new System.Drawing.Size(240, 367);
             this.dataGridViewVect.TabIndex = 35;
             this.dataGridViewVect.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewVect_CellPainting);
             this.dataGridViewVect.SelectionChanged += new System.EventHandler(this.dataGridViewVect_SelectionChanged);
@@ -305,66 +286,59 @@
             // labelCriticalDK
             // 
             this.labelCriticalDK.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCriticalDK.Location = new System.Drawing.Point(120, 169);
-            this.labelCriticalDK.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCriticalDK.Location = new System.Drawing.Point(80, 110);
             this.labelCriticalDK.Name = "labelCriticalDK";
-            this.labelCriticalDK.Size = new System.Drawing.Size(62, 20);
+            this.labelCriticalDK.Size = new System.Drawing.Size(41, 13);
             this.labelCriticalDK.TabIndex = 36;
             // 
             // labelCriticalDi
             // 
             this.labelCriticalDi.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCriticalDi.Location = new System.Drawing.Point(120, 214);
-            this.labelCriticalDi.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCriticalDi.Location = new System.Drawing.Point(80, 139);
             this.labelCriticalDi.Name = "labelCriticalDi";
-            this.labelCriticalDi.Size = new System.Drawing.Size(62, 20);
+            this.labelCriticalDi.Size = new System.Drawing.Size(41, 13);
             this.labelCriticalDi.TabIndex = 37;
             // 
             // labelCriticalDsm
             // 
             this.labelCriticalDsm.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCriticalDsm.Location = new System.Drawing.Point(120, 260);
-            this.labelCriticalDsm.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCriticalDsm.Location = new System.Drawing.Point(80, 169);
             this.labelCriticalDsm.Name = "labelCriticalDsm";
-            this.labelCriticalDsm.Size = new System.Drawing.Size(62, 20);
+            this.labelCriticalDsm.Size = new System.Drawing.Size(41, 13);
             this.labelCriticalDsm.TabIndex = 38;
             // 
             // buttonCriticalDK
             // 
             this.buttonCriticalDK.BackColor = System.Drawing.Color.Red;
-            this.buttonCriticalDK.Location = new System.Drawing.Point(190, 165);
-            this.buttonCriticalDK.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonCriticalDK.Location = new System.Drawing.Point(127, 107);
             this.buttonCriticalDK.Name = "buttonCriticalDK";
-            this.buttonCriticalDK.Size = new System.Drawing.Size(24, 31);
+            this.buttonCriticalDK.Size = new System.Drawing.Size(16, 20);
             this.buttonCriticalDK.TabIndex = 39;
             this.buttonCriticalDK.UseVisualStyleBackColor = false;
             // 
             // buttonCriticalDi
             // 
-            this.buttonCriticalDi.BackColor = System.Drawing.Color.Green;
-            this.buttonCriticalDi.Location = new System.Drawing.Point(190, 209);
-            this.buttonCriticalDi.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonCriticalDi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.buttonCriticalDi.Location = new System.Drawing.Point(127, 136);
             this.buttonCriticalDi.Name = "buttonCriticalDi";
-            this.buttonCriticalDi.Size = new System.Drawing.Size(24, 31);
+            this.buttonCriticalDi.Size = new System.Drawing.Size(16, 20);
             this.buttonCriticalDi.TabIndex = 40;
             this.buttonCriticalDi.UseVisualStyleBackColor = false;
             // 
             // buttonCritical
             // 
             this.buttonCritical.BackColor = System.Drawing.SystemColors.Highlight;
-            this.buttonCritical.Location = new System.Drawing.Point(190, 255);
-            this.buttonCritical.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonCritical.Location = new System.Drawing.Point(127, 166);
             this.buttonCritical.Name = "buttonCritical";
-            this.buttonCritical.Size = new System.Drawing.Size(24, 31);
+            this.buttonCritical.Size = new System.Drawing.Size(16, 20);
             this.buttonCritical.TabIndex = 41;
             this.buttonCritical.UseVisualStyleBackColor = false;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(14, 342);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.button1.Location = new System.Drawing.Point(9, 222);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(201, 57);
+            this.button1.Size = new System.Drawing.Size(134, 37);
             this.button1.TabIndex = 42;
             this.button1.Text = "Получить критические значения параметров";
             this.button1.UseVisualStyleBackColor = true;
@@ -372,9 +346,9 @@
             // 
             // DigitalVoltmeterForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1274, 863);
+            this.ClientSize = new System.Drawing.Size(849, 487);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonCritical);
             this.Controls.Add(this.buttonCriticalDi);
@@ -403,8 +377,8 @@
             this.Controls.Add(this.buttonGetFormules);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonSaveToExel);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(988, 862);
+            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.MinimumSize = new System.Drawing.Size(664, 512);
             this.Name = "DigitalVoltmeterForm";
             this.Text = "DigitalVoltmeter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DigitalVoltmeterForm_FormClosed);

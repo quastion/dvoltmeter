@@ -32,6 +32,7 @@ namespace DigitalVoltmeter
         private double voltagesQuantumStep;
 
         private Color idealVoltageColor = Color.Green;
+        private Color modelVoltageColor;
 
         private GraphExpandingForm expandingForm;
 
@@ -141,13 +142,13 @@ namespace DigitalVoltmeter
 
         private void buttonGetModel_Click(object sender, EventArgs e)
         {
-            int n = 0, coeff = 0, deltaCoeff = 0, deltaIndex = 0;
-            double deltaSM = 0;
+            int n = 0, deltaIndex = 0;
+            double coeff = 0, deltaCoeff = 0, deltaSM = 0;
             try
             {
                 n = int.Parse(textBoxN.Text);
-                coeff = int.Parse(textBoxK.Text);
-                deltaCoeff = int.Parse(textBoxDK.Text);
+                coeff = double.Parse(textBoxK.Text);
+                deltaCoeff = double.Parse(textBoxDK.Text);
                 deltaIndex = int.Parse(textBoxDi.Text);
                 deltaSM = double.Parse(textBoxDUsm.Text);
             }
@@ -176,8 +177,9 @@ namespace DigitalVoltmeter
                 if (inCode != binaryCode)
                     dataGridViewVect.Rows[x].DefaultCellStyle.BackColor = errorCellBackColor;
             }
+            modelVoltageColor = Color.DarkOrchid;
             VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение", voltagesQuantumStep);
-            chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
+            chartService.AddInputVoltageList("Voltages", modelVoltages, modelVoltageColor, 2);
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
         }
 
@@ -469,8 +471,8 @@ namespace DigitalVoltmeter
                 expandingForm = new GraphExpandingForm();
                 expandingForm.Chart.Series.Clear();
                 VoltageChartService chartService = new VoltageChartService(expandingForm.Chart, "Входное напряжение", voltagesQuantumStep);
-                chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Yellow, 2);
-                chartService.AddInputVoltageList("Voltages", modelVoltages, Color.Red, 2);
+                chartService.AddInputVoltageList("Voltages", modelVoltages, modelVoltageColor, 2);
+                chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
                 expandingForm.Show();
             }
         }
@@ -546,10 +548,9 @@ namespace DigitalVoltmeter
         private void button1_Click(object sender, EventArgs e)
         {
             List<ParamsContainer> list = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
-            MessageBox.Show("Для n=" + list[0].N + ";K="+list[0].Coeff+"\n" +
-            "ΔK критическое значение: " + list[0].DeltaCoeff + "\n" +
-            "Δi критическое значение: " + list[1].DeltaIndex + "\n" +
-            "δсм критическое значение: " + list[2].DeltaSM);
+            labelCriticalDK.Text = list[0].DeltaCoeff.ToString();
+            labelCriticalDi.Text = list[1].DeltaIndex.ToString();
+            labelCriticalDsm.Text = list[2].DeltaSM.ToString();
         }
 
         private void comboBoxResistorsCount_KeyPress(object sender, KeyPressEventArgs e)
