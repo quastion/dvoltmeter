@@ -19,7 +19,7 @@ namespace DigitalVoltmeter
 
         public double DeltaCoeff { get; set; }
 
-        public int DeltaIndex { get; set; }
+        public double DeltaIndex { get; set; }
 
         public double DeltaSM { get; set; }
 
@@ -30,7 +30,7 @@ namespace DigitalVoltmeter
         public List<int> ErrorIndexesFromInputAndOutputCodes { get; set; }
 
 
-        public ParamsContainer(int n, double coeff, double deltaCoeff, int deltaIndex, double deltaSM)
+        public ParamsContainer(int n, double coeff, double deltaCoeff, double deltaIndex, double deltaSM)
         {
             N = n;
             Coeff = coeff;

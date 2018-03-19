@@ -209,8 +209,8 @@ namespace DigitalVoltmeter
         /// <param name="workSheet"></param>
         public void MergeCells(int columnStartingIndex, int columnEndingIndex, int rowStartingIndex = 0, int rowEndingIndex = 0)
         {
-            string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex+1);
-            string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex+1);
+            string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex + 1);
+            string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex + 1);
             workSheet.get_Range(startingLiteral, endLiteral).Cells.Merge(Type.Missing);
         }
 
@@ -219,18 +219,22 @@ namespace DigitalVoltmeter
         {
             string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex + 1);
             string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex + 1);
-            for(int i =7; i < 11; i++)
+            for (int i = 7; i < 11; i++)
             {
                 workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].LineStyle = lineStyle;
                 workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].Weight = weight;
             }
         }
 
-        public void FillColor(int row, int column, int color = 46)
+        public void FillColor(int row, int column, Color color, int width = 1, int height = 1)
         {
-            if (row < 0 || column < 0)
-                throw new Exception("Выход индексов за границы таблицы!");
-            workSheet.get_Range(GetCellName(column, row+1), Missing.Value).Interior.ColorIndex = color;
+            if (row < 0 || column < 0 || width < 1 || height < 1)
+                throw new Exception("Неккоректные значения входных параметров!");
+            //workSheet.get_Range(GetCellName(column, row + 1), Missing.Value).Interior.ColorIndex = color;
+            String a = GetCellName(column, row + 1);
+            String b = GetCellName(column + width - 1, row + height);
+            workSheet.get_Range(a, b).Interior.Color =
+                ColorTranslator.ToOle(color);
         }
 
         private string GetCellName(int columnIndex, int rowIndex)
@@ -240,16 +244,20 @@ namespace DigitalVoltmeter
                 + (char)('A' + (columnIndex % 26)) + rowIndex.ToString();
         }
 
-        public void Write(int row, int column, string text)
+        public void Write(int row, int column, object text)
         {
             if (row < 0 || column < 0)
                 throw new Exception("Выход индексов за границы таблицы!");
-            workSheet.Cells[row+1, column+1] = text;
+            workSheet.get_Range(GetCellName(column, row + 1)).NumberFormat = "@";
+            workSheet.Cells[row + 1, column + 1] = text.ToString();
         }
 
         public void SetColumnsWidth(int columnIndex1, int columnIndex2, int width)
         {
-            workSheet.Range[GetCellName(columnIndex1, 1), GetCellName(columnIndex2, 1)].EntireColumn.ColumnWidth = width;
+            if (width < 0)
+                workSheet.Range[GetCellName(columnIndex1, 1), GetCellName(columnIndex2, 1)].EntireColumn.AutoFit();
+            else
+                workSheet.Range[GetCellName(columnIndex1, 1), GetCellName(columnIndex2, 1)].EntireColumn.ColumnWidth = width;
         }
 
         private void ChangeCellFillingColor(ref int colorIndexGeneral, int colorIndex1, int colorIndex2)

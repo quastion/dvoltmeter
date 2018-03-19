@@ -19,8 +19,6 @@ namespace DigitalVoltmeter
         /// Отсортированные списки индексов ошибочных бит ячеек Выхода
         /// </summary>
         List<List<int>> errorBitIndexes = new List<List<int>>() { };
-
-        private ExcelTools excel;
         private WordTools word;
 
         private LongBits[] e;
@@ -42,7 +40,6 @@ namespace DigitalVoltmeter
             InitializeDataGrid();
             expandingForm = new GraphExpandingForm();
             errorFont = new Font(dataGridViewVect.Font, FontStyle.Bold);
-            excel = new ExcelTools(progressBar);
             word = new WordTools(progressBar);
         }
 
@@ -105,7 +102,9 @@ namespace DigitalVoltmeter
             string[] bString = b.Select(val => val.ToString()).ToArray();
             string[] binaryString = MathProcessor.TransposeBitMatrix(a)
                                        .Select(val => val.ToString()).ToArray();
+            ExcelTools excel = new ExcelTools(progressBar);
             excel.GenerateDocument(singleCodesString, bString, binaryString);
+            excel.Dispose();
             progressBar.Value = 0;
         }
 
@@ -142,14 +141,14 @@ namespace DigitalVoltmeter
 
         private void buttonGetModel_Click(object sender, EventArgs e)
         {
-            int n = 0, deltaIndex = 0;
-            double coeff = 0, deltaCoeff = 0, deltaSM = 0;
+            int n = 0;
+            double coeff = 0, deltaCoeff = 0, deltaSM = 0, deltaIndex = 0;
             try
             {
                 n = int.Parse(textBoxN.Text);
                 coeff = double.Parse(textBoxK.Text);
                 deltaCoeff = double.Parse(textBoxDK.Text);
-                deltaIndex = int.Parse(textBoxDi.Text);
+                deltaIndex = double.Parse(textBoxDi.Text);
                 deltaSM = double.Parse(textBoxDUsm.Text);
             }
             catch
@@ -190,258 +189,6 @@ namespace DigitalVoltmeter
             list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Index));
             list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.SM));
             return list;
-        }
-
-        /// NOTE метод не оптимизирован! Его ожидает рефакторинг.
-        /// NOTE не рекомендуется выставлять startN и endN ниже числа 6 (возможен долгий поиск критических параметров)
-        /// <summary>
-        /// Изменение параметров для нахождения критических значений
-        /// При которых начинается ошибка
-        /// </summary>
-        private void CalculateExtremeParameters(int startN, int endN, double coeff)
-        {
-            if (startN > endN)
-                throw new Exception("Ошибка значений разрядности!");
-
-            ExcelTools ex = new ExcelTools();
-            int w = 15;
-            for (int i = startN; i <= endN; i++)
-            {
-                List<ParamsContainer> pcsList = FindCriticalParameters(i + 1, coeff);
-                ParamsContainer pc1 = pcsList[0];
-                ParamsContainer pc2 = pcsList[1];
-                ParamsContainer pc3 = pcsList[2];
-
-                ex.Write(0, i * (w + 1), "Разрядность: " + pc1.N);
-                ex.Write(1, i * (w + 1), "K");
-                ex.Write(1, i * (w + 1) + 2, "ΔK");
-                ex.Write(1, i * (w + 1) + 3, "Δi");
-                ex.Write(1, i * (w + 1) + 4, "δсм:");
-                ex.Write(2, i * (w + 1), "" + pc1.Coeff);
-                ex.Write(2, i * (w + 1) + 2, "" + pc1.DeltaCoeff);
-                ex.Write(2, i * (w + 1) + 3, "" + pc1.DeltaIndex);
-                ex.Write(2, i * (w + 1) + 4, "" + pc1.DeltaSM);
-                ex.Write(6, i * (w + 1), "Вход2");
-                ex.Write(6, i * (w + 1) + 1, "Выход2");
-                ex.Write(6, i * (w + 1) + 2, "Вход10");
-                ex.Write(6, i * (w + 1) + 3, "Выход10");
-
-                ex.Write(1, i * (w + 1) + 5, "K");
-                ex.Write(1, i * (w + 1) + 7, "ΔK");
-                ex.Write(1, i * (w + 1) + 8, "Δi");
-                ex.Write(1, i * (w + 1) + 9, "δсм:");
-                ex.Write(2, i * (w + 1) + 5, "" + pc2.Coeff);
-                ex.Write(2, i * (w + 1) + 7, "" + pc2.DeltaCoeff);
-                ex.Write(2, i * (w + 1) + 8, "" + pc2.DeltaIndex);
-                ex.Write(2, i * (w + 1) + 9, "" + pc2.DeltaSM);
-                ex.Write(6, i * (w + 1) + 5, "Вход2");
-                ex.Write(6, i * (w + 1) + 6, "Выход2");
-                ex.Write(6, i * (w + 1) + 7, "Вход10");
-                ex.Write(6, i * (w + 1) + 8, "Выход10");
-
-                ex.Write(1, i * (w + 1) + 10, "K");
-                ex.Write(1, i * (w + 1) + 12, "ΔK");
-                ex.Write(1, i * (w + 1) + 13, "Δi");
-                ex.Write(1, i * (w + 1) + 14, "δсм:");
-                ex.Write(2, i * (w + 1) + 10, "" + pc3.Coeff);
-                ex.Write(2, i * (w + 1) + 12, "" + pc3.DeltaCoeff);
-                ex.Write(2, i * (w + 1) + 13, "" + pc3.DeltaIndex);
-                ex.Write(2, i * (w + 1) + 14, "" + pc3.DeltaSM);
-                ex.Write(6, i * (w + 1) + 10, "Вход2");
-                ex.Write(6, i * (w + 1) + 11, "Выход2");
-                ex.Write(6, i * (w + 1) + 12, "Вход10");
-                ex.Write(6, i * (w + 1) + 13, "Выход10");
-
-                ex.Write(3, i * (w + 1), "Индексы компараторов со сбоем");
-                ex.Write(4, i * (w + 1), string.Join(", ", pc1.ComparatorsErrorIndexes));
-                ex.Write(4, i * (w + 1) + 5, string.Join(", ", pc2.ComparatorsErrorIndexes));
-                ex.Write(4, i * (w + 1) + 10, string.Join(", ", pc3.ComparatorsErrorIndexes));
-                ex.Write(5, i * (w + 1), "Пары двоичных кодов");
-
-                //Для pc1
-                for (int j = 0; j < pc1.InputBinaryCodes.Count; j++)
-                {
-                    LongBits bits = pc1.InputBinaryCodes[j];
-                    ex.Write(j + 6 + 1, i * (w + 1), bits.ToString());
-                    ex.Write(j + 6 + 1, i * (w + 1) + 2, bits.ToLong() + "");
-                    if (pc1.ErrorIndexesFromInputAndOutputCodes.Contains(j))
-                    {
-                        ex.FillColor(j + 7, i * (w + 1));
-                        ex.FillColor(j + 7, i * (w + 1) + 1);
-                        ex.FillColor(j + 7, i * (w + 1) + 2);
-                        ex.FillColor(j + 7, i * (w + 1) + 3);
-                    }
-                }
-                for (int j = 0; j < pc1.OutputBinaryCodes.Count; j++)
-                {
-                    LongBits bits = pc1.OutputBinaryCodes[j];
-                    ex.Write(j + 6 + 1, i * (w + 1) + 1, bits.ToString());
-                    ex.Write(j + 6 + 1, i * (w + 1) + 3, bits.ToLong() + "");
-                }
-                //Для pc2
-                for (int j = 0; j < pc2.InputBinaryCodes.Count; j++)
-                {
-                    LongBits bits = pc2.InputBinaryCodes[j];
-                    ex.Write(j + 6 + 1, i * (w + 1) + 5, bits.ToString());
-                    ex.Write(j + 6 + 1, i * (w + 1) + 7, bits.ToLong() + "");
-                    if (pc2.ErrorIndexesFromInputAndOutputCodes.Contains(j))
-                    {
-                        ex.FillColor(j + 7, i * (w + 1) + 5);
-                        ex.FillColor(j + 7, i * (w + 1) + 6);
-                        ex.FillColor(j + 7, i * (w + 1) + 7);
-                        ex.FillColor(j + 7, i * (w + 1) + 8);
-                    }
-                }
-                for (int j = 0; j < pc2.OutputBinaryCodes.Count; j++)
-                {
-                    LongBits bits = pc2.OutputBinaryCodes[j];
-                    ex.Write(j + 6 + 1, i * (w + 1) + 6, bits.ToString());
-                    ex.Write(j + 6 + 1, i * (w + 1) + 8, bits.ToLong() + "");
-                }
-                //Для pc3
-                for (int j = 0; j < pc3.InputBinaryCodes.Count; j++)
-                {
-                    LongBits bits = pc3.InputBinaryCodes[j];
-                    ex.Write(j + 6 + 1, i * (w + 1) + 10, bits.ToString());
-                    ex.Write(j + 6 + 1, i * (w + 1) + 12, bits.ToLong() + "");
-                    if (pc3.ErrorIndexesFromInputAndOutputCodes.Contains(j))
-                    {
-                        ex.FillColor(j + 7, i * (w + 1) + 10);
-                        ex.FillColor(j + 7, i * (w + 1) + 11);
-                        ex.FillColor(j + 7, i * (w + 1) + 12);
-                        ex.FillColor(j + 7, i * (w + 1) + 13);
-                    }
-                }
-                for (int j = 0; j < pc3.OutputBinaryCodes.Count; j++)
-                {
-                    LongBits bits = pc3.OutputBinaryCodes[j];
-                    ex.Write(j + 6 + 1, i * (w + 1) + 11, bits.ToString());
-                    ex.Write(j + 6 + 1, i * (w + 1) + 13, bits.ToLong() + "");
-                }
-
-
-                ex.MergeCells(i * (w + 1), i * (w + 1) + (w - 1), 0, 0); //разрядность
-                ex.MergeCells(i * (w + 1), i * (w + 1) + 1, 1, 1); //K1
-                ex.MergeCells(i * (w + 1), i * (w + 1) + 1, 2, 2); //ΔK1
-                ex.MergeCells(i * (w + 1) + 5, i * (w + 1) + 6, 1, 1); //K2
-                ex.MergeCells(i * (w + 1) + 5, i * (w + 1) + 6, 2, 2); //ΔK2
-                ex.MergeCells(i * (w + 1) + 10, i * (w + 1) + 11, 1, 1); //K3
-                ex.MergeCells(i * (w + 1) + 10, i * (w + 1) + 11, 2, 2); //ΔK3
-                ex.MergeCells(i * (w + 1), i * (w + 1) + (w - 1), 3, 3); //Индексы компараторов со сбоем
-                ex.MergeCells(i * (w + 1), i * (w + 1) + 4, 4, 4); //Сами индекс компараторов
-                ex.MergeCells(i * (w + 1) + 5, i * (w + 1) + 9, 4, 4); //Сами индекс компараторов
-                ex.MergeCells(i * (w + 1) + 10, i * (w + 1) + 14, 4, 4); //Сами индекс компараторов
-                ex.MergeCells(i * (w + 1), i * (w + 1) + (w - 1), 5, 5); //Индексы компараторов со сбоем
-
-                ex.Borders(i * (w + 1), i * (w + 1) + (w - 1), 0, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-                ex.Borders(i * (w + 1), i * (w + 1) + 4, 0, 2, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-                ex.Borders(i * (w + 1), i * (w + 1) + 9, 0, 2, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-                ex.Borders(i * (w + 1), i * (w + 1) + 14, 0, 2, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-                ex.Borders(i * (w + 1), i * (w + 1) + 4, 4, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-                ex.Borders(i * (w + 1), i * (w + 1) + 9, 4, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-                ex.Borders(i * (w + 1), i * (w + 1) + 14, 4, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, 4);
-
-                ex.SetColumnsWidth(i * (w + 1), i * (w + 1) + (w - 1), 25);
-            }
-            ex.Show();
-            ex.Dispose();
-        }
-
-        /// <summary>
-        /// Поиск критических значений параметров
-        /// deltaCoeff, deltaIndex, deltaSM
-        /// при которых происходит сбой компараторов
-        /// </summary>
-        /// <param name="n"></param>
-        /// <param name="coeff"></param>
-        /// <returns></returns>
-        List<ParamsContainer> FindCriticalParameters(int n, double coeff)
-        {
-            List<ParamsContainer> l = new List<ParamsContainer> { };
-            DACEmulator emulator;
-            double deltaCoeff = 0;
-            int deltaIndex = 0;
-            double deltaSM = 0;
-            List<int> indexes = new List<int> { };
-            List<int> diffs = null;
-            ParamsContainer p = null;
-
-            while (indexes.Count == 0)
-            {
-                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-                p = new ParamsContainer(n, coeff, 0, 0, 0);
-                int countNumbers = (int)Math.Pow(2, n);
-                int x;
-                for (x = 0; x < countNumbers; x++)
-                {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                    LongBits inputBinaryCode = new LongBits(x, n);
-                    LongBits outputBinaryCode = emulator.GetDKFromComparators(x);
-                    if (!GetIndexesOfDiffs(inputBinaryCode, outputBinaryCode, out diffs))
-                    {
-                        p.ErrorIndexesFromInputAndOutputCodes.Add(x);
-                    }
-                    p.InputBinaryCodes.Add(inputBinaryCode);
-                    p.OutputBinaryCodes.Add(outputBinaryCode);
-                }
-                deltaCoeff += 0.0001;
-            }
-            p.ComparatorsErrorIndexes = indexes.Distinct().ToArray();
-            p.DeltaCoeff = deltaCoeff;
-            l.Add(p);
-
-            deltaCoeff = 0;
-            indexes = new List<int> { };
-            while (indexes.Count == 0)
-            {
-                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-                p = new ParamsContainer(n, coeff, 0, 0, 0);
-                int countNumbers = (int)Math.Pow(2, n);
-                int x;
-                for (x = 0; x < countNumbers; x++)
-                {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                    LongBits inputBinaryCode = new LongBits(x, n);
-                    LongBits outputBinaryCode = emulator.GetDKFromComparators(x);
-                    if (!GetIndexesOfDiffs(inputBinaryCode, outputBinaryCode, out diffs))
-                    {
-                        p.ErrorIndexesFromInputAndOutputCodes.Add(x);
-                    }
-                    p.InputBinaryCodes.Add(inputBinaryCode);
-                    p.OutputBinaryCodes.Add(outputBinaryCode);
-                }
-                deltaIndex++;
-            }
-            p.DeltaIndex = deltaIndex;
-            p.ComparatorsErrorIndexes = indexes.Distinct().ToArray();
-            l.Add(p);
-
-            indexes = new List<int> { };
-            deltaIndex = 0;
-            while (indexes.Count == 0)
-            {
-                emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-                p = new ParamsContainer(n, coeff, 0, 0, 0);
-                int countNumbers = (int)Math.Pow(2, n);
-                int x;
-                for (x = 0; x < countNumbers; x++)
-                {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                    LongBits inputBinaryCode = new LongBits(x, n);
-                    LongBits outputBinaryCode = emulator.GetDKFromComparators(x);
-                    if (!GetIndexesOfDiffs(inputBinaryCode, outputBinaryCode, out diffs))
-                    {
-                        p.ErrorIndexesFromInputAndOutputCodes.Add(x);
-                    }
-                    p.InputBinaryCodes.Add(inputBinaryCode);
-                    p.OutputBinaryCodes.Add(outputBinaryCode);
-                }
-                deltaSM += 0.0001;
-            }
-            p.DeltaSM = deltaSM;
-            p.ComparatorsErrorIndexes = indexes.Distinct().ToArray();
-            l.Add(p);
-            return l;
         }
 
         bool GetIndexesOfDiffs(LongBits first, LongBits second, out List<int> diffs)
@@ -547,6 +294,21 @@ namespace DigitalVoltmeter
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //Коля, для вызова данных методов в UI возможно следует добавить поля для ввода шага, точности, границ разрядности 
+            //(см. параметры метода OutputTablesToExcel в классе CriticalParamsService
+
+            //============================== Вывод в excel ==============================
+            //Разкомментировать эту строчку обязательно, если будут выводиться таблицы в excels
+            //CriticalParamsService cps = new CriticalParamsService();
+            //Разкомментировать эту строчку, если нужен вывод в excel одной таблицы
+            //cps.OutputTableToExcel(int.Parse(textBoxN.Text), int.Parse(textBoxK.Text));
+            //Разкомментировать эту строчку, если нужен вывод в excel совокупности таблиц заданных разрядностей
+            //cps.OutputTablesToExcel(2, 8, int.Parse(textBoxK.Text));
+            //Раскоментировать следующие две строки, чтобы показать excel и закрыть его
+            //cps.Show();
+            //cps.Dispose();
+            //============================== Вывод в excel ==============================
+
             List<ParamsContainer> list = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
             labelCriticalDK.Text = list[0].DeltaCoeff.ToString();
             labelCriticalDi.Text = list[1].DeltaIndex.ToString();
@@ -560,8 +322,7 @@ namespace DigitalVoltmeter
 
         private void DigitalVoltmeterForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (excel != null)
-                excel.Dispose();
+
         }
 
         private void dataGridViewVect_SelectionChanged(object sender, EventArgs e)
@@ -699,6 +460,11 @@ namespace DigitalVoltmeter
             VoltageChartService chartService = new VoltageChartService(this.mainChart, "Входное напряжение при критическом δсм", voltagesQuantumStep);
             chartService.AddInputVoltageList("Voltages", modelVoltages, modelVoltageColor, 2);
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
+        }
+
+        private void DigitalVoltmeterForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

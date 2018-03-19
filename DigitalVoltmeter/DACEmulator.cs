@@ -16,7 +16,7 @@ namespace DigitalVoltmeter
 
         public double DeltaCoeff { get; set; }
 
-        public int DeltaIndex { get; set; }
+        public double DeltaIndex { get; set; }
 
         public double DeltaSM { get; set; }
 
@@ -30,7 +30,7 @@ namespace DigitalVoltmeter
             QuantStep = MaxSignal() / Math.Pow(2, N);
         }
 
-        public DACEmulator(int n, double coeff, double deltaCoeff, int deltaIndex, double deltaSM)
+        public DACEmulator(int n, double coeff, double deltaCoeff, double deltaIndex, double deltaSM)
         {
             N = n;
             Coeff = coeff;
@@ -147,42 +147,61 @@ namespace DigitalVoltmeter
             return errors.ToArray();
         }
 
-        public static ParamsContainer TestingDelta(int n, double coeff, Delta delta)
+        public static ParamsContainer TestingDelta(int n, double coeff, Delta delta, double initialStep = 1, double accuracy = 0.0001)
         {
             double deltaCoeff = 0;
-            int deltaIndex = 0;
+            double deltaIndex = 0;
             double deltaSM = 0;
             int countNumbers = (int)Math.Pow(2, n);
             List<int> indexes = new List<int>();
             ParamsContainer container = new ParamsContainer(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-            LongBits inputBinaryCode = null, outputBinaryCode = null;
+            LongBits inputBinaryCode = new LongBits(0, n), outputBinaryCode = inputBinaryCode;
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
-            while (indexes.Count == 0)
+            while (Math.Abs(initialStep * 2) > accuracy)
             {
-                emulator.DeltaCoeff = deltaCoeff;
-                emulator.DeltaIndex = deltaIndex;
-                emulator.DeltaSM = deltaSM;
-                container.ErrorIndexesFromInputAndOutputCodes.Clear();
-                for (int x = 0; x < countNumbers; x++)
+                inputBinaryCode = outputBinaryCode;
+                while (inputBinaryCode == outputBinaryCode)
                 {
-                    indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
-                    inputBinaryCode = new LongBits(x, n);
-                    outputBinaryCode = emulator.GetDKFromComparators(x);
-                    if (inputBinaryCode != outputBinaryCode)
+                    emulator.DeltaCoeff = deltaCoeff;
+                    emulator.DeltaIndex = deltaIndex;
+                    emulator.DeltaSM = deltaSM;
+                    for (int x = 0; x < countNumbers; x++)
                     {
-                        container.ErrorIndexesFromInputAndOutputCodes.Add(x);
+                        inputBinaryCode = new LongBits(x, n);
+                        outputBinaryCode = emulator.GetDKFromComparators(x);
+                        if (inputBinaryCode != outputBinaryCode)
+                            break;
+                    }
+                    if (inputBinaryCode == outputBinaryCode)
+                    { 
+                        if (delta == Delta.Coeff) deltaCoeff += initialStep;
+                        else if (delta == Delta.Index) deltaIndex += initialStep;
+                        else if (delta == Delta.SM) deltaSM += initialStep;
                     }
                 }
-                if (delta == Delta.Coeff) deltaCoeff += 0.0001;
-                else if (delta == Delta.Index) deltaIndex++;
-                else if (delta == Delta.SM) deltaSM += 0.0001;
+                if (delta == Delta.Coeff) deltaCoeff -= initialStep;
+                else if (delta == Delta.Index) deltaIndex -= initialStep;
+                else if (delta == Delta.SM) deltaSM -= initialStep;
+                initialStep /= 2;
             }
+
+            for (int x = 0; x < countNumbers; x++)
+            {
+                indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
+                inputBinaryCode = new LongBits(x, n);
+                outputBinaryCode = emulator.GetDKFromComparators(x);
+                if (inputBinaryCode != outputBinaryCode)
+                {
+                    container.ErrorIndexesFromInputAndOutputCodes.Add(x);
+                }
+                container.InputBinaryCodes.Add(inputBinaryCode);
+                container.OutputBinaryCodes.Add(outputBinaryCode);
+            }
+
             container.DeltaCoeff = emulator.DeltaCoeff;
             container.DeltaIndex = emulator.DeltaIndex;
             container.DeltaSM = emulator.DeltaSM;
             container.ComparatorsErrorIndexes = indexes.Distinct().ToArray();
-            container.InputBinaryCodes.Add(inputBinaryCode);
-            container.OutputBinaryCodes.Add(outputBinaryCode);
             return container;
         }
     }
