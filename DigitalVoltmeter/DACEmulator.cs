@@ -18,6 +18,8 @@ namespace DigitalVoltmeter
 
         public double DeltaIndex { get; set; }
 
+        public double[] DeltaIndexes { get; private set; }
+
         public double DeltaSM { get; set; }
 
         public double QuantStep { get; private set; }
@@ -36,6 +38,16 @@ namespace DigitalVoltmeter
             Coeff = coeff;
             DeltaCoeff = deltaCoeff;
             DeltaIndex = deltaIndex;
+            DeltaSM = deltaSM;
+            QuantStep = MaxSignal() / Math.Pow(2, N);
+        }
+
+        public DACEmulator(double coeff, double deltaCoeff, double[] deltaIndexes, double deltaSM)
+        {
+            N = deltaIndexes.Length;
+            Coeff = coeff;
+            DeltaCoeff = deltaCoeff;
+            DeltaIndexes = deltaIndexes;
             DeltaSM = deltaSM;
             QuantStep = MaxSignal() / Math.Pow(2, N);
         }
@@ -86,7 +98,7 @@ namespace DigitalVoltmeter
             double sum = 0;
             for (int i = 1; i <= N; i++)
             {
-                sum += x[i - 1] * Math.Pow(2, -(N - i + DeltaIndex));
+                sum += x[i - 1] * Math.Pow(2, -(N - i + (DeltaIndexes == null ? DeltaIndex : DeltaIndexes[i])));
             }
             double delta = deltaIsUp ? DeltaSM : -DeltaSM;
             return (Coeff + DeltaCoeff) * sum + (DeltaUsm() + delta);

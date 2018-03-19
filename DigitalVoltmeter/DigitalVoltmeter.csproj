@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DACService.cs" />
     <Compile Include="ParamsContainer.cs" />
     <Compile Include="VoltageChartService.cs" />
     <Compile Include="DACEmulator.cs" />
