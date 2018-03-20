@@ -240,6 +240,10 @@ namespace DigitalVoltmeter
                     }
                 }
             }
+            for (int i = deltaIndexes.Length - 1; i >= 0; i--)
+            {
+                emulator.DeltaIndexes[i] += deltaIndexesSteps[i];
+            }
             container.DeltaIndexes = deltaIndexes;
             return container;
         }
