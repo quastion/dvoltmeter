@@ -9,6 +9,7 @@ namespace DigitalVoltmeter
 {
     class CriticalParamsService
     {
+
         private ExcelTools excelTools;
         private int outputParamsCount = 4; //coeff, delta(coeff, index), sigmaSm
         private int widthTable;
@@ -33,7 +34,7 @@ namespace DigitalVoltmeter
             int spacingBetweenTables = 1;
             for (int i = nStart; i <= nEnd; i++)
             {
-                int heightTable = (int)Math.Pow(2, i) + 10; 
+                int heightTable = (int)Math.Pow(2, i) + 10;
                 OutputTableToExcel(i, coeff, 0, indexOfTable * (widthTable + spacingBetweenTables), initialStep, accuracy);
                 OutputTableToExcel(i, coeff, heightTable + spacingBetweenTables, indexOfTable * (widthTable + spacingBetweenTables), -initialStep, accuracy);
                 indexOfTable++;
@@ -52,9 +53,9 @@ namespace DigitalVoltmeter
         public void OutputTableToExcel(int n, int coeff, int row = 0, int column = 0, double initialStep = 1, double accuracy = 0.0001)
         {
             List<ParamsContainer> parameters = new List<ParamsContainer>();
-            parameters.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Coeff, initialStep, accuracy));
-            parameters.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Index, initialStep, accuracy));
-            parameters.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.SM, initialStep, accuracy));
+            parameters.Add(TestingDelta(n, coeff, DACEmulator.Delta.Coeff, initialStep, accuracy));
+            parameters.Add(TestingDelta(n, coeff, DACEmulator.Delta.Index, initialStep, accuracy));
+            parameters.Add(TestingDelta(n, coeff, DACEmulator.Delta.SM, initialStep, accuracy));
 
             string title = "Разрядность " + n + " (" + (initialStep > 0 ? "положительные" : "отрицательные") + " значения критических параметров)";
             PrintTableWithCriticalData(parameters, row, column, title);
@@ -66,7 +67,7 @@ namespace DigitalVoltmeter
         /// <param name="parameters"></param>
         /// <param name="row"></param>
         /// <param name="column"></param>
-        private void PrintTableWithCriticalData(List<ParamsContainer> parameters, int row = 0, int column = 0, string title= "Заголовок таблицы")
+        private void PrintTableWithCriticalData(List<ParamsContainer> parameters, int row = 0, int column = 0, string title = "Заголовок таблицы")
         {
             if (parameters.Count != 3)
                 throw new Exception("Число наборов параметров должно быть равно 3!");
@@ -74,80 +75,41 @@ namespace DigitalVoltmeter
                 throw new Exception("Непроинициализированное число выводимых параметров в таблицу!");
 
 
-            Print(title, row, column, widthTable, 2, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.LightGreen);
+            excelTools.Print(title, row, column, widthTable, 2, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.LightGreen);
             for (int i = 0; i < parameters.Count; i++)
             {
                 PrintCriticalParameter("K", parameters[i].Coeff.ToString(), row + 2, column + i * outputParamsCount);
                 PrintCriticalParameter("ΔK", parameters[i].DeltaCoeff.ToString(), row + 2, column + 1 + i * outputParamsCount);
                 PrintCriticalParameter("Δi", parameters[i].DeltaIndex.ToString(), row + 2, column + 2 + i * outputParamsCount);
                 PrintCriticalParameter("δсм", parameters[i].DeltaSM.ToString(), row + 2, column + 3 + i * outputParamsCount);
-                Borders(row + 2, column + i * outputParamsCount, outputParamsCount, 2);
+                excelTools.Borders(row + 2, column + i * outputParamsCount, outputParamsCount, 2);
             }
-            Print("Индексы компараторов со сбоем", row + 4, column, widthTable, 2, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Gainsboro);
-            Print("Входные и выходные данные", row + 7, column, widthTable, 2, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Gainsboro);
-            Borders(row + 7, column, widthTable, 2, 4);
-            Borders(row + 9, column, widthTable, 1, 4);
+            excelTools.Print("Индексы компараторов со сбоем", row + 4, column, widthTable, 2, 4, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Gainsboro);
+            excelTools.Print("Входные и выходные данные", row + 7, column, widthTable, 2, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Gainsboro);
+            excelTools.Borders(row + 7, column, widthTable, 2, 4);
+            excelTools.Borders(row + 9, column, widthTable, 1, 4);
             for (int i = 0; i < parameters.Count; i++)
             {
-                Print(string.Join(", ", parameters[i].ComparatorsErrorIndexes), row + 6, column + outputParamsCount * i, outputParamsCount, 1, 4);
+                excelTools.Print(string.Join(", ", parameters[i].ComparatorsErrorIndexes), row + 6, column + outputParamsCount * i, outputParamsCount, 1, 4);
                 PrintVector(parameters[i].InputBinaryCodes.ToArray(), row + 10, column + outputParamsCount * i);
                 PrintVector(parameters[i].OutputBinaryCodes.ToArray(), row + 10, column + 1 + outputParamsCount * i);
                 PrintVector(parameters[i].InputBinaryCodes.Select(x => x.ToLong().ToString()).ToArray<string>(), row + 10, column + 2 + outputParamsCount * i);
                 PrintVector(parameters[i].OutputBinaryCodes.Select(x => x.ToLong().ToString()).ToArray<string>(), row + 10, column + 3 + outputParamsCount * i);
-                Print("Вход2", row + 9, column + i * outputParamsCount, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
-                Print("Выход2", row + 9, column + i * outputParamsCount + 1, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
-                Print("Вход10", row + 9, column + i * outputParamsCount + 2, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
-                Print("Выход10", row + 9, column + i * outputParamsCount + 3, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
-                Borders(row + 10, column + i * outputParamsCount, 4, parameters[i].InputBinaryCodes.Count);
-                FillColor(row + 10, column + i * outputParamsCount, Color.LavenderBlush, 1, parameters[i].InputBinaryCodes.Count);
-                FillColor(row + 10, column + i * outputParamsCount+1, Color.Gainsboro, 1, parameters[i].InputBinaryCodes.Count);
-                FillColor(row + 10, column + i * outputParamsCount+2, Color.LavenderBlush, 1, parameters[i].InputBinaryCodes.Count);
-                FillColor(row + 10, column + i * outputParamsCount+3, Color.Gainsboro, 1, parameters[i].InputBinaryCodes.Count);
+                excelTools.Print("Вход2", row + 9, column + i * outputParamsCount, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
+                excelTools.Print("Выход2", row + 9, column + i * outputParamsCount + 1, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
+                excelTools.Print("Вход10", row + 9, column + i * outputParamsCount + 2, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
+                excelTools.Print("Выход10", row + 9, column + i * outputParamsCount + 3, 1, 1, 0, Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color.Silver);
+                excelTools.Borders(row + 10, column + i * outputParamsCount, 4, parameters[i].InputBinaryCodes.Count);
+                excelTools.FillColor(row + 10, column + i * outputParamsCount, Color.LavenderBlush, 1, parameters[i].InputBinaryCodes.Count);
+                excelTools.FillColor(row + 10, column + i * outputParamsCount + 1, Color.Gainsboro, 1, parameters[i].InputBinaryCodes.Count);
+                excelTools.FillColor(row + 10, column + i * outputParamsCount + 2, Color.LavenderBlush, 1, parameters[i].InputBinaryCodes.Count);
+                excelTools.FillColor(row + 10, column + i * outputParamsCount + 3, Color.Gainsboro, 1, parameters[i].InputBinaryCodes.Count);
                 for (int j = 0; j < parameters[i].ErrorIndexesFromInputAndOutputCodes.Count; j++)
-                    FillColor(row + 10 + parameters[i].ErrorIndexesFromInputAndOutputCodes[j], column + outputParamsCount * i, Color.Red, 4);
+                    excelTools.FillColor(row + 10 + parameters[i].ErrorIndexesFromInputAndOutputCodes[j], column + outputParamsCount * i, Color.Red, 4);
             }
             excelTools.SetColumnsWidth(column, column + widthTable, -1);
         }
 
-        /// <summary>
-        /// Нанесение границ
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="column"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="borderWeight"></param>
-        /// <param name="borderStyle"></param>
-        private void Borders(int row, int column, int width = 1, int height = 1, int borderWeight = 4, Microsoft.Office.Interop.Excel.XlLineStyle borderStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous)
-        {
-            if (width < 1 || height < 1 || row < 0 | column < 0 || borderWeight < 0)
-                throw new Exception("Отрицательные параметры недопустимы!");
-            if (borderWeight > 0)
-                excelTools.Borders(column, column + width - 1, row, row + height - 1, borderStyle, borderWeight);
-        }
-
-        /// <summary>
-        /// Занесение данных в ячейку
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="row"></param>
-        /// <param name="column"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="borderWeight"></param>
-        /// <param name="borderStyle"></param>
-        private void Print(object text, int row, int column, int width = 1, int height = 1, int borderWeight = 0, Microsoft.Office.Interop.Excel.XlLineStyle borderStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color? color = null)
-        {
-            if (width < 1 || height < 1 || row < 0 | column < 0 || borderWeight < 0)
-                throw new Exception("Отрицательные параметры недопустимы!");
-
-            excelTools.Write(row, column, text);
-            if (width > 1 || height > 1)
-                excelTools.MergeCells(column, column + width - 1, row, row + height - 1);
-            Borders(row, column, width, height, borderWeight, borderStyle);
-            if (color != null)
-                FillColor(row, column, color.Value, width, height);
-        }
 
         /// <summary>
         /// Печать критического параметра 
@@ -161,8 +123,8 @@ namespace DigitalVoltmeter
         /// <param name="width"></param>
         private void PrintCriticalParameter(string name, string value, int row, int column, int width = 1)
         {
-            Print(name, row, column, width, 1, 0);
-            Print(value, row + 1, column, width, 1, 0);
+            excelTools.Print(name, row, column, width, 1, 0);
+            excelTools.Print(value, row + 1, column, width, 1, 0);
         }
 
         /// <summary>
@@ -184,19 +146,117 @@ namespace DigitalVoltmeter
             for (int i = 0; i < values.Length; i++)
             {
                 if (isHorizontal)
-                    Print(values[i], row, column + cellHeight * i, cellWidth, cellHeight, borderWeight, borderStyle);
+                    excelTools.Print(values[i], row, column + cellHeight * i, cellWidth, cellHeight, borderWeight, borderStyle);
                 else
-                    Print(values[i], row + i * cellHeight, column, cellWidth, cellHeight, borderWeight, borderStyle);
+                    excelTools.Print(values[i], row + i * cellHeight, column, cellWidth, cellHeight, borderWeight, borderStyle);
             }
             if (isHorizontal)
-                Borders(row, column, values.Length * cellWidth, cellHeight, borderWeight, borderStyle);
+                excelTools.Borders(row, column, values.Length * cellWidth, cellHeight, borderWeight, borderStyle);
             else
-                Borders(row, column, cellWidth, values.Length * cellHeight, borderWeight, borderStyle);
+                excelTools.Borders(row, column, cellWidth, values.Length * cellHeight, borderWeight, borderStyle);
         }
 
-        private void FillColor(int row, int column, Color color, int width = 1, int height = 1)
+        public static ParamsContainer TestingDelta(int n, double coeff, DACEmulator.Delta delta, double initialStep = 1, double accuracy = 0.0001)
         {
-            excelTools.FillColor(row, column, color, width, height);
+            double deltaCoeff = 0;
+            double deltaIndex = 0;
+            double deltaSM = 0;
+            int countNumbers = (int)Math.Pow(2, n);
+            List<int> indexes = new List<int>();
+            ParamsContainer container = new ParamsContainer(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            LongBits inputBinaryCode = new LongBits(0, n), outputBinaryCode = inputBinaryCode;
+            DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            while (Math.Abs(initialStep * 2) > accuracy)
+            {
+                inputBinaryCode = outputBinaryCode;
+                while (inputBinaryCode == outputBinaryCode)
+                {
+                    emulator.DeltaCoeff = deltaCoeff;
+                    emulator.DeltaIndex = deltaIndex;
+                    emulator.DeltaSM = deltaSM;
+                    for (int x = 0; x < countNumbers; x++)
+                    {
+                        inputBinaryCode = new LongBits(x, n);
+                        outputBinaryCode = emulator.GetDKFromComparators(x);
+                        if (inputBinaryCode != outputBinaryCode)
+                            break;
+                    }
+                    if (inputBinaryCode == outputBinaryCode)
+                    {
+                        if (delta == DACEmulator.Delta.Coeff) deltaCoeff += initialStep;
+                        else if (delta == DACEmulator.Delta.Index) deltaIndex += initialStep;
+                        else if (delta == DACEmulator.Delta.SM) deltaSM += initialStep;
+                    }
+                }
+                if (delta == DACEmulator.Delta.Coeff) deltaCoeff -= initialStep;
+                else if (delta == DACEmulator.Delta.Index) deltaIndex -= initialStep;
+                else if (delta == DACEmulator.Delta.SM) deltaSM -= initialStep;
+                initialStep /= 2;
+            }
+
+            for (int x = 0; x < countNumbers; x++)
+            {
+                indexes.AddRange(emulator.GetEKPErrorFromComparators(x).ToList());
+                inputBinaryCode = new LongBits(x, n);
+                outputBinaryCode = emulator.GetDKFromComparators(x);
+                if (inputBinaryCode != outputBinaryCode)
+                {
+                    container.ErrorIndexesFromInputAndOutputCodes.Add(x);
+                }
+                container.InputBinaryCodes.Add(inputBinaryCode);
+                container.OutputBinaryCodes.Add(outputBinaryCode);
+            }
+
+            container.DeltaCoeff = emulator.DeltaCoeff;
+            container.DeltaIndex = emulator.DeltaIndex;
+            container.DeltaSM = emulator.DeltaSM;
+            container.ComparatorsErrorIndexes = indexes.Distinct().ToArray();
+            return container;
+        }
+
+        public static ParamsContainer TestingDeltaIndexes(int n, double coeff, double initialStep = 1, double accuracy = 0.0000001)
+        {
+            double[] deltaIndexes = new double[n];
+            double[] deltaIndexesSteps = new double[n];
+            for (int i = 0; i < deltaIndexesSteps.Length; i++) deltaIndexesSteps[i] = initialStep / (Math.Pow(2, i));
+            ParamsContainer container = new ParamsContainer();
+            container.N = n;
+            container.Coeff = coeff;
+            DACEmulator emulator = new DACEmulator(n, 0, deltaIndexes, 0);
+            emulator.DeltaIndexes = deltaIndexes;
+            bool isContinue = true;
+            while (isContinue)
+            {
+                isContinue = deltaIndexesSteps.Select(x => Math.Abs(x)).Max() >= accuracy;
+                for (int i = deltaIndexes.Length-1; i >=0 ; i--)
+                {
+                    deltaIndexes[i] += deltaIndexesSteps[i];
+                    emulator.DeltaIndexes = deltaIndexes;
+                    bool noErrors = TestingDeltaIndexesPart(emulator);
+                    if (!noErrors)
+                    {
+                        deltaIndexes[i] -= deltaIndexesSteps[i];
+                        deltaIndexesSteps[i] /= 2;
+                    }
+                }
+            }
+            container.DeltaIndexes = deltaIndexes;
+            return container;
+        }
+
+        private static bool TestingDeltaIndexesPart(DACEmulator emulator)
+        {
+            int countNumbers = (int)Math.Pow(2, emulator.N);
+            double borderU = emulator.DeltaUsm();
+            LongBits inputBinaryCode = new LongBits(0, emulator.N), outputBinaryCode = inputBinaryCode;
+            for (int x = 0; x < countNumbers; x++)
+            {
+                inputBinaryCode = new LongBits(x, emulator.N);
+                outputBinaryCode = emulator.GetDKFromComparators(x);
+                if (inputBinaryCode!=outputBinaryCode)
+                    return false;
+            }
+            return true;
         }
 
         public void Dispose()

@@ -185,9 +185,9 @@ namespace DigitalVoltmeter
         private List<ParamsContainer> TestingModel(int n, double coeff)
         {
             List<ParamsContainer> list = new List<ParamsContainer>();
-            list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Coeff));
-            list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.Index));
-            list.Add(DACEmulator.TestingDelta(n, coeff, DACEmulator.Delta.SM));
+            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.Coeff));
+            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.Index));
+            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.SM));
             return list;
         }
 
@@ -309,6 +309,10 @@ namespace DigitalVoltmeter
             //cps.Dispose();
             //============================== Вывод в excel ==============================
 
+            //ParamsContainer container = CriticalParamsService.TestingDeltaIndexes(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
+            //String s = string.Join(", ", container.DeltaIndexes);
+            //MessageBox.Show(s);
+
             List<ParamsContainer> list = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
             labelCriticalDK.Text = list[0].DeltaCoeff.ToString();
             labelCriticalDi.Text = list[1].DeltaIndex.ToString();
@@ -329,8 +333,6 @@ namespace DigitalVoltmeter
         {
             dataGridViewVect.ClearSelection();
         }
-
-
 
         private void buttonCriticalDK_Click(object sender, EventArgs e)
         {

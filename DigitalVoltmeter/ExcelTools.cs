@@ -201,6 +201,66 @@ namespace DigitalVoltmeter
             }
         }
 
+
+        public void FillColor(int row, int column, Color color, int width = 1, int height = 1)
+        {
+            if (row < 0 || column < 0 || width < 1 || height < 1)
+                throw new Exception("Неккоректные значения входных параметров!");
+            //workSheet.get_Range(GetCellName(column, row + 1), Missing.Value).Interior.ColorIndex = color;
+            String a = GetCellName(column, row + 1);
+            String b = GetCellName(column + width - 1, row + height);
+            workSheet.get_Range(a, b).Interior.Color =
+                ColorTranslator.ToOle(color);
+        }
+
+        /// <summary>
+        /// Нанесение границ
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="borderWeight"></param>
+        /// <param name="borderStyle"></param>
+        public void Borders(int row, int column, int width = 1, int height = 1, int borderWeight = 4, Microsoft.Office.Interop.Excel.XlLineStyle borderStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous)
+        {
+            if (width < 1 || height < 1 || row < 0 | column < 0 || borderWeight < 0)
+                throw new Exception("Отрицательные параметры недопустимы!");
+            if (borderWeight > 0)
+            {
+                string startingLiteral = GetCellName(column, row + 1);
+                string endLiteral = GetCellName(column + width - 1, row + height);
+                for (int i = 7; i < 11; i++)
+                {
+                    workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].LineStyle = borderStyle;
+                    workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].Weight = borderWeight;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Занесение данных в ячейку
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="borderWeight"></param>
+        /// <param name="borderStyle"></param>
+        public void Print(object text, int row, int column, int width = 1, int height = 1, int borderWeight = 0, Microsoft.Office.Interop.Excel.XlLineStyle borderStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous, Color? color = null)
+        {
+            if (width < 1 || height < 1 || row < 0 | column < 0 || borderWeight < 0)
+                throw new Exception("Отрицательные параметры недопустимы!");
+
+            Write(row, column, text);
+            if (width > 1 || height > 1)
+                MergeCells(column, column + width - 1, row, row + height - 1);
+            Borders(row, column, width, height, borderWeight, borderStyle);
+            if (color != null)
+                FillColor(row, column, color.Value, width, height);
+        }
+
         /// <summary>
         /// Объединение ячеек
         /// </summary>
@@ -212,29 +272,6 @@ namespace DigitalVoltmeter
             string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex + 1);
             string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex + 1);
             workSheet.get_Range(startingLiteral, endLiteral).Cells.Merge(Type.Missing);
-        }
-
-        public void Borders(int columnStartingIndex, int columnEndingIndex, int rowStartingIndex, int rowEndingIndex,
-            XlLineStyle lineStyle, double weight)
-        {
-            string startingLiteral = GetCellName(columnStartingIndex, rowStartingIndex + 1);
-            string endLiteral = GetCellName(columnEndingIndex, rowEndingIndex + 1);
-            for (int i = 7; i < 11; i++)
-            {
-                workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].LineStyle = lineStyle;
-                workSheet.get_Range(startingLiteral, endLiteral).Borders[(XlBordersIndex)i].Weight = weight;
-            }
-        }
-
-        public void FillColor(int row, int column, Color color, int width = 1, int height = 1)
-        {
-            if (row < 0 || column < 0 || width < 1 || height < 1)
-                throw new Exception("Неккоректные значения входных параметров!");
-            //workSheet.get_Range(GetCellName(column, row + 1), Missing.Value).Interior.ColorIndex = color;
-            String a = GetCellName(column, row + 1);
-            String b = GetCellName(column + width - 1, row + height);
-            workSheet.get_Range(a, b).Interior.Color =
-                ColorTranslator.ToOle(color);
         }
 
         private string GetCellName(int columnIndex, int rowIndex)

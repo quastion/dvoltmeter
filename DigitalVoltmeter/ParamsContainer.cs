@@ -20,6 +20,7 @@ namespace DigitalVoltmeter
         public double DeltaCoeff { get; set; }
 
         public double DeltaIndex { get; set; }
+        public double[] DeltaIndexes { get; set; }
 
         public double DeltaSM { get; set; }
 
