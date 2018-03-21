@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DigitalVoltmeter
 {
-    class DACEmulator
+    public class DACEmulator
     {
         public enum Delta { Coeff = 0, Index = 1, SM = 2 }
 
@@ -98,7 +98,7 @@ namespace DigitalVoltmeter
             double sum = 0;
             for (int i = 1; i <= N; i++)
             {
-                sum += x[i - 1] * Math.Pow(2, -(N - i + (DeltaIndexes == null ? DeltaIndex : DeltaIndexes[i-1])));
+                sum += x[i - 1] * Math.Pow(2, -(N - i + (DeltaIndexes == null ? DeltaIndex : DeltaIndexes[i - 1])));
             }
             double delta = deltaIsUp ? DeltaSM : -DeltaSM;
             return (Coeff + DeltaCoeff) * sum + (DeltaUsm() + delta);
