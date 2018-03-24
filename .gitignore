@@ -2,4 +2,5 @@
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/*
+.vs/DigitalVoltmeter/v15/.suo
+.vs/DigitalVoltmeter/v15/sqlite3/storage.ide
