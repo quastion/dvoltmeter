@@ -38,6 +38,7 @@ namespace DigitalVoltmeter
         {
             InitializeComponent();
             InitializeDataGrid();
+            InitializeDeltaIGrid((int)numericUpDownN.Value);
             expandingForm = new GraphExpandingForm();
             errorFont = new Font(dataGridViewVect.Font, FontStyle.Bold);
             word = new WordTools(progressBar);
@@ -93,6 +94,55 @@ namespace DigitalVoltmeter
             dataGridViewVect.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
         }
 
+        private void InitializeDeltaIGrid(int n)
+        {
+            dataGridViewDeltaI.Columns.Clear();
+
+            for (int i = 0; i < n; i++)
+            {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn
+                {
+                    Name = "Δ" + i,
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
+                dataGridViewDeltaI.Columns.Add(col);
+            }
+
+            dataGridViewDeltaI.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+
+            object[] values = new object[n];
+            for (int i = 0; i < n; i++)
+                values[i] = 0.0;
+            dataGridViewDeltaI.Rows.Add(values);
+        }
+
+        private void InitializeDeltaIErrorsGrid(double[] dvalues)
+        {
+            dataGridViewDeltaIErrors.Columns.Clear();
+            if (dvalues == null) return;
+
+            for (int i = 0; i < dvalues.Length; i++)
+            {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn
+                {
+                    Name = "Δ" + i,
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                };
+                dataGridViewDeltaIErrors.Columns.Add(col);
+            }
+
+            dataGridViewDeltaIErrors.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewDeltaIErrors.DefaultCellStyle.BackColor = labelCriticalDK.BackColor;
+            //dataGridViewDeltaIErrors.DefaultCellStyle.
+
+            object[] values = new object[dvalues.Length];
+            for (int i = 0; i < dvalues.Length; i++)
+                values[i] = dvalues[i];
+            dataGridViewDeltaIErrors.Rows.Add(values);
+        }
+
         private void buttonSaveToExel_Click(object sender, EventArgs e)
         {
             if (this.e == null || b == null || a == null)
@@ -110,7 +160,7 @@ namespace DigitalVoltmeter
 
         private void buttonGetFormules_Click(object sender, EventArgs e)
         {
-            int bitsCount = int.Parse(textBoxN.Text);
+            int bitsCount = (int)numericUpDownN.Value;
             richTextBox.Text = string.Empty;
 
             this.e = MathProcessor.GetAllEK((int)Math.Pow(2, bitsCount));
@@ -146,15 +196,16 @@ namespace DigitalVoltmeter
             double[] masDelta;
             try
             {
-                n = int.Parse(textBoxN.Text);
-                coeff = double.Parse(textBoxK.Text);
-                deltaCoeff = double.Parse(textBoxDK.Text);
-                masDelta = Array.ConvertAll(textBoxDi.Text.Split(';'), double.Parse);
-                if (masDelta.Length != n) { 
-                    MessageBox.Show("Количество параметров дельта i не равно разрядности");
-                    return;
+                n = (int)numericUpDownN.Value;
+                coeff = (double)numericUpDownK.Value;
+                deltaCoeff = (double)numericUpDownDK.Value;
+                {
+                    List<double> l = new List<double> { };
+                    foreach (DataGridViewCell cell in dataGridViewDeltaI.Rows[0].Cells)
+                        l.Add(Convert.ToDouble(cell.Value));
+                    masDelta = l.ToArray();
                 }
-                deltaSM = double.Parse(textBoxDUsm.Text);
+                deltaSM = (double)numericUpDownDUsm.Value;
             }
             catch
             {
@@ -317,14 +368,14 @@ namespace DigitalVoltmeter
             //ParamsContainer container = CriticalParamsService.TestingDeltaIndexes(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
             //String s = string.Join(", ", container.DeltaIndexes);
             //MessageBox.Show(s);
-            int n = int.Parse(textBoxN.Text);
-            double k = double.Parse(textBoxK.Text);
-            double accuracy = Double.Parse(textBoxAccuracy.Text);
-            double initialStep = Double.Parse(textBoxInitialStep.Text);
+            int n = (int)numericUpDownN.Value;
+            double k = (double)numericUpDownK.Value;
+            double accuracy = (double)numericUpDownAccuracy.Value;
+            double initialStep = (double)numericUpDownInitialStep.Value;
 
             List<ParamsContainer> list = TestingModel(n, k,accuracy,initialStep);
             labelCriticalDK.Text = list[0].DeltaCoeff.ToString();
-            labelCriticalDi.Text = list[1].DeltaIndex.ToString();
+            InitializeDeltaIErrorsGrid(list[1].DeltaIndexes);
             labelCriticalDsm.Text = list[2].DeltaSM.ToString();
         }
 
@@ -348,8 +399,8 @@ namespace DigitalVoltmeter
             int n = 0, deltaIndex = 0;
             double coeff = 0, deltaCoeff = 0, deltaSM = 0;
 
-            n = int.Parse(textBoxN.Text);
-            coeff = double.Parse(textBoxK.Text);
+            n = (int)numericUpDownN.Value;
+            coeff = (double)numericUpDownK.Value;
             try
             {
                 deltaCoeff = double.Parse(labelCriticalDK.Text);
@@ -387,27 +438,34 @@ namespace DigitalVoltmeter
         private void textBoxN_TextChanged(object sender, EventArgs e)
         {
             labelCriticalDK.Text = "";
-            labelCriticalDi.Text = "";
+            InitializeDeltaIErrorsGrid(null);
             labelCriticalDsm.Text = "";
+            InitializeDeltaIGrid((int)numericUpDownN.Value);
         }
 
         private void buttonCriticalDi_Click(object sender, EventArgs e)
         {
-            int n = 0, deltaIndex = 0;
+            int n = 0;
+            double[] masDelta;
             double coeff = 0, deltaCoeff = 0, deltaSM = 0;
 
-            n = int.Parse(textBoxN.Text);
-            coeff = double.Parse(textBoxK.Text);
+            n = (int)numericUpDownN.Value;
+            coeff = (double)numericUpDownK.Value;
             try
             {
-                deltaIndex = int.Parse(labelCriticalDi.Text);
+                {
+                    List<double> l = new List<double> { };
+                    foreach (DataGridViewCell cell in dataGridViewDeltaIErrors.Rows[0].Cells)
+                        l.Add(Convert.ToDouble(cell.Value));
+                    masDelta = l.ToArray();
+                }
             }
             catch
             {
                 MessageBox.Show("Absent critical parameters!");
                 return;
             }
-            DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            DACEmulator emulator = new DACEmulator(coeff, deltaCoeff, masDelta, deltaSM);
             voltagesQuantumStep = emulator.RealStep;
             int countNumbers = (int)Math.Pow(2, n);
             modelVoltages = new double[countNumbers];
@@ -437,8 +495,8 @@ namespace DigitalVoltmeter
             int n = 0, deltaIndex = 0;
             double coeff = 0, deltaCoeff = 0, deltaSM = 0;
 
-            n = int.Parse(textBoxN.Text);
-            coeff = double.Parse(textBoxK.Text);
+            n = (int)numericUpDownN.Value;
+            coeff = (double)numericUpDownK.Value;
             try
             {
                 deltaSM = double.Parse(labelCriticalDsm.Text);
@@ -476,6 +534,11 @@ namespace DigitalVoltmeter
         private void DigitalVoltmeterForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridViewDeltaIErrors_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridViewDeltaIErrors.ClearSelection();
         }
     }
 }
