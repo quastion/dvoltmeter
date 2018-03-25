@@ -143,12 +143,17 @@ namespace DigitalVoltmeter
         {
             int n = 0;
             double coeff = 0, deltaCoeff = 0, deltaSM = 0, deltaIndex = 0;
+            double[] masDelta;
             try
             {
                 n = int.Parse(textBoxN.Text);
                 coeff = double.Parse(textBoxK.Text);
                 deltaCoeff = double.Parse(textBoxDK.Text);
-                deltaIndex = double.Parse(textBoxDi.Text);
+                masDelta = Array.ConvertAll(textBoxDi.Text.Split(';'), double.Parse);
+                if (masDelta.Length != n) { 
+                    MessageBox.Show("Количество параметров дельта i не равно разрядности");
+                    return;
+                }
                 deltaSM = double.Parse(textBoxDUsm.Text);
             }
             catch
@@ -157,7 +162,7 @@ namespace DigitalVoltmeter
                 return;
             }
 
-            DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
+            DACEmulator emulator = new DACEmulator(coeff, deltaCoeff, masDelta, deltaSM);
             voltagesQuantumStep = emulator.RealStep;
             int countNumbers = (int)Math.Pow(2, n);
             modelVoltages = new double[countNumbers];
@@ -182,12 +187,12 @@ namespace DigitalVoltmeter
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
         }
 
-        private List<ParamsContainer> TestingModel(int n, double coeff)
+        private List<ParamsContainer> TestingModel(int n, double coeff,double accuracy,double initialStep)
         {
             List<ParamsContainer> list = new List<ParamsContainer>();
-            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.Coeff));
-            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.Index));
-            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.SM));
+            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.Coeff, initialStep, accuracy));
+            list.Add(CriticalParamsService.TestingDeltaIndexes(n, coeff, initialStep, accuracy));
+            list.Add(CriticalParamsService.TestingDelta(n, coeff, DACEmulator.Delta.SM, initialStep, accuracy));
             return list;
         }
 
@@ -312,8 +317,12 @@ namespace DigitalVoltmeter
             //ParamsContainer container = CriticalParamsService.TestingDeltaIndexes(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
             //String s = string.Join(", ", container.DeltaIndexes);
             //MessageBox.Show(s);
+            int n = int.Parse(textBoxN.Text);
+            double k = double.Parse(textBoxK.Text);
+            double accuracy = Double.Parse(textBoxAccuracy.Text);
+            double initialStep = Double.Parse(textBoxInitialStep.Text);
 
-            List<ParamsContainer> list = TestingModel(int.Parse(textBoxN.Text), double.Parse(textBoxK.Text));
+            List<ParamsContainer> list = TestingModel(n, k,accuracy,initialStep);
             labelCriticalDK.Text = list[0].DeltaCoeff.ToString();
             labelCriticalDi.Text = list[1].DeltaIndex.ToString();
             labelCriticalDsm.Text = list[2].DeltaSM.ToString();
