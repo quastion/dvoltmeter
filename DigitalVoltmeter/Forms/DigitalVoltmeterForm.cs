@@ -135,7 +135,6 @@ namespace DigitalVoltmeter
 
             dataGridViewDeltaIErrors.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewDeltaIErrors.DefaultCellStyle.BackColor = labelCriticalDK.BackColor;
-            //dataGridViewDeltaIErrors.DefaultCellStyle.
 
             object[] values = new object[dvalues.Length];
             for (int i = 0; i < dvalues.Length; i++)
@@ -192,7 +191,7 @@ namespace DigitalVoltmeter
         private void buttonGetModel_Click(object sender, EventArgs e)
         {
             int n = 0;
-            double coeff = 0, deltaCoeff = 0, deltaSM = 0, deltaIndex = 0;
+            double coeff = 0, deltaCoeff = 0, deltaSM = 0;
             double[] masDelta;
             try
             {
