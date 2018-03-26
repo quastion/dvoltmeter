@@ -434,7 +434,7 @@ namespace DigitalVoltmeter
             chartService.AddInputVoltageList("Ideal voltages", idealVoltages, idealVoltageColor, 2);
         }
 
-        private void textBoxN_TextChanged(object sender, EventArgs e)
+        private void numericUpDownN_TextChanged(object sender, EventArgs e)
         {
             labelCriticalDK.Text = "";
             InitializeDeltaIErrorsGrid(null);
