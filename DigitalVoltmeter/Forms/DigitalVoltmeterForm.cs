@@ -145,7 +145,7 @@ namespace DigitalVoltmeter
         private void buttonSaveToExel_Click(object sender, EventArgs e)
         {
             if (this.e == null || b == null || a == null)
-                throw new Exception("Should be generate the equations!");
+                throw new Exception("Сначала должны быть сгенерированы уравнения!");
 
             string[] singleCodesString = this.e.Select(val => val.ToString()).ToArray();
             string[] bString = b.Select(val => val.ToString()).ToArray();
@@ -208,7 +208,7 @@ namespace DigitalVoltmeter
             }
             catch
             {
-                MessageBox.Show("Input parameters have wrong values!");
+                MessageBox.Show("Неверный формат входных параметров!");
                 return;
             }
 
@@ -406,7 +406,7 @@ namespace DigitalVoltmeter
             }
             catch
             {
-                MessageBox.Show("Absent critical parameters!");
+                MessageBox.Show("Критические параметры отсутствуют!");
                 return;
             }
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
@@ -452,16 +452,14 @@ namespace DigitalVoltmeter
             coeff = (double)numericUpDownK.Value;
             try
             {
-                {
-                    List<double> l = new List<double> { };
-                    foreach (DataGridViewCell cell in dataGridViewDeltaIErrors.Rows[0].Cells)
-                        l.Add(Convert.ToDouble(cell.Value));
-                    masDelta = l.ToArray();
-                }
+                List<double> l = new List<double> { };
+                foreach (DataGridViewCell cell in dataGridViewDeltaIErrors.Rows[0].Cells)
+                    l.Add(Convert.ToDouble(cell.Value));
+                masDelta = l.ToArray();
             }
             catch
             {
-                MessageBox.Show("Absent critical parameters!");
+                MessageBox.Show("Критические параметры отсутствуют!");
                 return;
             }
             DACEmulator emulator = new DACEmulator(coeff, deltaCoeff, masDelta, deltaSM);
@@ -502,7 +500,7 @@ namespace DigitalVoltmeter
             }
             catch
             {
-                MessageBox.Show("Absent critical parameters!");
+                MessageBox.Show("Критические параметры отсутствуют!");
                 return;
             }
             DACEmulator emulator = new DACEmulator(n, coeff, deltaCoeff, deltaIndex, deltaSM);
