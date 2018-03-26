@@ -392,11 +392,11 @@
             this.groupBoxCriticalValues.Controls.Add(this.buttonCriticalDK);
             this.groupBoxCriticalValues.Controls.Add(this.buttonCriticalDi);
             this.groupBoxCriticalValues.Controls.Add(this.buttonCritical);
-            this.groupBoxCriticalValues.Location = new System.Drawing.Point(16, 326);
+            this.groupBoxCriticalValues.Location = new System.Drawing.Point(12, 326);
             this.groupBoxCriticalValues.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxCriticalValues.Name = "groupBoxCriticalValues";
             this.groupBoxCriticalValues.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxCriticalValues.Size = new System.Drawing.Size(271, 134);
+            this.groupBoxCriticalValues.Size = new System.Drawing.Size(275, 134);
             this.groupBoxCriticalValues.TabIndex = 48;
             this.groupBoxCriticalValues.TabStop = false;
             this.groupBoxCriticalValues.Text = "Критические значения";
@@ -404,7 +404,7 @@
             // labelDUsmErr
             // 
             this.labelDUsmErr.AutoSize = true;
-            this.labelDUsmErr.Location = new System.Drawing.Point(2, 107);
+            this.labelDUsmErr.Location = new System.Drawing.Point(1, 107);
             this.labelDUsmErr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDUsmErr.Name = "labelDUsmErr";
             this.labelDUsmErr.Size = new System.Drawing.Size(36, 17);
@@ -414,7 +414,7 @@
             // labelDIErr
             // 
             this.labelDIErr.AutoSize = true;
-            this.labelDIErr.Location = new System.Drawing.Point(14, 66);
+            this.labelDIErr.Location = new System.Drawing.Point(13, 66);
             this.labelDIErr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDIErr.Name = "labelDIErr";
             this.labelDIErr.Size = new System.Drawing.Size(24, 17);
@@ -424,7 +424,7 @@
             // labelDKErr
             // 
             this.labelDKErr.AutoSize = true;
-            this.labelDKErr.Location = new System.Drawing.Point(8, 24);
+            this.labelDKErr.Location = new System.Drawing.Point(7, 24);
             this.labelDKErr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDKErr.Name = "labelDKErr";
             this.labelDKErr.Size = new System.Drawing.Size(30, 17);
