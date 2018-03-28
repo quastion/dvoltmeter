@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DigitalVoltmeter
 {
@@ -536,6 +537,21 @@ namespace DigitalVoltmeter
         private void dataGridViewDeltaIErrors_SelectionChanged(object sender, EventArgs e)
         {
             dataGridViewDeltaIErrors.ClearSelection();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            long now = DateTime.Now.Ticks; 
+            var area = CriticalParamsService.GetCriticalArea(4, 1000, 10f, 1);
+            using (Graphics g = CreateGraphics())
+            {
+                Point[] points = area.Select(p => { return new Point((int)p.X + 1300, (int)p.Y + 300); }).ToArray();
+                g.DrawLines(Pens.Black, points);
+                //foreach(Point3D point in area){
+                //    g.DrawEllipse(Pens.Black, point.X+1300, point.Y+300, 1, 1);
+                //}
+            }
+            double time = ((double)(DateTime.Now.Ticks-now))/10000000;
         }
     }
 }

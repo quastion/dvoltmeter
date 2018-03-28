@@ -158,5 +158,61 @@ namespace DigitalVoltmeter
             }
             return errors.ToArray();
         }
+
+        /// <summary>
+        /// Получение дельта параметров по их типу
+        /// </summary>
+        /// <param name="delta"></param>
+        /// <returns></returns>
+        public double GetDeltaParameter(DACEmulator.Delta delta)
+        {
+            switch (delta)
+            {
+                case DACEmulator.Delta.Coeff:
+                    return DeltaCoeff;
+                case DACEmulator.Delta.Index:
+                    return DeltaIndex;
+                case DACEmulator.Delta.SM:
+                    return DeltaSM;
+                default:
+                    throw new Exception("Такого параметра не существует!");
+            }
+        }
+
+        public void AddDeltaParameter(DACEmulator.Delta delta, double value)
+        {
+            switch (delta)
+            {
+                case DACEmulator.Delta.Coeff:
+                    DeltaCoeff += value;
+                    break;
+                case DACEmulator.Delta.Index:
+                    DeltaIndex += value;
+                    break;
+                case DACEmulator.Delta.SM:
+                    DeltaSM += value;
+                    break;
+                default:
+                    throw new Exception("Такого параметра не существует!");
+            }
+        }
+
+        public void SetDeltaParameter(DACEmulator.Delta delta, double value)
+        {
+            switch (delta)
+            {
+                case DACEmulator.Delta.Coeff:
+                    DeltaCoeff = value;
+                    break;
+                case DACEmulator.Delta.Index:
+                    DeltaIndex = value;
+                    break;
+                case DACEmulator.Delta.SM:
+                    DeltaSM = value;
+                    break;
+                default:
+                    throw new Exception("Такого параметра не существует!");
+            }
+        }
     }
 }
