@@ -113,18 +113,6 @@ namespace DigitalVoltmeter.Forms
         {
             return cos(beta);
         }
-        private double R(double Rc, double a)
-        {
-            return Rc * (1 + Math.Abs(sin(2 * a)));
-        }
-        public double x(int Rc, double a)
-        {
-            return R(Rc, a) * cos(a);
-        }
-        public double y(int Rc, double a)
-        {
-            return R(Rc, a) * sin(a);
-        }
         #endregion
 
         private List<double[]> SortArt(List<Polygon> polygons)
