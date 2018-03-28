@@ -30,7 +30,6 @@ namespace DigitalVoltmeter
         public int[] ComparatorsErrorIndexes { get; set; }
         public List<int> ErrorIndexesFromInputAndOutputCodes { get; set; }
 
-
         public ParamsContainer(int n, double coeff, double deltaCoeff, double deltaIndex, double deltaSM)
         {
             N = n;
@@ -48,6 +47,21 @@ namespace DigitalVoltmeter
             InputBinaryCodes = new List<LongBits>();
             OutputBinaryCodes = new List<LongBits>();
             ErrorIndexesFromInputAndOutputCodes = new List<int>();
+        }
+
+        public double GetDeltaParameter(DACEmulator.Delta delta)
+        {
+            switch (delta)
+            {
+                case DACEmulator.Delta.Coeff:
+                    return DeltaCoeff;
+                case DACEmulator.Delta.Index:
+                    return DeltaIndex;
+                case DACEmulator.Delta.SM:
+                    return DeltaSM;
+                default:
+                    throw new Exception("Такого параметра не существует!");
+            }
         }
     }
 }

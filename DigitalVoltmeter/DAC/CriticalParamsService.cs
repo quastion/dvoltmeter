@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DigitalVoltmeter
 {
@@ -156,11 +157,8 @@ namespace DigitalVoltmeter
                 excelTools.Borders(row, column, cellWidth, values.Length * cellHeight, borderWeight, borderStyle);
         }
 
-        public static ParamsContainer TestingDelta(int n, double coeff, DACEmulator.Delta delta, double initialStep = 1, double accuracy = 0.0001)
+        public static ParamsContainer TestingDelta(int n, double coeff, DACEmulator.Delta delta, double initialStep = 1, double accuracy = 0.0001, double deltaCoeff = 0, double deltaIndex = 0, double deltaSM = 0)
         {
-            double deltaCoeff = 0;
-            double deltaIndex = 0;
-            double deltaSM = 0;
             int countNumbers = (int)Math.Pow(2, n);
             List<int> indexes = new List<int>();
             ParamsContainer container = new ParamsContainer(n, coeff, deltaCoeff, deltaIndex, deltaSM);
@@ -228,11 +226,11 @@ namespace DigitalVoltmeter
             while (isContinue)
             {
                 isContinue = deltaIndexesSteps.Select(x => Math.Abs(x)).Max() >= accuracy;
-                for (int i = deltaIndexes.Length-1; i >=0 ; i--)
+                for (int i = deltaIndexes.Length - 1; i >= 0; i--)
                 {
                     deltaIndexes[i] += deltaIndexesSteps[i];
                     emulator.DeltaIndexes = deltaIndexes;
-                    bool noErrors = TestingDeltaIndexesPart(emulator);
+                    bool noErrors = ErrorChecking(emulator);
                     if (!noErrors)
                     {
                         deltaIndexes[i] -= deltaIndexesSteps[i];
@@ -248,19 +246,108 @@ namespace DigitalVoltmeter
             return container;
         }
 
-        private static bool TestingDeltaIndexesPart(DACEmulator emulator)
+        private static bool ErrorChecking(DACEmulator emulator)
         {
             int countNumbers = (int)Math.Pow(2, emulator.N);
-            double borderU = emulator.DeltaUsm();
             LongBits inputBinaryCode = new LongBits(0, emulator.N), outputBinaryCode = inputBinaryCode;
             for (int x = 0; x < countNumbers; x++)
             {
                 inputBinaryCode = new LongBits(x, emulator.N);
                 outputBinaryCode = emulator.GetDKFromComparators(x);
-                if (inputBinaryCode!=outputBinaryCode)
+                if (inputBinaryCode != outputBinaryCode)
                     return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Поиск области допустимых значений критических параметров для двумерного случая,
+        /// то есть для deltaSm и deltaK
+        /// Идея такова: на плоскости X, Y находится верхняя и нижняя части области areaUp и areaBottom и объединяются в общую область
+        /// Затем по оси Z строятся дуги edgeUp (верхняя) и edgeBottom (нижняя) - они также объединяются в одну плоскость
+        /// Таким образом строятся ребра, после чего все записывается в один массив точек
+        /// Ребра были сделаны для того, чтобы их потом последовательно можно было соединить линиями
+        /// А можно и отрисовать только лишь точки
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="coeff"></param>
+        /// <param name="deltaSmStep"></param>
+        /// <param name="deltaSmStep"></param>
+        public static List<Point3D> GetCriticalArea(int n, double coeff, double deltaSmInitialStep = 1, double deltaCoeffStep = 1)
+        {
+            if (deltaSmInitialStep <= 0 || deltaCoeffStep <= 0)
+                throw new Exception("Недопустимые аргументы, должны быть > 0!");
+
+            List<Point3D> areaUp = new List<Point3D>();
+            List<Point3D> areaBottom = new List<Point3D>();
+            DACEmulator emulator = new DACEmulator(n, coeff, 0,0,0);
+
+            //Нижняя и верхняя половины области
+            int edgesCount = 0;
+            areaUp = GetPointsOfCriticalArea(emulator, DACEmulator.Delta.Coeff, DACEmulator.Delta.SM, deltaSmInitialStep, deltaCoeffStep);
+            emulator.DeltaCoeff = 0;
+            emulator.DeltaIndex = 0;
+            emulator.DeltaSM = 0;
+            areaBottom = GetPointsOfCriticalArea(emulator, DACEmulator.Delta.Coeff, DACEmulator.Delta.SM, deltaSmInitialStep, -deltaCoeffStep);
+            edgesCount = areaUp.Count;
+            
+            for (int i = 0; i < edgesCount; i++)
+            {
+                emulator.DeltaCoeff = areaUp[i].X;
+                emulator.DeltaIndex = 0;
+                List<Point3D> edgeUp = GetPointsOfCriticalArea(emulator, areaBottom[i].Y, areaUp[i].Y, DACEmulator.Delta.SM, DACEmulator.Delta.Index, deltaSmInitialStep, deltaCoeffStep / 10000);
+                emulator.DeltaCoeff = areaUp[i].X;
+                emulator.DeltaIndex = 0;
+                List<Point3D> edgeBottom = GetPointsOfCriticalArea(emulator, areaBottom[i].Y, areaUp[i].Y, DACEmulator.Delta.SM, DACEmulator.Delta.Index, deltaSmInitialStep, -deltaCoeffStep / 10000);
+                edgeBottom.Reverse();
+                edgeUp.AddRange(edgeBottom);
+                areaUp.AddRange(edgeUp);
+            }
+            areaBottom.Reverse();
+            areaUp.AddRange(areaBottom);
+            return areaUp;
+        }
+
+        private static List<Point3D> GetPointsOfCriticalArea(DACEmulator emulator, DACEmulator.Delta minMaxDeltaParameter, DACEmulator.Delta changingDeltaParameter, double minMaxDeltaParameterStep = 1, double changingDeltaParameterStep = 1)
+        {
+            double accuracy = 0.0001;
+            List<Point3D> area = new List<Point3D>();
+            double deltaMin = TestingDelta(emulator.N, emulator.Coeff, minMaxDeltaParameter, -minMaxDeltaParameterStep, accuracy, emulator.DeltaCoeff, emulator.DeltaIndex, emulator.DeltaSM).GetDeltaParameter(minMaxDeltaParameter);
+            double deltaMax = TestingDelta(emulator.N, emulator.Coeff, minMaxDeltaParameter, minMaxDeltaParameterStep, accuracy, emulator.DeltaCoeff, emulator.DeltaIndex, emulator.DeltaSM).GetDeltaParameter(minMaxDeltaParameter);
+
+            minMaxDeltaParameterStep = (deltaMax - deltaMin) / minMaxDeltaParameterStep;
+            for (double i = deltaMin; i <= deltaMax; i += minMaxDeltaParameterStep)
+            {
+                emulator.SetDeltaParameter(minMaxDeltaParameter, i);
+                while (ErrorChecking(emulator))
+                {
+                    emulator.AddDeltaParameter(changingDeltaParameter, changingDeltaParameterStep);
+                }
+                area.Add(new Point3D((float)emulator.GetDeltaParameter(DACEmulator.Delta.Coeff), (float)emulator.GetDeltaParameter(DACEmulator.Delta.SM), (float)emulator.GetDeltaParameter(DACEmulator.Delta.Index)));
+                emulator.SetDeltaParameter(changingDeltaParameter, 0);
+            }
+            return area;
+        }
+
+        private static List<Point3D> GetPointsOfCriticalArea(DACEmulator emulator, double deltaMin, double deltaMax, DACEmulator.Delta minMaxDeltaParameter, DACEmulator.Delta changingDeltaParameter, double minMaxDeltaParameterStep = 1, double changingDeltaParameterStep = 1)
+        {
+            double accuracy = 0.0001;
+            List<Point3D> area = new List<Point3D>();
+            if (deltaMin >= deltaMax)
+                return area;
+            
+            minMaxDeltaParameterStep = (deltaMax - deltaMin) / minMaxDeltaParameterStep;
+            for (double i = deltaMin; i <= deltaMax; i += minMaxDeltaParameterStep)
+            {
+                emulator.SetDeltaParameter(minMaxDeltaParameter, i);
+                while (ErrorChecking(emulator))
+                {
+                    emulator.AddDeltaParameter(changingDeltaParameter, changingDeltaParameterStep);
+                }
+                area.Add(new Point3D((float)emulator.GetDeltaParameter(DACEmulator.Delta.Coeff), (float)emulator.GetDeltaParameter(DACEmulator.Delta.SM), (float)emulator.GetDeltaParameter(DACEmulator.Delta.Index)));
+                emulator.SetDeltaParameter(changingDeltaParameter, 0);
+            }
+            return area;
         }
 
         public void Dispose()
