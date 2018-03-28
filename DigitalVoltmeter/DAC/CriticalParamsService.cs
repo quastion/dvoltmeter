@@ -304,7 +304,8 @@ namespace DigitalVoltmeter
                 areaUp.AddRange(edgeUp);
             }
             areaBottom.Reverse();
-            areaUp.AddRange(areaBottom);
+            //areaUp.AddRange(areaBottom);
+            areaUp.RemoveRange(0, edgesCount); 
             return areaUp;
         }
 

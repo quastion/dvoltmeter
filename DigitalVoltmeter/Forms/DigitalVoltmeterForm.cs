@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalVoltmeter.Forms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -551,6 +552,8 @@ namespace DigitalVoltmeter
                 //    g.DrawEllipse(Pens.Black, point.X+1300, point.Y+300, 1, 1);
                 //}
             }
+            GraphForm graphForm = new GraphForm { Area = area };
+            graphForm.Show();
             double time = ((double)(DateTime.Now.Ticks-now))/10000000;
         }
     }
